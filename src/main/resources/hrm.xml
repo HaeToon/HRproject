@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leekiye.mybatis">
+
+    <select id="getHrmTotal" resultType="int">
+        SELECT COUNT(*) AS TOTAL FROM HRM
+    </select>
+
+    <select id="selectHrm" resultType="HrmDto" parameterType="HrmDto">
+        SELECT * FROM HRM WHERE EMPNO = ${empNo}
+    </select>
+
+    <insert id="insertHrm" parameterType="HrmDto">
+        INSERT INTO HRM VALUES (
+        #{empNo}, #{eName}, #{foreignName}, #{deptNo}, #{mobileNumber},
+        #{passport}, #{email}, #{hireDate}, #{hireType}, #{resignationDate},
+        #{outReason}, #{bankName}, #{account}, #{accountHolder}, #{postCode},
+        #{address}, #{addressDetail}, #{originalProfile}, #{renameProfile}, #{etcFile},
+        #{deptName}, #{positionName}, #{remarks}, #{positionNo})
+    </insert>
+
+    <update id="updateHrm" parameterType="HrmDto">
+        UPDATE HRM
+        SET
+        eName = #{eName},
+        foreignName = #{foreignName},
+        deptNo = #{deptNo},
+        mobileNumber = #{mobileNumber},
+        passport = #{passport},
+        email = #{email},
+        hireDate = #{hireDate},
+        hireType = #{hireType},
+        resignationDate = #{resignationDate},
+        outReason = #{outReason},
+        bankName = #{bankName},
+        account = #{account},
+        accountHolder = #{accountHolder},
+        postCode = #{postCode},
+        address = #{address},
+        addressDetail = #{addressDetail},
+        originalProfile = #{originalProfile},
+        renameProfile = #{renameProfile},
+        etcFile = #{etcFile},
+        deptName = #{deptName},
+        positionName = #{positionName},
+        remarks = #{remarks},
+        positionNo = #{positionNo}
+        WHERE empNo = #{empNo}
+    </update>
+
+
+</mapper>
