@@ -16,25 +16,26 @@ public class HrmDto {
     private String foreignName;
     private int deptNo;
     private String deptName;
-    private String positionName;
-    private String mobileNumber;
+    private String position; // 변경된 부분
+    private String mobile; // 변경된 부분
     private String passport;
     private String email;
     private String hireDate;
     private String hireType;
-    private String resignationDate;
-    private String outReason;
+    private String resignDate; // 변경된 부분
+    private String outReasons; // 변경된 부분
     private String bankName;
     private String account;
     private String accountHolder;
     private String postCode;
     private String address;
     private String addressDetail;
-    private String originalProfile;
-    private String renameProfile;
+    private String originalName; // 변경된 부분
+    private String renameName; // 변경된 부분
     private String etcFile;
     private String remarks;
-    private int positionNo;
+    private int positionNo; // 테이블 정의에 없음, 필요시 추가
 
 }
+
 

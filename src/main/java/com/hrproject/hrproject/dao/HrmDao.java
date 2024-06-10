@@ -3,15 +3,13 @@ package com.hrproject.hrproject.dao;
 import com.hrproject.hrproject.dto.HrmDto;
 import com.hrproject.hrproject.dto.HrmPageDto;
 import com.hrproject.hrproject.mybatis.MybatisConnectionFactory;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpServlet;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@WebFilter("/")
-public class HrmDao extends HttpServlet {
-
+public class HrmDao {
     public int insertHrm(HrmDto hrmDto) {
         int result = 0;
 
@@ -32,11 +30,11 @@ public class HrmDao extends HttpServlet {
         return result;
     }
 
-    public HrmDto selectHrm(int no) {
+    public HrmDto getHrm(int no) {
         HrmDto hrmDto = null;
 
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-        hrmDto = sqlSession.selectOne("selectHrm", no);
+        hrmDto = sqlSession.selectOne("getHrm", no);
 
         sqlSession.commit();
         sqlSession.close();
@@ -48,22 +46,38 @@ public class HrmDao extends HttpServlet {
         int total = 0;
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
         total = sqlSession.selectOne("getHrmTotal");
-        sqlSession.commit();
         sqlSession.close();
 
         return total;
     }
 
-
-    public List<HrmDto> getHrmBoardList(HrmPageDto hrmPageDto) {
-        List<HrmDto> hrmList =  null;
+    public int getHrmTotal(String search, String searchWord) {
+        int total = 0;
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-
-        hrmList = sqlSession.selectList("getHrmBoardList", hrmPageDto);
+        Map<String, String> searchMap = new HashMap<>();
+        searchMap.put("search", search);
+        searchMap.put("searchWord", searchWord);
+        total = sqlSession.selectOne("getHrmTotal", searchMap);
         sqlSession.commit();
         sqlSession.close();
 
+        return total;
+    }
+    public List<HrmDto> getHrmBoardList(HrmPageDto hrmPageDto) {
+        List<HrmDto> hrmList =  null;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        hrmList = sqlSession.selectList("getHrmList", hrmPageDto);
+        sqlSession.commit();
+        sqlSession.close();
         return hrmList;
 
+    }
+
+    public List<HrmDto> getSearchHrmList(HrmPageDto pageListDto) {
+        List<HrmDto> hrmList = null;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession();
+        hrmList = sqlSession.selectList("getSearchHrmList", pageListDto);
+        sqlSession.close();
+        return hrmList;
     }
 }

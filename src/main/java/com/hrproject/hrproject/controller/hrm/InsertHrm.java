@@ -1,8 +1,9 @@
+/*
 package com.hrproject.hrproject.controller.hrm;
 
-import com.leekiye.jhta2024semiproject.dao.HrmDao;
-import com.leekiye.jhta2024semiproject.dto.HrmDto;
-import com.leekiye.jhta2024semiproject.utils.ScriptWriter;
+import com.hrproject.hrproject.dao.HrmDao;
+import com.hrproject.hrproject.dto.HrmDto;
+import com.hrproject.hrproject.utils.ScriptWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,11 +20,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @MultipartConfig
-@WebServlet("/")
+@WebServlet("/hrm/hrm-board")
 public class InsertHrm extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/hrm/insertHrm.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/hrm/hrm-board.jsp").forward(req, resp);
     }
 
     @Override
@@ -98,3 +99,4 @@ public class InsertHrm extends HttpServlet {
 
     }
 }
+*/

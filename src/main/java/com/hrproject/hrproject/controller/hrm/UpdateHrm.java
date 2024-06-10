@@ -1,8 +1,9 @@
+/*
 package com.hrproject.hrproject.controller.hrm;
 
-import com.leekiye.jhta2024semiproject.dao.HrmDao;
-import com.leekiye.jhta2024semiproject.dto.HrmDto;
-import com.leekiye.jhta2024semiproject.utils.ScriptWriter;
+import com.hrproject.hrproject.dao.HrmDao;
+import com.hrproject.hrproject.dto.HrmDto;
+import com.hrproject.hrproject.utils.ScriptWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,11 +12,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/")
+@WebServlet("/hrm/hrm-board")
 public class UpdateHrm extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/hrm/updateHrm.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/hrm/hrm-board.jsp").forward(req, resp);
     }
 
     @Override
@@ -60,3 +61,4 @@ public class UpdateHrm extends HttpServlet {
 
     }
 }
+*/

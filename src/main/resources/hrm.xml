@@ -2,52 +2,93 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.leekiye.mybatis">
+<mapper namespace="com.hrproject.hrproject.dao.HrmDao">
+
+    <sql id="search">
+        <choose>
+            <when test="search eq 'empno'">
+                subject like '%'||#{searchWord}||'%'
+            </when>
+            <when test="search eq 'ename'">
+                content like '%'||#{searchWord}||'%'
+            </when>
+            <when test="search eq 'deptno'">
+                username like '%'||#{searchWord}||'%'
+            </when>
+            <when test="search eq 'email'">
+                username like '%'||#{searchWord}||'%'
+            </when>
+            <otherwise>
+                empno like '%'||#{searchWord}||'%' or
+                ename like '%'||#{searchWord}||'%' or
+                deptno like '%'||#{searchWord}||'%' or
+                email like '%'||#{searchWord}||'%'
+            </otherwise>
+        </choose>
+    </sql>
 
     <select id="getHrmTotal" resultType="int">
         SELECT COUNT(*) AS TOTAL FROM HRM
     </select>
 
-    <select id="selectHrm" resultType="HrmDto" parameterType="HrmDto">
+    <select id="getSearchHrmTotal" resultType="int" parameterType="HashMap">
+        select count(*) as total from HRM
+        <if test="search != null and searchWord != null">
+            where
+            <include refid="search"></include>
+        </if>
+    </select>
+
+    <select id="getHrm" resultType="HrmDto" parameterType="HrmDto">
         SELECT * FROM HRM WHERE EMPNO = ${empNo}
     </select>
 
+    <select id="getHrmList" resultType="HrmDto" parameterType="HrmPageDto">
+        SELECT * FROM (
+        SELECT *, ROW_NUMBER() OVER () AS num FROM HRM
+        ) AS numbered_rows
+        LIMIT #{start}, #{end}
+    </select>
+
     <insert id="insertHrm" parameterType="HrmDto">
-        INSERT INTO HRM VALUES (
-        #{empNo}, #{eName}, #{foreignName}, #{deptNo}, #{mobileNumber},
-        #{passport}, #{email}, #{hireDate}, #{hireType}, #{resignationDate},
-        #{outReason}, #{bankName}, #{account}, #{accountHolder}, #{postCode},
-        #{address}, #{addressDetail}, #{originalProfile}, #{renameProfile}, #{etcFile},
-        #{deptName}, #{positionName}, #{remarks}, #{positionNo})
+        INSERT INTO HRM (
+        EMPNO, ENAME, FOREIGN_NAME, DEPTNO, DEPTNAME, POSITION, MOBILE, PASSPORT, EMAIL, HIREDATE, HIRETYPE, RESIGNDATE,
+        OUTREASONS, BANK_NAME, ACCOUNT, ACCOUNT_HOLDER, POSTCODE, ADDRESS, ADDRESS_DETAIL, ORIGINAL_NAME, RENAME_NAME,
+        ETC_FILE, REMARKS, POSITION_NO
+        ) VALUES (
+        #{empNo}, #{eName}, #{foreignName}, #{deptNo}, #{deptName}, #{position}, #{mobile}, #{passport}, #{email},
+        #{hireDate}, #{hireType}, #{resignDate}, #{outReasons}, #{bankName}, #{account}, #{accountHolder}, #{postCode},
+        #{address}, #{addressDetail}, #{originalName}, #{renameName}, #{etcFile}, #{remarks}, #{positionNo}
+        )
     </insert>
 
     <update id="updateHrm" parameterType="HrmDto">
         UPDATE HRM
         SET
-        eName = #{eName},
-        foreignName = #{foreignName},
-        deptNo = #{deptNo},
-        mobileNumber = #{mobileNumber},
-        passport = #{passport},
-        email = #{email},
-        hireDate = #{hireDate},
-        hireType = #{hireType},
-        resignationDate = #{resignationDate},
-        outReason = #{outReason},
-        bankName = #{bankName},
-        account = #{account},
-        accountHolder = #{accountHolder},
-        postCode = #{postCode},
-        address = #{address},
-        addressDetail = #{addressDetail},
-        originalProfile = #{originalProfile},
-        renameProfile = #{renameProfile},
-        etcFile = #{etcFile},
-        deptName = #{deptName},
-        positionName = #{positionName},
-        remarks = #{remarks},
-        positionNo = #{positionNo}
-        WHERE empNo = #{empNo}
+        ENAME = #{eName},
+        FOREIGN_NAME = #{foreignName},
+        DEPTNO = #{deptNo},
+        DEPTNAME = #{deptName},
+        POSITION = #{position},
+        MOBILE = #{mobile},
+        PASSPORT = #{passport},
+        EMAIL = #{email},
+        HIREDATE = #{hireDate},
+        HIRETYPE = #{hireType},
+        RESIGNDATE = #{resignDate},
+        OUTREASONS = #{outReasons},
+        BANK_NAME = #{bankName},
+        ACCOUNT = #{account},
+        ACCOUNT_HOLDER = #{accountHolder},
+        POSTCODE = #{postCode},
+        ADDRESS = #{address},
+        ADDRESS_DETAIL = #{addressDetail},
+        ORIGINAL_NAME = #{originalName},
+        RENAME_NAME = #{renameName},
+        ETC_FILE = #{etcFile},
+        REMARKS = #{remarks},
+        POSITION_NO = #{positionNo}
+        WHERE EMPNO = #{empNo}
     </update>
 
 

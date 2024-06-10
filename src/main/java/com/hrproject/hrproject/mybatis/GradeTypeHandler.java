@@ -1,4 +1,4 @@
-package com.hrproject.hrproject.mybatis;
+/*package com.hrproject.hrproject.mybatis;
 
 import com.leekiye.mybatis.dto.Grade;
 import org.apache.ibatis.type.JdbcType;
@@ -65,4 +65,4 @@ public class GradeTypeHandler implements TypeHandler<Grade> {
         }
         return result;
     }
-}
+}*/

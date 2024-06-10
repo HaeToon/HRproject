@@ -1,24 +1,17 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>JSP - Hello World</title>
-    <link href="../../css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="../../js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/jquery-3.7.1.min.js"></script>
-</head>
-<body>
-<div class="container">
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@include file="../include/header.jsp"%>
+<%@include file="../include/left_side_menu.jsp"%>
+<div class="container content-area d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary position-absolute top-0 col-8">
     <table class="table">
         <thead>
         <tr>
             <%-- 10개 --%>
+
             <th scope="col"><input type="checkbox" id="check-all"></th>
             <th scope="col">입사일자</th>
             <th scope="col">사원번호</th>
-            <th scope="col">성명</th>
+            <th scope="col">성명</th>S
             <th scope="col">부서번호(명)</th>
             <th scope="col">직위/직급명</th>
             <th scope="col">Email</th>
@@ -28,31 +21,32 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <c:forEach items="${hrmList}" var="hrmDto" varStatus="loop">
-                <th scope="row"><input type="checkbox">${loop.count}</th>
-                <td>${total - hrmDto.num + 1}</td>
+        <c:forEach items="${hrmList}" var="hrmDto" varStatus="loop">
+            <tr>
+                    <%--            <td>${total - hrmDto.num + 1}</td>  --%>
+                <td scope="row"><input type="checkbox">${loop.count}</td>
                 <td>${hrmDto.hireDate}</td>
                 <td><a href="">${hrmDto.empNo}</a></td>
-                <td><a href="">${hrmDto.eName}</a></td>
-                <td>${hrmDto.deptName}</td>
-                <td>${hrmDto.positionName}</td>
+                <td>${hrmDto.EName}</td>
+                <td>${hrmDto.deptNo}(부서명 넣으면됨)</td>
+                <td>직위/직급</td>
+                    <%--                <td>${hrmList.positionName}</td>--%>
                 <td>${hrmDto.email}</td>
                 <td>${hrmDto.account}</td>
                 <td><textarea></textarea></td>
-                <td><a href="">인쇄</a> </td>
-            </c:forEach>
-            <%--<td><input type="checkbox"></td>
-            <td>입사일자</td>
-            <td><a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">사원번호</a></td>
-            <td><a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">성명</a></td>
-            <td>부서명</td>
-            <td>직위/직급명</td>
-            <td>Email</td>
-            <td>계좌번호</td>
-            <td>새로운 항목 추가???</td>
-            <td>인쇄</td>--%>
-        </tr>
+                <td><a href="">인쇄</a></td>
+                    <%--            <td><input type="checkbox"></td>--%>
+                    <%--            <td>입사일자</td>--%>
+                    <%--            <td><a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">사원번호</a></td>--%>
+                    <%--            <td><a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">성명</a></td>--%>
+                    <%--            <td>부서명</td>--%>
+                    <%--            <td>직위/직급명</td>--%>
+                    <%--            <td>Email</td>--%>
+                    <%--            <td>계좌번호</td>--%>
+                    <%--            <td>새로운 항목 추가???</td>--%>
+                    <%--            <td>인쇄</td>--%>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
 
@@ -71,7 +65,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/url" id="modalForm" method="post" enctype="multipart/form-data">
+                    <form action="../hrm/board" id="modalForm" method="post" enctype="multipart/form-data">
                         <div class="row mt-3">
                             <div class="col">사원번호</div>
                             <div class="col col-md-4">
@@ -79,7 +73,7 @@
                             </div>
                             <div class="col">성명</div>
                             <div class="col col-md-4">
-                                <input type="text" class="form-control" placeholder="Name" aria-label="name">
+                                <input type="text" class="form-control" placeholder="Name" aria-label="ename">
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -138,9 +132,9 @@
                                 <input type="text" class="form-control" placeholder="" aria-label="">
                             </div>
                         </div>
-                    </form>
-                </div> <%--컬럼명 부분--%>
 
+                    </form>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" form="modalForm" class="btn btn-primary">Submit</button>
@@ -149,7 +143,6 @@
             </div>
         </div>
     </div>
-
 </div>
-</body>
-</html>
+
+<%@include file="../include/right_side_info.jsp"%>
