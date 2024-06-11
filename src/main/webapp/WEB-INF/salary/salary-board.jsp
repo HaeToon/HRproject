@@ -18,7 +18,6 @@
             <thead>
             <tr>
                 <th>번호</th>
-<<<<<<< HEAD
                 <th>사원 번호</th>
                 <th>사원 명</th>
                 <th>급여구분</th>
@@ -28,42 +27,14 @@
                 <th>근속연월</th>
                 <th>지급액</th>
                 <th>기타</th>
-=======
-                <th>사원번호</th>
-                <th>테스트</th>
-                <th>테스트</th>
-                <th>테스트</th>
->>>>>>> b3132e61be3128b30884c08a32a6b4c1593af722
             </tr>
             </thead>
             <tbody>
-
-
-
-
-
-            <%
-                // salaryList 값을 가져옴
-                List<SalaryPlusEmpNameDto> salaryList = (List<SalaryPlusEmpNameDto>) request.getAttribute("salaryList");
-
-                System.out.println();
-                System.out.println("JSP salaryList >>> "+salaryList);
-
-            %>
-
-
-
-
-
-
-
-
-
             <c:forEach items="${salaryList}" var="salaryDto" varStatus="loop">
                 <tr>
                     <td>${salaryDto.salary_No}</td>
                     <td>${salaryDto.empNo}</td>
-                    <td>${salaryDto.eName}</td>
+                    <td>${salaryDto.ename}</td>
                     <td>${salaryDto.salaryName}</td>
                     <td>${salaryDto.salary}</td>
                     <td>${salaryDto.salaryDay}</td>
