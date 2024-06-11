@@ -35,8 +35,6 @@ public class HrmDao {
 
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
         hrmDto = sqlSession.selectOne("getHrm", no);
-
-        sqlSession.commit();
         sqlSession.close();
 
         return hrmDto;
@@ -58,7 +56,6 @@ public class HrmDao {
         searchMap.put("search", search);
         searchMap.put("searchWord", searchWord);
         total = sqlSession.selectOne("getHrmTotal", searchMap);
-        sqlSession.commit();
         sqlSession.close();
 
         return total;
@@ -67,16 +64,15 @@ public class HrmDao {
         List<HrmDto> hrmList =  null;
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
         hrmList = sqlSession.selectList("getHrmList", hrmPageDto);
-        sqlSession.commit();
         sqlSession.close();
         return hrmList;
 
     }
 
-    public List<HrmDto> getSearchHrmList(HrmPageDto pageListDto) {
+    public List<HrmDto> getSearchHrmBoardList(HrmPageDto hrmPageDto) {
         List<HrmDto> hrmList = null;
-        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession();
-        hrmList = sqlSession.selectList("getSearchHrmList", pageListDto);
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        hrmList = sqlSession.selectList("getSearchHrmList", hrmPageDto);
         sqlSession.close();
         return hrmList;
     }

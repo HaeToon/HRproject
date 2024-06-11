@@ -1,4 +1,4 @@
-package com.hrproject.hrproject.controller.board;
+package com.hrproject.hrproject.controller.hrm;
 
 import com.hrproject.hrproject.dao.HrmDao;
 import com.hrproject.hrproject.dto.HrmDto;
@@ -21,7 +21,7 @@ public class HrmBoard extends HttpServlet {
 
         int total = getTotalHrmCount(search, searchWord); // DB에서 가져온 총 사원수
         int currentPage = getCurrentPage(req);
-        int listPerPage = 10; // 페이지당 보여지는 게시물 수
+        int listPerPage = 20; // 페이지당 보여지는 게시물 수
         int paginationPerPage = 5; // 보여지는 페이지 수 ex : 1 ~ 5, 6 ~ 10
 
         /* 변수명 Page -> pagination 바꾸기 */
@@ -29,13 +29,10 @@ public class HrmBoard extends HttpServlet {
         int startPage = calculateStartPage(currentPage, paginationPerPage);
         int endPage = calculateEndPage(totalPage, startPage, paginationPerPage);
 
-        HrmPageDto pageListDto = createPageDto(currentPage, listPerPage, search, searchWord);
-        List<HrmDto> hrmList = getHrmList(pageListDto);
+        HrmPageDto hrmPageDto = createPageDto(currentPage, listPerPage, search, searchWord);
+        List<HrmDto> hrmList = getHrmList(hrmPageDto);
 
         setRequestAttributes(req, totalPage, startPage, endPage, listPerPage, paginationPerPage, search, searchWord, hrmList);
-        System.out.println("hrmList === " + hrmList.get(0).getEName());
-        System.out.println("hrmList === " + hrmList.get(1).getEName());
-
 
         req.getRequestDispatcher("/WEB-INF/hrm/hrm-board.jsp").forward(req, resp);
     }
@@ -76,27 +73,26 @@ public class HrmBoard extends HttpServlet {
     }
 
     private HrmPageDto createPageDto(int page, int listPerPage, String search, String searchWord) {
-        int start = (page - 1) * listPerPage + 1;
-        int end = page * listPerPage;
-        HrmPageDto pageListDto = HrmPageDto.builder()
+        int start = (page - 1) * listPerPage;
+        int end =  listPerPage;
+//        int end = page * listPerPage;
+        HrmPageDto hrmPageDto = HrmPageDto.builder()
                 .start(start)
                 .end(end)
                 .build();
         if (search != null && searchWord != null) {
-            pageListDto.setSearch(search);
-            pageListDto.setSearchWord(searchWord);
+            hrmPageDto.setSearch(search);
+            hrmPageDto.setSearchWord(searchWord);
         }
-        return pageListDto;
+        return hrmPageDto;
     }
 
-    private List<HrmDto> getHrmList(HrmPageDto pageListDto) {
+    private List<HrmDto> getHrmList(HrmPageDto hrmPageDto) {
         HrmDao hrmDao = new HrmDao();
-        if (pageListDto.getSearch() != null && pageListDto.getSearchWord() != null){
-            return hrmDao.getSearchHrmList(pageListDto);
+        if (hrmPageDto.getSearch() != null && hrmPageDto.getSearchWord() != null){
+            return hrmDao.getSearchHrmBoardList(hrmPageDto);
         } else {
-            System.out.println(pageListDto.getStart() + pageListDto.getEnd() + pageListDto.getSearch());
-            System.out.println("getHrmList");
-            return hrmDao.getHrmBoardList(pageListDto);
+            return hrmDao.getHrmBoardList(hrmPageDto);
         }
     }
 

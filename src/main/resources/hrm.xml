@@ -6,26 +6,27 @@
 
     <sql id="search">
         <choose>
-            <when test="search eq 'empno'">
-                subject like '%'||#{searchWord}||'%'
+            <when test="search == 'empno'">
+                empno LIKE CONCAT('%', #{searchWord}, '%')
             </when>
-            <when test="search eq 'ename'">
-                content like '%'||#{searchWord}||'%'
+            <when test="search == 'ename'">
+                ename LIKE CONCAT('%', #{searchWord}, '%')
             </when>
-            <when test="search eq 'deptno'">
-                username like '%'||#{searchWord}||'%'
+            <when test="search == 'deptname'">
+                deptname LIKE CONCAT('%', #{searchWord}, '%')
             </when>
-            <when test="search eq 'email'">
-                username like '%'||#{searchWord}||'%'
+            <when test="search == 'email'">
+                email LIKE CONCAT('%', #{searchWord}, '%')
             </when>
             <otherwise>
-                empno like '%'||#{searchWord}||'%' or
-                ename like '%'||#{searchWord}||'%' or
-                deptno like '%'||#{searchWord}||'%' or
-                email like '%'||#{searchWord}||'%'
+                empno LIKE CONCAT('%', #{searchWord}, '%') OR
+                ename LIKE CONCAT('%', #{searchWord}, '%') OR
+                deptname LIKE CONCAT('%', #{searchWord}, '%') OR
+                email LIKE CONCAT('%', #{searchWord}, '%')
             </otherwise>
         </choose>
     </sql>
+
 
     <select id="getHrmTotal" resultType="int">
         SELECT COUNT(*) AS TOTAL FROM HRM
@@ -34,8 +35,7 @@
     <select id="getSearchHrmTotal" resultType="int" parameterType="HashMap">
         select count(*) as total from HRM
         <if test="search != null and searchWord != null">
-            where
-            <include refid="search"></include>
+            where <include refid="search"></include>
         </if>
     </select>
 
@@ -47,6 +47,17 @@
         SELECT * FROM (
         SELECT *, ROW_NUMBER() OVER () AS num FROM HRM
         ) AS numbered_rows
+        LIMIT #{start}, #{end}
+    </select>
+
+    <select id="getSearchHrmList" resultType="HrmDto" parameterType="HrmPageDto">
+        SELECT * FROM (
+        SELECT *, ROW_NUMBER() OVER () AS num FROM HRM
+        ) AS numbered_rows
+        <if test="search != null and searchWord != null">
+            where <include refid="search"></include>
+        </if>
+        ) AS b01
         LIMIT #{start}, #{end}
     </select>
 

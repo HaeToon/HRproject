@@ -4,10 +4,10 @@
 <html>
 <head>
     <title>Title</title>
-    <link href="../../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../css/include.css" rel="stylesheet">
-    <script src="../../js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/jquery-3.7.1.min.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/include.css" rel="stylesheet">
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/jquery-3.7.1.min.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -18,7 +18,7 @@
 <c:when test="${sessionMember eq null}">
 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between border-bottom">
     <div class="col-md-2">
-        <a href="/index/index"><img src="../../images/logo.png"></a>
+        <a href="/index/index"><img src="../images/logo.png"></a>
     </div>
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <h2>첫화면은 슬로건 좌측 사이드메뉴 클릭시 카테고리 </h2>
@@ -32,7 +32,7 @@
 <header class="header d-flex flex-wrap align-items-center justify-content-between border-bottom">
     <!-- 로고 영역 시작 -->
     <div class="col-md-2">
-        <img src="../../images/logo.png">
+        <img src="../images/logo.png">
     </div>
         <%--      로고영역 끝      --%>
     <!-- 카테고리 영역 -->
@@ -65,4 +65,5 @@
 </c:otherwise>
 </c:choose>
 <%--헤더 끝--%>
-<div class="position-relative col-12"></div>
+<div class="position-relative col-12">
+
