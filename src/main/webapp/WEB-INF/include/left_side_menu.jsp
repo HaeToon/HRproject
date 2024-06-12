@@ -18,7 +18,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link link-body-emphasis p-5">
+            <a href="/notice/board" class="nav-link link-body-emphasis p-5">
                 공지사항
             </a>
         </li>

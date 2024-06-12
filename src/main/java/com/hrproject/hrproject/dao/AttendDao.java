@@ -5,13 +5,39 @@ import com.hrproject.hrproject.dto.AttendDto;
 import com.hrproject.hrproject.mybatis.MybatisConnectionFactory;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AttendDao {
+
+    public List<AttendDto> searchAttend(String search, String searchWord) {
+        try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
+            Map<String, Object> parameterMap = new HashMap<>();
+            parameterMap.put("search", search);
+            parameterMap.put("searchWord", "%" + searchWord + "%");
+
+            List<AttendDto> attendList = sqlSession.selectList("searchAttend", parameterMap);
+            System.out.println("search query is successful");
+            System.out.println(attendList); // 가져온 데이터 로깅
+
+            return attendList;
+        } catch (Exception e) {
+            // 예외 발생 시 처리
+            e.printStackTrace(); // 혹은 로깅
+            return null; // 또는 예외를 상위로 다시 throw
+        }
+    }
+
+
     public int insertAttendDao(AttendDto attendDto) {
         int result = 0;
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession();
-        result = sqlSession.insert("insertAttend", attendDto);
+        result = sqlSession.insert("insertAttend",attendDto);
+        //sqlSession.commit();
+        if (result>0){
+            System.out.println("attend insert Qry is successfully");
+        }
         sqlSession.close();
         return result;
 

@@ -100,6 +100,8 @@
         POSITION_NO = #{positionNo}
         WHERE EMPNO = #{empNo}
     </update>
-
+    <select id="getSearchEmpNoByName" resultType="HrmDto" parameterType="String">
+        SELECT * FROM HRM WHERE ENAME = #{searchName}
+    </select>
 
 </mapper>

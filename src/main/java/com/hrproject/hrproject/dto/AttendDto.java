@@ -14,7 +14,10 @@ public class AttendDto {
     private String atdCode; //근태코드
     private double atdNum; //근태수
     private String atdDate; //근태기간
+    private String startAtdDate; //시작 근태기간
+    private String endAtdDate; //끝 근태기간
     private String offDay; //휴가명
     private String offDayRs; //휴가사유
     private String print; //인쇄
+
 }

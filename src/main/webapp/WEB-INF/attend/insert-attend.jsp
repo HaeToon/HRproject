@@ -20,6 +20,7 @@
     </style>
 </head>
 <body>
+<button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">신규</button>
 
 <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" data-bs-backdrop="static"
      tabindex="-1">
@@ -34,68 +35,68 @@
                     <div class="row mb-3">
                         <label for="empNo" class="col-sm-2 col-form-label">사원번호</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="empNo">
+                            <input type="text" class="form-control" id="empNo" name="empNo">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="attendCount" class="col-sm-2 col-form-label">근태번호</label>
+                        <label for="atdNo" class="col-sm-2 col-form-label">근태번호</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="attendCount">
+                            <input type="text" class="form-control" id="atdNo" name="atdNo">
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <label for="eName" class="col-sm-2 col-form-label">사원명</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="ename">
+                            <input type="text" class="form-control" id="ename" name="ename">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="attendNo" class="col-sm-2 col-form-label">근태코드</label>
+                        <label for="atdCode" class="col-sm-2 col-form-label">근태코드</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="attendNo">
+                            <input type="text" class="form-control" id="atdCode" name="atdCode">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="num" class="col-sm-2 col-form-label">근태수</label>
+                        <label for="atdNum" class="col-sm-2 col-form-label">근태수</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="num">
+                            <input type="text" class="form-control" id="atdNum" name="atdNum">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="attendNo" class="col-sm-2 col-form-label">근태기간</label>
+                        <label class="col-sm-2 col-form-label">근태기간</label>
                         <div class="col-sm-10 col-auto">
-                            <input type="date" class="form-control" id="startAttendDate"> ~ <input type="date" class="form-control" id="endAttendDate">
+                            <input type="date" class="form-control" id="startAtdDate" name="startAtdDate"> ~ <input type="date" class="form-control" id="endAtdDate" name="endAtdDate">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="offday" class="col-sm-2 col-form-label">휴가명</label>
+                        <label for="offDay" class="col-sm-2 col-form-label">휴가명</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="offday">
+                            <input type="text" class="form-control" id="offDay" name="offDay">
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="detailOffday" class="col-sm-2 col-form-label">휴가사유</label>
+                        <label for="offDayRs" class="col-sm-2 col-form-label">휴가사유</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="detailOffday">
+                            <input type="text" class="form-control" id="offDayRs" name="offDayRs">
                         </div>
                     </div>
 
                     <legend class="col-form-label col-sm-2 pt-0">인쇄</legend>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="print" id="printY" value="printY" checked>
+                        <input class="form-check-input" type="radio" name="print" id="printY" value="Y" checked>
                         <label class="form-check-label" for="printY">
                             Y
                         </label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="print" id="printN" value="printN">
+                        <input class="form-check-input" type="radio" name="print" id="printN" value="N">
                         <label class="form-check-label" for="printN">
                             N
                         </label>

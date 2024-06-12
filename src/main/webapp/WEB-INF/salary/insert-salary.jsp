@@ -34,6 +34,7 @@
                         <div class="col">대상 사원번호</div>
                         <div class="col col-md-4">
                             <input type="text" class="form-control" placeholder="00008" aria-label="empNo" name="empNo">
+
                         </div>
                     </div>
                     <div class="row">

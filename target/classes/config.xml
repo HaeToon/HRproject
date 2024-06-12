@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!--  순서 properties > typeAliases > typeHandlers  -->
+    <properties resource="db.properties"></properties>
+ <typeAliases>
+     <typeAlias alias="SalaryDto" type="com.hrproject.hrproject.dto.SalaryDto"/>
+     <typeAlias alias="SalaryPlusEmpNameDto" type="com.hrproject.hrproject.dto.SalaryPlusEmpNameDto"/>
+     <typeAlias alias="SalarySearchDto" type="com.hrproject.hrproject.dto.SalarySearchDto"/>
+     <typeAlias alias="SalaryLogDto" type="com.hrproject.hrproject.dto.SalaryLogDto"/>
+     <typeAlias alias="HrmDto" type="com.hrproject.hrproject.dto.HrmDto"/>
+     <typeAlias alias="HrmPageDto" type="com.hrproject.hrproject.dto.HrmPageDto"/>
+     <typeAlias alias="AttendDto" type="com.hrproject.hrproject.dto.AttendDto"/>
+
+ </typeAliases>
+<!--  자바 타입이랑 db타입 맞춰줘야 할때 typeHandler씀  -->
+<!--    <typeHandlers>-->
+<!--        <typeHandler handler="com.heo96.mybatis.mybatis.GradeTypeHandler"></typeHandler>-->
+<!--    </typeHandlers>-->
+    <!--  db.properties 연결?..  -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+<!--  mapper resources의 xml resource  -->
+    <mappers>
+        <mapper resource="salary.xml"/>
+        <mapper resource="hrm.xml"/>
+        <mapper resource="attend.xml"/>
+        <mapper resource="notice.xml"/>
+    </mappers>
+</configuration>

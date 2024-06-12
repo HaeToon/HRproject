@@ -76,4 +76,11 @@ public class HrmDao {
         sqlSession.close();
         return hrmList;
     }
+    public List<HrmDto> getSearchEmpNoByName(String searchName){ //salary insert modal의 search modal용
+        List<HrmDto>empNoList = null;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        empNoList=sqlSession.selectList("getSearchEmpNoByName",searchName);
+        sqlSession.close();
+        return empNoList;
+    }
 }

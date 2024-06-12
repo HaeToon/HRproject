@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hrproject.hrproject.mybatis">
+    <insert id="insertSalary" parameterType="SalaryDto">
+        INSERT INTO SALARY (EMPNO, ACCOUNTINGPERIOD, SALARYCATEGORY, SALARYNAME, SALARYDAY, SALARY, SALARYINFO)
+        VALUES (
+        #{empNo},
+        #{accountingPeriod},
+        #{salaryCategory},
+        #{salaryName},
+        #{salaryDay},
+        #{salary},
+        #{salaryInfo}
+        )
+    </insert>
+
+    <select id="getSalaryList" resultType="SalaryPlusEmpNameDto">
+        SELECT
+        S.SALARY_NO,
+        S.EMPNO,
+        H.ENAME as eName,
+        S.ACCOUNTINGPERIOD,
+        S.SALARYCATEGORY,
+        S.SALARYNAME,
+        S.SALARYDAY,
+        S.SALARY,
+        S.SALARYINFO
+        FROM
+        SALARY S
+        JOIN
+        HRM H ON S.EMPNO = H.EMPNO
+    </select>
+
+</mapper>

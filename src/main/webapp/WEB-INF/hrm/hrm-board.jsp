@@ -31,7 +31,7 @@
                     <label class="btn btn-outline-secondary" for="btn-check-${loop.count}">${((page -1) * listPerPage) + loop.count}</label></td>
                 <td>${hrmDto.hireDate}</td>
                 <td><a href="">${hrmDto.empNo}</a></td>
-                <td><a href="">${hrmDto.EName}</a></td>
+                <td><a href="">${hrmDto.ename}</a></td>
                 <td>${hrmDto.deptName}</td>
                 <td>${hrmDto.position}</td>
                 <td>${hrmDto.email}</td>

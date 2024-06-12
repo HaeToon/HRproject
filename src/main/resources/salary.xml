@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hrproject.hrproject.mybatis">
+
     <insert id="insertSalary" parameterType="SalaryDto">
         INSERT INTO SALARY (EMPNO, ACCOUNTINGPERIOD, SALARYCATEGORY, SALARYNAME, SALARYDAY, SALARY, SALARYINFO)
         VALUES (
@@ -16,11 +17,104 @@
         )
     </insert>
 
+
+    <insert id="insertSalaryLog" parameterType="SalaryLogDto">
+        INSERT INTO SALARY_MODIFY_LOG ( salary_No, empNo, ename, accountingPeriod, salaryCategory, salaryName,
+        salaryDay, salary, salaryInfo, modifyReason, whoModify, logDate, logStatus
+        ) VALUES (
+        #{salary_No},
+        #{empNo},
+        #{ename},
+        #{accountingPeriod},
+        #{salaryCategory},
+        #{salaryName},
+        #{salaryDay},
+        #{salary},
+        #{salaryInfo},
+        #{modifyReason},
+        #{whoModify},
+        DATE_FORMAT(SYSDATE(), '%Y-%m-%d %H:%i:%s'),
+        #{logStatus}
+        )
+
+    </insert>
+
+
+    <select id="getSearchSalaryList" resultType="SalarySearchDto" parameterType="SalarySearchDto">
+        SELECT
+        S.SALARY_NO,
+        S.EMPNO,
+        H.ENAME AS ename,
+        S.ACCOUNTINGPERIOD,
+        S.SALARYCATEGORY,
+        S.SALARYNAME,
+        S.SALARYDAY,
+        S.SALARY,
+        S.SALARYINFO
+        FROM
+        SALARY S
+        JOIN
+        HRM H ON S.EMPNO = H.EMPNO
+        WHERE
+        1=1
+        <if test="salary_No != null and salary_No != 0">
+            AND S.SALARY_NO = #{salary_No}
+        </if>
+        <if test="empNo != null and empNo != 0">
+            AND S.EMPNO = #{empNo}
+        </if>
+        <if test="ename != null and ename != ''">
+            AND H.ENAME LIKE CONCAT('%', #{ename}, '%')
+        </if>
+        <if test="accountingPeriod != null and accountingPeriod != ''">
+            AND S.ACCOUNTINGPERIOD = #{accountingPeriod}
+        </if>
+        <if test="salaryCategory != null and salaryCategory != ''">
+            AND S.SALARYCATEGORY = #{salaryCategory}
+        </if>
+        <if test="salaryName != null and salaryName != '' ">
+            AND S.SALARYNAME = #{salaryName}
+        </if>
+        <if test="salaryDay != null and salaryDay != ''">
+            AND DATE_FORMAT(S.SALARYDAY, '%Y-%m') = #{salaryDay}
+        </if>
+        <if test="salary != null and salary != 0">
+            AND S.SALARY = #{salary}
+        </if>
+        <if test="salaryInfo != null and salaryInfo != ''">
+            AND S.SALARYINFO LIKE CONCAT('%', #{salaryInfo}, '%')
+        </if>
+        <if test="salaryMin != null and salaryMin != 0 and salaryMax != null and salaryMax != 0 and salaryMax &gt; salaryMin">
+            AND S.SALARY BETWEEN #{salaryMin} AND #{salaryMax}
+        </if>
+
+    </select>
+
+    <select id="salarySelect" resultType="SalaryPlusEmpNameDto" parameterType="int">
+        SELECT
+        S.SALARY_NO,
+        S.EMPNO,
+        H.ENAME as ename,
+        S.ACCOUNTINGPERIOD,
+        S.SALARYCATEGORY,
+        S.SALARYNAME,
+        S.SALARYDAY,
+        S.SALARY,
+        S.SALARYINFO
+        FROM
+        SALARY S
+        JOIN
+        HRM H ON S.EMPNO = H.EMPNO
+        WHERE
+        S.SALARY_NO = #{salary_No}
+    </select>
+
+
     <select id="getSalaryList" resultType="SalaryPlusEmpNameDto">
         SELECT
         S.SALARY_NO,
         S.EMPNO,
-        H.ENAME as eName,
+        H.ENAME as ename,
         S.ACCOUNTINGPERIOD,
         S.SALARYCATEGORY,
         S.SALARYNAME,
@@ -32,5 +126,23 @@
         JOIN
         HRM H ON S.EMPNO = H.EMPNO
     </select>
+
+
+    <delete id="deleteSalary" parameterType="int">
+        delete from salary where salary_No = #{salary_No}
+    </delete>
+
+    <update id="updateSalary" parameterType="salaryPlusEmpNameDto">
+        UPDATE salary
+        SET
+        accountingperiod = #{accountingPeriod},
+        salarycategory = #{salaryCategory},
+        salaryname = #{salaryName},
+        salaryday = #{salaryDay},
+        salary = #{salary},
+        salaryinfo = #{salaryInfo}
+        WHERE
+        salary_no = #{salary_No}
+    </update>
 
 </mapper>

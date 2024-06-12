@@ -17,15 +17,29 @@ import java.util.List;
 public class AttendBoard extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//
-        AttendDao attendDao = new AttendDao();
-        List<AttendDto> attendList = attendDao.getAttendList();
+
+        AttendDao attendDao = null;
+        List<AttendDto> attendList = null;
         req.setAttribute("attendList",attendList);
-        RequestDispatcher dispatcher =
-                req.getRequestDispatcher("/WEB-INF/attend/board-attend.jsp");
-        dispatcher.forward(req,resp);
 
+        String search = req.getParameter("search");
+        String searchWord = req.getParameter("searchWord");
 
+        // 검색어와 검색 조건이 모두 제공되면 검색을 수행합니다.
+        if (search != null && searchWord != null && !search.isBlank() && !searchWord.isBlank()) {
+            attendDao = new AttendDao();
+            attendList = attendDao.searchAttend(search, searchWord);
+            req.setAttribute("attendList", attendList);
+        } else {
+            // 검색어나 검색 조건이 제공되지 않은 경우 모든 출결 정보를 가져옵니다.
+            attendDao = new AttendDao();
+            attendList = attendDao.getAttendList();
+            req.setAttribute("attendList", attendList);
+        }
+
+        // JSP 페이지로 포워딩합니다.
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/attend/board-attend.jsp");
+        dispatcher.forward(req, resp);
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

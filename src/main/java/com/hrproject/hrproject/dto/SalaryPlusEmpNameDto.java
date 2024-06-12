@@ -19,4 +19,5 @@ public class SalaryPlusEmpNameDto {
     private String salaryDay;           //지급날짜
     private int salary;                 //돈!
     private String salaryInfo;          //급여내역
+
 }
