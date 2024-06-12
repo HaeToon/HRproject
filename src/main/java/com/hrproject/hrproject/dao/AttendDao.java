@@ -1,7 +1,6 @@
 package com.hrproject.hrproject.dao;
 
 
-
 import com.hrproject.hrproject.dto.AttendDto;
 import com.hrproject.hrproject.mybatis.MybatisConnectionFactory;
 import org.apache.ibatis.session.SqlSession;
@@ -32,4 +31,29 @@ public class AttendDao {
         }
     }
 
+    public int updateAttend(AttendDto attendDto) {
+        try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
+            int result = sqlSession.update("updateAttend", attendDto);
+            sqlSession.commit();  // Ensure the transaction is committed
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int updateAttendList(List<AttendDto> attendList) {
+        int totalUpdated = 0;
+        try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
+            for (AttendDto attendDto : attendList) {
+                int result = sqlSession.update("updateAttend", attendDto);
+                totalUpdated += result;
+            }
+            sqlSession.commit();  // Ensure the transaction is committed
+            return totalUpdated;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

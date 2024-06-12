@@ -3,25 +3,35 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hrproject.hrproject.mybatis">
-    <insert id="insertAttend" parameterType="AttendDto">
-        INSERT INTO SALARY (EMPNO, ATDNO, ENAME, ATDCODE, ATDNUM, ATDDATE, OFFDAY, OFFDAYRS, PRINT)
-        VALUES (
-        #{empNo},
-        #{atdNo},
-        #{ename},
-        #{atdCode},
-        #{atdNum},
-        #{atdDate},
-        #{offDay},
-        #{offDayRs},
-        #{print}
-        )
+<insert id="insertAttend" parameterType="AttendDto">
+    INSERT INTO SALARY (EMPNO, ATDNO, ENAME, ATDCODE, ATDNUM, ATDDATE, OFFDAY, OFFDAYRS, PRINT)
+    VALUES (
+    #{empNo},
+    #{atdNo},
+    #{ename},
+    #{atdCode},
+    #{atdNum},
+    #{atdDate},
+    #{offDay},
+    #{offDayRs},
+    #{print}
+    )
+</insert>
 
-    </insert>
+<select id="getAttendList" resultType="AttendDto">
+    select * from attend
+</select>
 
-
-    <select id="getAttendList" resultType="AttendDto">
-        select * from attend
-    </select>
-
+<update id="updateAttend" parameterType="AttendDto">
+    UPDATE ATTEND
+    SET
+    ATDNUM = #{atdNum},
+    ATDDATE = #{atdDate},
+    OFFDAY = #{offDay},
+    OFFDAYRS = #{offDayRs},
+    PRINT = #{print}
+    WHERE
+    EMPNO = #{empNo} AND
+    ATDNO = #{atdNo}
+</update>
 </mapper>

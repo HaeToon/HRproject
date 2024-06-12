@@ -154,10 +154,6 @@
                     </c:forEach>
                     </tbody>
                 </table>
-
-
-
-
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Back to
