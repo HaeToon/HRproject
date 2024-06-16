@@ -9,11 +9,12 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class NoticeDto {
-    private int empno;
     private int notice_no;
-    private String writer;
-    private String subject;
+    private String title;
+    private String author;
+    private String created_date;
     private String content;
-    private String regdate;
-    private int hit;
+    private int views;
+
+
 }

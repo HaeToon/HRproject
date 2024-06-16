@@ -52,7 +52,6 @@ public class AttendDao {
         }
         sqlSession.close();
         return result;
-
     }
 
     public List<AttendDto> getAttendList() {
@@ -87,5 +86,36 @@ public class AttendDao {
             e.printStackTrace();
             return 0;
         }
+    }
+
+
+
+//    출퇴근 기록에서 필요해서 만들었습니다!!
+    public List<AttendDto> getAttendListByEmpNo(int empNo) {
+        try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
+            List<AttendDto> attendList = sqlSession.selectList("getAttendListByEmpNo", empNo);
+            System.out.println("getAttendListByEmpNo query is successfully");
+            System.out.println("attendList >>> " + attendList); // 가져온 데이터 로깅
+
+            return attendList;
+        } catch (Exception e) {
+            // 예외 발생 시 처리
+            e.printStackTrace(); // 혹은 로깅
+            return null; // 또는 예외를 상위로 다시 throw
+        }
+    }
+    public int checkEmpNo(String empNo){
+        int result =0;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        result=sqlSession.selectOne("countByEmpNo",empNo);
+        return result;
+    }
+
+    public int checkAtdNo(String atdNo){
+        int result = 0;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        result=sqlSession.selectOne("countByAtdNo",atdNo);
+        return result;
+
     }
 }

@@ -6,67 +6,107 @@
     <title>Title</title>
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/include.css" rel="stylesheet">
+    <link href="../../css/hrm.css" rel="stylesheet">
     <link href="../../css/salary.css" rel="stylesheet">
+    <link href="../../css/attend.css" rel="stylesheet">
     <link href="../../css/notice.css" rel="stylesheet">
     <link href="../../css/index.css" rel="stylesheet">
     <script src="../../js/bootstrap.bundle.min.js"></script>
     <script src="../../js/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </head>
 <body>
 <%--헤더 처음--%>
-<c:choose>
-    <c:when test="${sessionMember eq null}">
-        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between border-bottom">
-            <div class="col-md-2">
-                <a href="/index/index"><img src="../../images/logo.png"></a>
+<nav class="navbar navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <div class="row w-100">
+            <!-- Offcanvas Toggle Button -->
+            <div class="col-auto">
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
             </div>
-            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                <h2>첫화면은 슬로건 좌측 사이드메뉴 클릭시 카테고리 </h2>
+            <!-- Login Button -->
+            <div class="header-user-info d-flex col-auto ms-auto text-end">
+                <img src="../../images/profile01.jpg" class="profile">
+                <a href="" class="user-name btn btn-outline-light">홍길동</a>
+                <a href="" class="btn btn-outline-light me-2">로그인</a>
+            </div>
+        </div>
+    </div>
+    <!-- Offcanvas Component -->
+    <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel" style="width:300px">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">메뉴</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <hr>
+        <div class="offcanvas-body">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="left-side-link nav-item d-flex align-items-center">
+                    <i class="bi bi-house"></i>
+                    <a class="nav-link" aria-current="page" href="/index/index">홈으로</a>
+                </li>
+                <li class="left-side-link nav-item align-items-center" >
+                    <div class="d-flex align-items-center">
+                    <i class="bi bi-search"></i>
+                    <button class="btn btn-toggle collapsed nav-link" data-bs-toggle="collapse" data-bs-target="#selectDropDown" aria-expanded="false">
+                        조회
+                    </button>
+                    </div>
+                    <div class="collapse" id="selectDropDown" style="">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="#" class="nav-link text-decoration-none rounded">근태 조회</a></li>
+                            <li><a href="#" class="nav-link text-decoration-none rounded">급여 조회</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="left-side-link nav-item align-items-center" >
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-person-workspace"></i>
+                        <button class="btn btn-toggle collapsed nav-link" data-bs-toggle="collapse" data-bs-target="#workDropDown" aria-expanded="false">
+                            업무
+                        </button>
+                    </div>
+                    <div class="collapse" id="workDropDown" style="">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="/attend/board" class="nav-link text-decoration-none rounded">근태 업무</a></li>
+                            <li><a href="/salary/board" class="nav-link text-decoration-none rounded">급여 업무</a></li>
+                            <li><a href="/hrm/board" class="nav-link text-decoration-none rounded">인사 업무</a></li>
+                        </ul>
+                    </div>
+                </li>
+<%--                <li class="left-side-link nav-item d-flex align-items-center" >--%>
+<%--                    <div class="d-flex align-items-center">--%>
+<%--                    <i class="bi bi-person-workspace"></i>--%>
+<%--                    <button class="btn btn-toggle collapsed nav-link" data-bs-toggle="collapse" data-bs-target="#workDropDown" aria-expanded="false">--%>
+<%--                        업무--%>
+<%--                    </button>--%>
+<%--                    </div>--%>
+<%--                    <div class="collapse" id="workDropDown" style="">--%>
+<%--                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">--%>
+<%--                            <li><a href="/attend/board" class="nav-link text-decoration-none rounded">근태 업무</a></li>--%>
+<%--                            <li><a href="/salary/board" class="nav-link text-decoration-none rounded">급여 업무</a></li>--%>
+<%--                            <li><a href="/hrm/board" class="nav-link text-decoration-none rounded">인사 업무</a></li>--%>
+<%--                        </ul>--%>
+<%--                    </div>--%>
+<%--                </li>--%>
+                <li class="left-side-link nav-item d-flex align-items-center">
+                    <i class="bi bi-exclamation-square"></i>
+                    <a class="nav-link" href="/notice/board">공지사항</a>
+                </li>
+                <li class="left-side-link nav-item d-flex align-items-center">
+                    <i class="bi bi-calendar4"></i>
+                    <a class="nav-link" href="#">커뮤니티</a>
+                </li>
             </ul>
-            <div class="col-md-3 text-end">
-                <h2>뭔가넣는곳</h2>
-            </div>
-        </header>
-    </c:when>
-    <c:otherwise>
-        <header class="header d-flex flex-wrap align-items-center justify-content-between border-bottom">
-            <!-- 로고 영역 시작 -->
-            <div class="col-md-2">
-                <img src="../../images/logo.png">
-            </div>
-                <%--      로고영역 끝      --%>
-            <!-- 카테고리 영역 -->
-            <div class="col-md-8">
-                <ul class="nav justify-content-center mb-0">
-                    <li class="nav-item">
-                        <a href="" class="nav-link p-5 bg-body-tertiary">카테고리1</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link p-5 bg-body-tertiary">카테고리2</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link p-5 bg-body-tertiary">카테고리3</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link p-5 bg-body-tertiary">카테고리4</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link p-5 bg-body-tertiary">카테고리5</a>
-                    </li>
-                </ul>
-            </div>
-                <%--      카테고리영역 끝      --%>
-            <!-- 기타 영역 -->
-            <div class="col-md-2 text-end">
-                <h2>뭔가넣는곳</h2>
-            </div>
-                <%--      기타영역 끝      --%>
-        </header>
-    </c:otherwise>
-</c:choose>
+        </div>
+        <hr>
+    </div>
+</nav>
 <%--헤더 끝--%>
 <div class="position-relative col-12">
 

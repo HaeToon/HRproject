@@ -5,6 +5,7 @@ import com.hrproject.hrproject.dto.SalaryLogDto;
 import com.hrproject.hrproject.dto.SalaryPlusEmpNameDto;
 import com.hrproject.hrproject.dto.SalarySearchDto;
 import com.hrproject.hrproject.mybatis.MybatisConnectionFactory;
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
@@ -13,12 +14,22 @@ public class SalaryDao {
     public int insertSalaryDao(SalaryDto salaryDto) {
         int result = 0;
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession();
-        result = sqlSession.insert("insertSalary",salaryDto);
-        //sqlSession.commit();
-        if (result>0){
-            System.out.println("salary insert Qry is successfully");
+        try {
+            result = sqlSession.insert("insertSalary", salaryDto);
+            sqlSession.commit();
+            if (result > 0) {
+                System.out.println("Salary insert query was successful.");
+            }
+        } catch (PersistenceException e) {
+            System.err.println("Error inserting salary: " + e.getMessage());
+            e.printStackTrace();
+            result = -1;
+            // Handle or rethrow the exception as needed
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
         }
-        sqlSession.close();
         return result;
 
     }
@@ -96,5 +107,28 @@ public class SalaryDao {
         }
         sqlSession.close();
         return result;
+    }
+    public int getTotalSalaryCount(String search , String searchWord){
+        SalaryDao salaryTotalDao = new SalaryDao();
+        if (search != null && searchWord != null) {
+            return salaryTotalDao.getSalaryTotal(search, searchWord);
+        } else {
+            return salaryTotalDao.getSalaryTotal();
+        }
+    }
+    public int getSalaryTotal() { //salary list 의 개수 얻기
+        int total = 0;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        total = sqlSession.selectOne("getSalaryTotal");
+        sqlSession.close();
+
+        return total;
+    }
+    public int getSalaryTotal(String search , String searchWord) { //salary list 의 개수 얻기
+        int total = 0;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        total = sqlSession.selectOne("getSalaryTotal");
+        sqlSession.close();
+        return total;
     }
 }

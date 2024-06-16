@@ -4,7 +4,6 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hrproject.hrproject.dao.HrmDao">
 
-
     <sql id="search">
         <choose>
             <when test="search == 'empno'">
@@ -50,6 +49,12 @@
         LIMIT #{start}, #{end}
     </select>
 
+
+    <!--    출퇴근 기록에 필요해서 만들었습니다.!! -->
+    <select id="getEmpNoList" resultType="HrmDto" >
+        select empNo from hrm
+    </select>
+
     <select id="getSearchHrmList" resultType="HrmDto" parameterType="HrmPageDto">
         SELECT * FROM (
         SELECT *, ROW_NUMBER() OVER () AS num FROM HRM WHERE showAble = 1
@@ -57,7 +62,7 @@
         <if test="search != null and searchWord != null">
             <include refid="search"></include>
         </if>
-        LIMIT #{start}, #{end};
+        LIMIT #{start}, #{end}
     </select>
 
     <insert id="insertHrm" parameterType="HrmDto">

@@ -19,7 +19,7 @@ public class SalaryInsert extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         HrmDao hrmDao = new HrmDao();
-        List<HrmDto> hrmList=null;
+        List<HrmDto> hrmList = null;
 
         req.getRequestDispatcher("/WEB-INF/salary/insert-salary.jsp").forward(req, resp);
 
@@ -35,20 +35,27 @@ public class SalaryInsert extends HttpServlet {
                 .salaryDay(req.getParameter("salaryDay"))
                 .salary(Integer.parseInt(req.getParameter("salary")))
                 .salaryInfo(req.getParameter("salaryInfo"))
-
                 .build();
 
         SalaryDao salaryDao = new SalaryDao();
 
-        System.out.println("SalaryInsert.java __ salaryDto >>> "+ salaryDto);
+        System.out.println("SalaryInsert.java __ salaryDto >>> " + salaryDto);
 
         int result = salaryDao.insertSalaryDao(salaryDto);
-if (result>0){
-    System.out.println("salary data input successfully");
-    resp.sendRedirect("/salary/board");
-}else {
-    System.out.println("salary data input failed");
-}
+        if (result > 0) {
+            System.out.println("salary data input successfully");
+            resp.sendRedirect("/salary/board");
+        } else if (result == -1) {
+            // Display alert message using JavaScript
+            String alertMessage = "Employee number does not exist.";
+            String script = "alert('" + alertMessage + "');";
+            resp.getWriter().println("<script>" + script + "</script>");
+
+            // Add JavaScript to delay redirection after alert is acknowledged
+            resp.getWriter().println("<script>setTimeout(function() { window.location.href = '/salary/board'; }, 100);</script>");
+        } else {
+            System.out.println("salary data input failed");
+        }
 
     }
 }

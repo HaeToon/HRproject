@@ -29,6 +29,8 @@ public class HrmBoard extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String search = req.getParameter("search");
         String searchWord = req.getParameter("searchWord");
+        String url = req.getRequestURL().toString().substring(22);
+
 
         int total = getTotalHrmCount(search, searchWord); // DB에서 가져온 총 사원수
         int currentPage = getCurrentPage(req);
@@ -45,6 +47,7 @@ public class HrmBoard extends HttpServlet {
         setRequestAttributes(req, totalPage, startPage, endPage, listPerPage, paginationPerPage, search, searchWord, hrmList);
 
 
+        req.setAttribute("url", url);
         req.getRequestDispatcher("/WEB-INF/hrm/hrm-board.jsp").forward(req, resp);
     }
     private int getTotalHrmCount(String search, String searchWord) {

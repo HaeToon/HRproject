@@ -1,43 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<%--<%@ include file="../include/header.jsp" %>--%>
-<style>
-    .employee-card {
-        border: 1px solid #ddd;
-        padding: 20px;
-    }
-
-    .profile-container {
-        display: flex;
-    }
-
-    .profile-upload {
-        flex: 0 0 200px;
-        text-align: center;
-    }
-
-    .profile-details {
-        flex: 1;
-        margin-left: 20px;
-    }
-
-    .profile-details .form-row {
-        display: flex;
-        margin-bottom: 10px;
-    }
-
-    .profile-details .form-row .col {
-        flex: 1;
-        padding: 5px;
-    }
-
-    .preview img {
-        max-width: 100%;
-        max-height: 100%;
-        display: block;
-    }
-</style>
-
-
+<link href="../../css/hrm.css" rel="stylesheet">
 <div class="employee-card">
     <h1 class="text-center">사원 카드</h1>
     <div class="profile-container">

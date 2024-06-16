@@ -13,6 +13,7 @@
      <typeAlias alias="HrmDto" type="com.hrproject.hrproject.dto.HrmDto"/>
      <typeAlias alias="HrmPageDto" type="com.hrproject.hrproject.dto.HrmPageDto"/>
      <typeAlias alias="AttendDto" type="com.hrproject.hrproject.dto.AttendDto"/>
+     <typeAlias alias="WorkScheduleDto" type="com.hrproject.hrproject.dto.WorkScheduleDto"/>
 
  </typeAliases>
 <!--  자바 타입이랑 db타입 맞춰줘야 할때 typeHandler씀  -->
@@ -37,5 +38,6 @@
         <mapper resource="hrm.xml"/>
         <mapper resource="attend.xml"/>
         <mapper resource="notice.xml"/>
+        <mapper resource="workSchedule.xml"/>
     </mappers>
 </configuration>

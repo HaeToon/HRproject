@@ -1,25 +1,71 @@
-.header.category{
-    justify-content: center;
+.left-side-link{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    .bi-house{
+        font-size: 24px;
+    }
+    .bi-search{
+        font-size: 24px;
+    }
+    .bi-person-workspace{
+        font-size: 24px;
+    }
+    .bi-exclamation-square{
+        font-size: 24px;
+    }
+    .bi-calendar4{
+        font-size: 24px;
+    }
 }
-.container {
-    position: relative;
+.nav-link{
+    width:100%;
+    font-size: 24px;
+    text-align: center;
 }
-
-.left-sidebar {
-    position: relative;
-    width: 220px; /* 사이드바의 너비 설정 */
+.btn-toggle-nav .nav-item {
+    display: flex; /* 플렉스 박스 레이아웃 설정 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    height: 100%; /* 필요에 따라 높이 설정 */
 }
-
-.profile-area {
-    position: relative;
-    width: 280px; /* 프로필 영역의 너비 설정 */
-    top: 0;
-    right: 0;
+.nav-link-light {
+    color: #f8f9fa; /* Text color for light outline button */
 }
-
+.nav-link-light:hover {
+    color: #212529; /* Text color on hover */
+}
 .content-area {
     position: relative;
-    width: calc(100% - 500px); /* 왼쪽 사이드바와 프로필 영역의 너비를 빼고 남는 공간 */
-    top: 0;
-    left: 220px; /* 왼쪽 사이드바의 너비만큼 왼쪽으로 밀어줌 */
+    width: calc(100% - 300px); /* 왼쪽 사이드바와 프로필 영역의 너비를 빼고 남는 공간 */
+    margin-top: 66px;
+    left: 150px; /* 왼쪽 사이드바의 너비만큼 왼쪽으로 밀어줌 */
+}
+.light{
+    color: #ffffff;
+}
+.profile {
+    border-radius: 100px;
+    width:50px;
+    height:50px;
+    object-fit: cover;
+    overflow: hidden;
+}
+.header-user-info{
+    justify-content: center;
+    align-items: center;
+    .user-name{
+        font-size: 18px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+}
+.board-title{
+    background: #ffffff;
+    height:100px;
+    position: relative;
+    .title{
+        position: absolute;
+        bottom:0;
+        left:16px;
+    }
 }

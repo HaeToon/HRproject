@@ -1,3 +1,12 @@
-.insertSalary{
+.salary-insert-button{
+    width:120px;
+}
+.salary-search-area {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 16px;
+}
+.salary-search-button{
     width:120px;
 }
