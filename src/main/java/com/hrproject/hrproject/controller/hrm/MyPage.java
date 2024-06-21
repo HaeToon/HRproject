@@ -14,7 +14,6 @@ import java.time.LocalDate;
 
 @WebServlet("/hrm/mypage")
 public class MyPage extends HttpServlet {
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int empNo = Integer.parseInt(req.getParameter("sessionEmpNo"));

@@ -129,6 +129,7 @@ public class HrmDao {
         HrmDao hrmDao = new HrmDao();
         if (hrmDao.getHrm(empNo) == null) return hrmDto; // 로그인하려는 empNo 없음연 리턴
 
+
         String hashPassword = hrmDao.getHrm(empNo).getPassword();
         if (password.equals(hashPassword)) hrmDto = hrmDao.getHrm(empNo); // 비밀번호 변경전 empNo=password면 이걸로 로그인
         else if (BCrypt.checkpw(password, hashPassword)) hrmDto = hrmDao.getHrm(empNo); // 비밀번호 변경후 로그인
