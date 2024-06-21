@@ -123,9 +123,13 @@
                             <div class="input-group">
                                 <span class="input-group-text" id="bankName">은행명</span>
                                 <select class="form-select col-2" aria-label="은행명 선택" name="bankName">
-                                    <c:forEach var="bank" items="${bankMap}">
-                                        <option value="${bank.key}">${bank.value}</option>
-                                    </c:forEach>
+                                    <option value="한국은행">한국은행</option>
+                                    <option value="국민은행">국민은행</option>
+                                    <option value="신한은행">신한은행</option>
+                                    <option value="우리은행">우리은행</option>
+                                    <option value="하나은행">하나은행</option>
+                                    <option value="기업은행">기업은행</option>
+                                    <option value="외환은행">외환은행</option>
                                 </select>
                                 <span class="input-group-text">통장번호</span>
                                 <input type="text" class="form-control col-6 is-invalid" aria-label="account"
@@ -133,6 +137,9 @@
                                 <span class="input-group-text">예금주</span>
                                 <input type="text" class="form-control col-2" aria-label="accountHolder"
                                        name="accountHolder">
+                                <button class="btn btn-outline-secondary btn-duplicate" type="button"
+                                        id="btn-account-duplicate">확인
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -192,6 +199,7 @@
 
     let emailChecked = false;
     let mobileChecked = false;
+    // let accountChecked = false;
     let passportChecked = true;
     $('#reset').click(function () {
         $('#birthDate').addClass('is-invalid');
@@ -214,6 +222,7 @@
         $('#passport').prop('readonly', false);
         emailChecked = false;
         mobileChecked = false;
+        // accountChecked = false;
         passportChecked = true;
     });
 
@@ -275,6 +284,11 @@
             $("#passport").focus();
             return false;
         }
+        // if (!accountChecked) {
+        //     alert("계좌번호 중복확인 필요 ㄱㄱ")
+        //     $("#account").focus();
+        //     return false;
+        // }
     });
 
     $(".btn-duplicate").on("click", function () {
@@ -305,6 +319,13 @@
                 checkField = "mobile";
                 data = {check: checkField, checkValue: checkValue};
                 break;
+            // case "account":
+            //     if (accountChecked) {
+            //         return;
+            //     }
+            //     checkField = "account";
+            //     data = {check: checkField, checkValue: checkValue};
+            //     break;
             default:
                 console.error("Invalid input ID.");
                 return;
@@ -338,6 +359,10 @@
                                 $("#" + inputId).addClass('is-valid');
                                 passportChecked = true;
                                 break;
+                            // case "account":
+                            //     $("#" + inputId).addClass('is-valid');
+                            //     accountChecked = true;
+                            //     break;
                             case "mobile":
                                 $("#" + inputId).addClass('is-valid');
                                 mobileChecked = true;

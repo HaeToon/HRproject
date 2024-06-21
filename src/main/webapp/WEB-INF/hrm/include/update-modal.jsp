@@ -123,9 +123,13 @@
                                 <span class="input-group-text">은행명</span>
                                 <select class="form-select col-2" id="bankName_update" aria-label="은행명 선택"
                                         name="bankName">
-                                    <c:forEach var="bank" items="${bankMap}">
-                                        <option value="${bank.key}">${bank.value}</option>
-                                    </c:forEach>
+                                    <option value="한국은행">한국은행</option>
+                                    <option value="국민은행">국민은행</option>
+                                    <option value="신한은행">신한은행</option>
+                                    <option value="우리은행">우리은행</option>
+                                    <option value="하나은행">하나은행</option>
+                                    <option value="기업은행">기업은행</option>
+                                    <option value="외환은행">외환은행</option>
                                 </select>
                                 <span class="input-group-text">통장번호</span>
                                 <input type="text" class="form-control col-6" aria-label="account"
@@ -183,16 +187,24 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="modifyModalForm" class="btn btn-primary" id="btn-update">수정</button>
-                <%--                <form action="../hrm/update" type="post">--%>
-                <%--                    <input type="hidden" id="empNo_password_update" name="empNo_password">--%>
-                <%--                    <button type="submit" form="modifyModalForm" class="btn btn-primary">비밀번호 초기화</button>--%>
-                <%--                </form>--%>
+                <form action="../hrm/change-password" method="post" id="password-reset-form">
+                    <input type="hidden" id="empNo_password_update" name="empNoPasswordReset">
+                    <button type="submit" id="password-reset-btn" class="btn btn-primary">비밀번호 초기화</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+
+    let empNo_password_reset;
+    $("#password-reset-btn").on("click", function () {
+        empNo_password_reset = $("#empNo_update").val();
+        $("#empNo_password_update").val(empNo_password_reset);
+        $("#password-reset-form").submit();
+    });
+
     let emailChecked_update = true;
     let mobileChecked_update = true;
     let passportChecked_update = true;

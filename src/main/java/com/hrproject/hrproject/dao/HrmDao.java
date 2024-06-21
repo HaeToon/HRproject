@@ -1,6 +1,5 @@
 package com.hrproject.hrproject.dao;
 
-import com.hrproject.hrproject.dto.EvaluationDto;
 import com.hrproject.hrproject.dto.HrmDto;
 import com.hrproject.hrproject.dto.HrmPageDto;
 import com.hrproject.hrproject.mybatis.MybatisConnectionFactory;
@@ -51,6 +50,7 @@ public class HrmDao {
 //        sqlSession.close();
 //        return result;
 //    }
+
     public int setShowAbleHrm(HrmDto hrmDto) {
         int result = 0;
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession();
@@ -128,11 +128,8 @@ public class HrmDao {
         HrmDto hrmDto = null;
         HrmDao hrmDao = new HrmDao();
         if (hrmDao.getHrm(empNo) == null) return hrmDto; // 로그인하려는 empNo 없음연 리턴
-
-
         String hashPassword = hrmDao.getHrm(empNo).getPassword();
-        if (password.equals(hashPassword)) hrmDto = hrmDao.getHrm(empNo); // 비밀번호 변경전 empNo=password면 이걸로 로그인
-        else if (BCrypt.checkpw(password, hashPassword)) hrmDto = hrmDao.getHrm(empNo); // 비밀번호 변경후 로그인
+        if (BCrypt.checkpw(password, hashPassword)) hrmDto = hrmDao.getHrm(empNo); // 비밀번호 변경후 로그인
         return hrmDto;
     }
 
@@ -189,59 +186,6 @@ public int getUsedAnnualLeaveDays(int empNo) {
         return result;
     }
 
-    //     getWorkStatus
-    public int getWorkStatus(int empNo) {
-        int result = 0;
-
-        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-        result = sqlSession.selectOne("getWorkStatus", empNo);
-        sqlSession.close();
-
-        return result;
-    }
-
-    public EvaluationDto getHrmEval(int empNo) {
-        EvaluationDto evaluationDto = null;
-
-        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-        evaluationDto = sqlSession.selectOne("getHrmEval", empNo);
-        sqlSession.close();
-
-        return evaluationDto;
-    }
-
-//    public int createHrmEval(int empNo) {
-//        int result = 0;
-//        /* TOTALWORKDAYS % days_since_hire = 출근율 = EvaluationScore */
-//        /* 모든 직원중 최대 출근율 기준점으로 잡고 나머지 계산?  */
-////        double score = (double) getTotalWorkDays(empNo) / (double) getDaysSinceHire(empNo);
-//        double score =  (double) 4000 / (double) getDaysSinceHire(empNo);
-//        EvaluationDto evaluationDto = EvaluationDto.builder()
-//                .empNo(empNo)
-//                .performanceScore(score)
-//                .build();
-//
-//        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-//        result = sqlSession.insert("createHrmEval", evaluationDto);
-//        sqlSession.close();
-//        return result;
-//    }
-//
-//    public int getDaysSinceHire(int empNo) {
-//        int result = 0;
-//        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-//        result = sqlSession.selectOne("getDaysSinceHire", empNo);
-//        sqlSession.close();
-//        return result;
-//    }
-
-    public int getTotalWorkDays(int empNo) {
-        int result = 0;
-        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-        result = sqlSession.selectOne("getTotalWorkDays", empNo);
-        sqlSession.close();
-        return result;
-    }
 
     //// HrmEval 관련 getHrm 보드
     public List<HrmDto> getHrmEvalBoardList(HrmPageDto hrmPageDto) {
@@ -258,5 +202,19 @@ public int getUsedAnnualLeaveDays(int empNo) {
         hrmList = sqlSession.selectList("getEvalSearchHrmList", hrmPageDto);
         sqlSession.close();
         return hrmList;
+    }
+
+    public int promote(int empNo) {
+        int result = 0;
+
+        HrmDto hrmDto = getHrm(empNo);
+        if (hrmDto.getPosNo()<50) hrmDto.setPosNo(hrmDto.getPosNo()+10);
+        else return result;
+
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        result = sqlSession.update("promote", hrmDto);
+
+        sqlSession.close();
+        return result;
     }
 }

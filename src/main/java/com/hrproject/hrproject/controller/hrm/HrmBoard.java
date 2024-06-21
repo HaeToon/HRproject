@@ -29,7 +29,6 @@ public class HrmBoard extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String search = req.getParameter("search");
         String searchWord = req.getParameter("searchWord");
-        String url = req.getRequestURL().toString().substring(22);
 
 
         int total = getTotalHrmCount(search, searchWord); // DB에서 가져온 총 사원수
@@ -51,7 +50,7 @@ public class HrmBoard extends HttpServlet {
         int maxEmpNo = hrmDao.getMaxEmpNo();
         req.setAttribute("maxEmpNo", maxEmpNo);
 
-        req.setAttribute("url", url);
+
         req.getRequestDispatcher("/WEB-INF/hrm/hrm-board.jsp").forward(req, resp);
     }
 
@@ -131,6 +130,6 @@ public class HrmBoard extends HttpServlet {
         HrmMap hrmMap = new HrmMap();
         req.setAttribute("deptMap", hrmMap.getDeptMap());
         req.setAttribute("positionMap", hrmMap.getPositionMap());
-        req.setAttribute("bankMap", hrmMap.getBankMap());
+//        req.setAttribute("bankMap", hrmMap.getBankMap());
     }
 }

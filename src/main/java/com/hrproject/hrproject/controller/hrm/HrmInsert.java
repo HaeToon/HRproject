@@ -64,7 +64,7 @@ public class HrmInsert extends HttpServlet {
                         .email("ee" + (i + maxEmpNo) + "@ee.co")
                         .hireDate(dateStrHire)
                         .hireType("신입")
-                        .bankName(hrmMap.getBankMap().get(2))
+                        .bankName("한국은행")
                         .account("Acc" + (i + maxEmpNo))
                         .accountHolder("AccHolder" + (i + 1))
                         .postCode(Integer.toString(12345 + i))
@@ -158,7 +158,7 @@ public class HrmInsert extends HttpServlet {
                     .hireDate(req.getParameter("hireDate"))
                     .hireType(req.getParameter("hireType"))
 
-                    .bankName(hrmMap.getBankMap().get(Integer.parseInt(req.getParameter("bankName"))))
+                    .bankName(req.getParameter("bankName"))
                     .account(req.getParameter("account"))
                     .accountHolder(req.getParameter("accountHolder"))
                     .postCode(req.getParameter("postCode"))

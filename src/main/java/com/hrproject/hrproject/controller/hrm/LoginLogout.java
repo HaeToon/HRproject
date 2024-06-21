@@ -14,10 +14,10 @@ import java.io.IOException;
 
 @WebServlet("/hrm/login-logout")
 public class LoginLogout extends HttpServlet {
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        req.getRequestDispatcher("/WEB-INF/index/index.jsp").forward(req, resp);
-//    }
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/WEB-INF/hrm/login.jsp").forward(req, resp);
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -25,7 +25,7 @@ public class LoginLogout extends HttpServlet {
         if (req.getParameter("sessionEmpNo") != null) {
             HttpSession session = req.getSession();
             session.invalidate();
-            ScriptWriter.alertAndNext(resp, "로그아웃", "../index/index");
+            ScriptWriter.alertAndNext(resp, "로그아웃", "../hrm/login-logout");
         } else {
             /* 관리자 로그인 임시 */
             if (req.getParameter("loginEmpNo").equals("admin") && req.getParameter("loginPassword").equals("1234")) {

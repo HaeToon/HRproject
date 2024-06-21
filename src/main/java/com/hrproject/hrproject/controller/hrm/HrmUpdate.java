@@ -44,21 +44,6 @@ public class HrmUpdate extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         /* 예외처리 try catch 어케함?? */
         /* empNo 수정버튼 누른거랑 다른값 들어오면 막아야함 */
-//        if (req.getParameter("empNo_password_update") != null) {
-//            HrmDao hrmDao = new HrmDao();
-//            HrmDto hrmDto = HrmDto.builder()
-//                    .empNo(Integer.parseInt(req.getParameter("empNo_password_update")))
-//                    .password(req.getParameter("empNo_password_update"))
-//                    .build();
-//            int result = hrmDao.changePW(hrmDto);
-//            if (result > 0) {
-//                ScriptWriter.alertAndNext(resp, "비밀번호 초기화 되었습니다.", "../hrm/board");
-//                return;
-//            } else {
-//                ScriptWriter.alertAndBack(resp, "오류가 발생했습니다. 다시 시도해주세요.");
-//                return;
-//            }
-//        }
 
         if (!isNullCheck(req)) {
             Part profile = req.getPart("profile");
@@ -122,7 +107,7 @@ public class HrmUpdate extends HttpServlet {
                     .account(req.getParameter("account"))
                     .email(req.getParameter("email"))
 
-                    .bankName(hrmMap.getBankMap().get(Integer.parseInt(req.getParameter("bankName"))))
+                    .bankName(req.getParameter("bankName"))
                     .accountHolder(req.getParameter("accountHolder"))
                     .postCode(req.getParameter("postCode"))
                     .address(req.getParameter("address"))

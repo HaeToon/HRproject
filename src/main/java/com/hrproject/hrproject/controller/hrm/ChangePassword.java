@@ -21,10 +21,32 @@ public class ChangePassword extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String empNo = req.getParameter("empNo");
-
         String changePW = req.getParameter("changePassword");
         String changePWConfirm = req.getParameter("changePasswordConfirm");
 
+        /* 사원 비밀번호 초기화 */
+        if (req.getParameter("empNoPasswordReset") != null){
+            int resetPasswordEmpNo = Integer.parseInt(req.getParameter("empNoPasswordReset"));
+
+            String salt = BCrypt.gensalt();
+            String hashPassword = BCrypt.hashpw(req.getParameter("empNoPasswordReset"), salt);
+
+            HrmDto hrmDto = HrmDto.builder()
+                    .empNo(resetPasswordEmpNo)
+                    .password(hashPassword)
+                    .build();
+
+            HrmDao changePWDao = new HrmDao();
+            int changePWResult = changePWDao.changePW(hrmDto);
+            if (changePWResult > 0) {
+                ScriptWriter.alertAndNext(resp, "사원 비밀번호가 초기화 되었습니다. password = 사원번호", "../hrm/board");
+            } else {
+                ScriptWriter.alertAndBack(resp, "오류가 발생했습니다. 다시 시도해주세요.");
+            }
+        }
+
+
+        /* 사원 비밀번호 변경 */
         if (Objects.equals(changePW, changePWConfirm) && empNo != null) {
             String salt = BCrypt.gensalt();
             String hashPassword = BCrypt.hashpw(changePW, salt);
@@ -37,7 +59,7 @@ public class ChangePassword extends HttpServlet {
             HrmDao changePWDao = new HrmDao();
             int changePWResult = changePWDao.changePW(hrmDto);
             if (changePWResult > 0) {
-                ScriptWriter.alertAndNext(resp, "사원 비밀번호가 변경되었습니다.", "../hrm/board");
+                ScriptWriter.alertAndNext(resp, "사원 비밀번호가 변경되었습니다.", "../hrm/mypage");
             } else {
                 ScriptWriter.alertAndBack(resp, "오류가 발생했습니다. 다시 시도해주세요.");
             }

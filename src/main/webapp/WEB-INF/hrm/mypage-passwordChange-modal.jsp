@@ -10,7 +10,7 @@
             <div class="modal-body">
                 <%--<form action="/hrm/login-logout" id="loginModal" method="post">--%>
                 <form action="../hrm/change-password" id="changePWModal" method="post">
-                    <input type="hidden" class="form-control" value="${sessionDto.empNo}" id="empNo" name="empNo">
+                    <input type="hidden" class="form-control" value="${loginDto.empNo}" id="empNo" name="empNo">
                     <div class="row mt-8">
                         <div class="col">비밀번호</div>
                         <div class="col col-md-8">
