@@ -123,9 +123,13 @@
                             <div class="input-group">
                                 <span class="input-group-text" id="bankName">은행명</span>
                                 <select class="form-select col-2" aria-label="은행명 선택" name="bankName">
-                                    <c:forEach var="bank" items="${bankMap}">
-                                        <option value="${bank.key}">${bank.value}</option>
-                                    </c:forEach>
+                                    <option value="한국은행">한국은행</option>
+                                    <option value="국민은행">국민은행</option>
+                                    <option value="신한은행">신한은행</option>
+                                    <option value="우리은행">우리은행</option>
+                                    <option value="하나은행">하나은행</option>
+                                    <option value="기업은행">기업은행</option>
+                                    <option value="외환은행">외환은행</option>
                                 </select>
                                 <span class="input-group-text">통장번호</span>
                                 <input type="text" class="form-control col-6 is-invalid" aria-label="account"
@@ -133,6 +137,9 @@
                                 <span class="input-group-text">예금주</span>
                                 <input type="text" class="form-control col-2" aria-label="accountHolder"
                                        name="accountHolder">
+                                <button class="btn btn-outline-secondary btn-duplicate" type="button"
+                                        id="btn-account-duplicate">확인
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -193,7 +200,6 @@
     let emailChecked = false;
     let mobileChecked = false;
     let passportChecked = true;
-
     $('#reset').click(function () {
         $('#birthDate').addClass('is-invalid');
         $('#hireDate').addClass('is-invalid');
@@ -217,19 +223,6 @@
         mobileChecked = false;
         passportChecked = true;
     });
-
-    // 사원정보 입력시에 토요일이나 일요일 입력 못하게 막는 function
-    function validateHireDate(input) {
-        const date = new Date(input.value);
-        const day = date.getUTCDay();
-
-        if (day === 6 || day === 0) { // 6: Saturday, 0: Sunday
-            alert('토요일과 일요일은 선택할 수 없습니다.');
-            input.value = ''; // Reset the input value
-            return false;
-        }
-        return true;
-    }
 
     $("#btn-insert").on("click", () => {
         /* 필수 입력 사항 체크 */
@@ -289,15 +282,6 @@
             $("#passport").focus();
             return false;
         }
-
-        // 입사일자 유효성 체크
-        if (!validateHireDate(document.getElementById('hireDate'))) {
-            return false;
-        }
-
-        // 폼 제출 허용
-        $('#modalForm').submit();
-
     });
 
     $(".btn-duplicate").on("click", function () {
@@ -445,4 +429,16 @@
         }
     });
 
+
+    // var empNoInput = document.getElementById('empNo');
+    // var submitBtn = document.getElementById('submitBtn');
+    //
+    // // 제출 버튼 클릭 시 유효성 검사
+    // submitBtn.addEventListener('click', function (event) {
+    //     if (empNoInput.value.trim() === '') {
+    //         empNoInput.classList.add('is-invalid');
+    //     } else {
+    //         empNoInput.classList.remove('is-invalid');
+    //     }
+    // });
 </script>

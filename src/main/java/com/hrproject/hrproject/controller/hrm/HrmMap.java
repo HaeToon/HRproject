@@ -26,21 +26,21 @@ public class HrmMap {
         return deptMap;
     }
 
-    public Map<Integer, String> getBankMap() {
-        Map<Integer, String> bankMap = new TreeMap<>();
-        bankMap.put(1, "한국은행");
-        bankMap.put(2, "국민은행");
-        bankMap.put(3, "기업은행");
-        bankMap.put(4, "외환은행");
-        bankMap.put(5, "국민농협");
-        bankMap.put(6, "우리은행");
-        bankMap.put(7, "신한은행");
-        bankMap.put(8, "하나은행");
-        bankMap.put(9, "SC제일은행");
-        bankMap.put(10, "케이뱅크");
-        bankMap.put(11, "카카오뱅크");
-        bankMap.put(12, "씨티은행");
-        bankMap.put(13, "스탠다드차타드은행");
-        return bankMap;
-    }
+//    public Map<Integer, String> getBankMap() {
+//        Map<Integer, String> bankMap = new TreeMap<>();
+//        bankMap.put(1, "한국은행");
+//        bankMap.put(2, "국민은행");
+//        bankMap.put(3, "기업은행");
+//        bankMap.put(4, "외환은행");
+//        bankMap.put(5, "국민농협");
+//        bankMap.put(6, "우리은행");
+//        bankMap.put(7, "신한은행");
+//        bankMap.put(8, "하나은행");
+//        bankMap.put(9, "SC제일은행");
+//        bankMap.put(10, "케이뱅크");
+//        bankMap.put(11, "카카오뱅크");
+//        bankMap.put(12, "씨티은행");
+//        bankMap.put(13, "스탠다드차타드은행");
+//        return bankMap;
+//    }
 }

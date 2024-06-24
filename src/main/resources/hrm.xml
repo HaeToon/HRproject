@@ -169,26 +169,6 @@
 
     </select>
 
-    <select id="getTotalWorkDays" resultType="Integer">
-        SELECT COUNT(*) AS total FROM hrm h
-        JOIN work_schedule w ON h.empno = w.empno
-        WHERE w.status = '퇴근' and h.empno = #{value} and showable = 1
-    </select>
-    <select id="getDaysSinceHire" resultType="Integer">
-        SELECT DATEDIFF(CURDATE(), h.hiredate) AS days_since_hire FROM
-        hrm h join work_schedule ws on h.empno = ws.empno where h.empno = #{value}
-    </select>
-
-    <select id="getHrmEval" resultType="EvaluationDto">
-        select * from Evaluations where empno = #{value} ORDER BY evaluation_NO DESC
-        LIMIT 1
-    </select>
-
-    <insert id="createHrmEval" parameterType="EvaluationDto">
-        INSERT INTO Evaluations ( empno, evaluation_YEAR, performance_score, performance_grade, comments
-        ) VALUES (#{empNo}, 1, #{performanceScore}, 1, 1
-        )
-    </insert>
 
     <select id="getEvalHrmList" resultType="HrmDto" parameterType="HrmPageDto">
         <![CDATA[
@@ -216,7 +196,6 @@
     </select>
 
     <select id="getEvalSearchHrmList" resultType="HrmDto" parameterType="HrmPageDto">
-        <![CDATA[
     SELECT *,
            TIMESTAMPDIFF(YEAR, HRM.HIREDATE, CURDATE()) AS yosYear,
            TIMESTAMPDIFF(MONTH, HRM.HIREDATE, CURDATE()) - TIMESTAMPDIFF(YEAR, HRM.HIREDATE, CURDATE()) * 12 AS yosMonth,
@@ -227,8 +206,10 @@
                DATEDIFF(CURDATE(), HRM.HIREDATE) -
                (
                    DATEDIFF(CURDATE(), HRM.HIREDATE) DIV 7 * 2 +
+                   <![CDATA[
                    CASE WHEN WEEKDAY(HRM.HIREDATE) + 1 > 7 OR WEEKDAY(CURDATE()) + 1 < 2 THEN 0 ELSE 1 END +
                    CASE WHEN WEEKDAY(HRM.HIREDATE) + 1 > 7 OR WEEKDAY(CURDATE()) + 1 < 3 THEN 0 ELSE 1 END
+                   ]]>
                )
            ) AS attendanceRate
     FROM (
@@ -236,10 +217,13 @@
         FROM HRM HRM
         WHERE HRM.showAble = 1
         <if test="search != null and searchWord != null">
-            <include refid="search"></include>
+            and hrm.<include refid="search"></include>
         </if>
     ) AS hrm
     LIMIT #{start}, #{end}
-    ]]>
     </select>
+    <update id="promote" parameterType="HrmDto">
+        UPDATE HRM SET posNo = #{posNo}
+        WHERE EMPNO = #{empNo}
+    </update>
 </mapper>
