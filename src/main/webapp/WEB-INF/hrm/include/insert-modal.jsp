@@ -199,7 +199,6 @@
 
     let emailChecked = false;
     let mobileChecked = false;
-    // let accountChecked = false;
     let passportChecked = true;
     $('#reset').click(function () {
         $('#birthDate').addClass('is-invalid');
@@ -222,7 +221,6 @@
         $('#passport').prop('readonly', false);
         emailChecked = false;
         mobileChecked = false;
-        // accountChecked = false;
         passportChecked = true;
     });
 
@@ -284,11 +282,6 @@
             $("#passport").focus();
             return false;
         }
-        // if (!accountChecked) {
-        //     alert("계좌번호 중복확인 필요 ㄱㄱ")
-        //     $("#account").focus();
-        //     return false;
-        // }
     });
 
     $(".btn-duplicate").on("click", function () {
@@ -319,13 +312,6 @@
                 checkField = "mobile";
                 data = {check: checkField, checkValue: checkValue};
                 break;
-            // case "account":
-            //     if (accountChecked) {
-            //         return;
-            //     }
-            //     checkField = "account";
-            //     data = {check: checkField, checkValue: checkValue};
-            //     break;
             default:
                 console.error("Invalid input ID.");
                 return;
@@ -359,10 +345,6 @@
                                 $("#" + inputId).addClass('is-valid');
                                 passportChecked = true;
                                 break;
-                            // case "account":
-                            //     $("#" + inputId).addClass('is-valid');
-                            //     accountChecked = true;
-                            //     break;
                             case "mobile":
                                 $("#" + inputId).addClass('is-valid');
                                 mobileChecked = true;

@@ -209,6 +209,19 @@
     let mobileChecked_update = true;
     let passportChecked_update = true;
 
+    // 사원정보 입력시에 토요일이나 일요일 입력 못하게 막는 function
+    function validateHireDate(input) {
+        const date = new Date(input.value);
+        const day = date.getUTCDay();
+
+        if (day === 6 || day === 0) { // 6: Saturday, 0: Sunday
+            alert('토요일과 일요일은 선택할 수 없습니다.');
+            input.value = ''; // Reset the input value
+            return false;
+        }
+        return true;
+    }
+
     $("#btn-update").on("click", () => {
         /* 필수 입력 사항 체크 */
         if ($("#ename_update").val().trim() === "") {
@@ -267,6 +280,15 @@
             $("#passport").focus();
             return false;
         }
+
+        // 입사일자 주말이면 컷하기
+        if (!validateHireDate(document.getElementById('hireDate_update'))) {
+            return false;
+        }
+
+        // 폼 제출 허용
+        $('#modifyModalForm').submit();
+
     });
 
     $(".btn-update-duplicate").on("click", function () {
