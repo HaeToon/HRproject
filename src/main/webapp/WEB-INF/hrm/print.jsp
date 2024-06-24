@@ -18,10 +18,13 @@
                     <c:choose>
                         <c:when test="${not empty printHrmCardDto.renameProfile}">
                             <img src="${request.contextPath}/upload/${printHrmCardDto.renameProfile}"
+                                 id="renameProfile_view"
                                  class="myPageProfile">
                         </c:when>
                         <c:otherwise>
-                            <img src="../images/profile01.jpg" class="myPageProfile">
+                            <img src="../images/profile01.jpg"
+                                 id="renameProfile_view"
+                                 class="myPageProfile">
                         </c:otherwise>
                     </c:choose>
 
@@ -104,7 +107,7 @@
                             <label for="remarks_view" class="form-label">비고</label>
                             <textarea class="form-control" id="remarks_view" name="remarks"
                                       value="${printHrmCardDto.remarks}"
-                                      readonly>비고란</textarea>
+                                      readonly>${printHrmCardDto.remarks}</textarea>
                         </div>
                     </div>
                 </div>
@@ -112,13 +115,18 @@
         </form>
     </div>
 </div>
+
+<div class="text-center mt-3">
+    <button type="button" class="btn btn-secondary" id="btn-print">인쇄</button>
+    <button type="button" class="btn btn-secondary" id="btn-closeprint" data-bs-dismiss="modal" onclick="window.close()">창 닫기</button>
+</div>
+
 <script>
-    $(document).ready(function(){
+    $("#btn-print").on("click", function () {
         const printContent = $(".employee-card").html();
         const originalContents = $("body").html();
         $("body").html(printContent);
         window.print();
-        //$("body").html(originalContents);
-    })
-
+        $("body").html(originalContents);  // 인쇄 후 원래 콘텐츠로 복원
+    });
 </script>

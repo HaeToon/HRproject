@@ -50,3 +50,12 @@
         font-size: 48px;
     }
 }
+
+#renameProfile_view {
+    width: 140px;
+    height: 180px;
+}
+
+.nav-item {
+    list-style-type: none;
+}

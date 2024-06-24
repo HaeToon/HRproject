@@ -193,6 +193,7 @@
     let emailChecked = false;
     let mobileChecked = false;
     let passportChecked = true;
+
     $('#reset').click(function () {
         $('#birthDate').addClass('is-invalid');
         $('#hireDate').addClass('is-invalid');
@@ -216,6 +217,19 @@
         mobileChecked = false;
         passportChecked = true;
     });
+
+    // 사원정보 입력시에 토요일이나 일요일 입력 못하게 막는 function
+    function validateHireDate(input) {
+        const date = new Date(input.value);
+        const day = date.getUTCDay();
+
+        if (day === 6 || day === 0) { // 6: Saturday, 0: Sunday
+            alert('토요일과 일요일은 선택할 수 없습니다.');
+            input.value = ''; // Reset the input value
+            return false;
+        }
+        return true;
+    }
 
     $("#btn-insert").on("click", () => {
         /* 필수 입력 사항 체크 */
@@ -275,6 +289,15 @@
             $("#passport").focus();
             return false;
         }
+
+        // 입사일자 유효성 체크
+        if (!validateHireDate(document.getElementById('hireDate'))) {
+            return false;
+        }
+
+        // 폼 제출 허용
+        $('#modalForm').submit();
+
     });
 
     $(".btn-duplicate").on("click", function () {
@@ -422,16 +445,4 @@
         }
     });
 
-
-    // var empNoInput = document.getElementById('empNo');
-    // var submitBtn = document.getElementById('submitBtn');
-    //
-    // // 제출 버튼 클릭 시 유효성 검사
-    // submitBtn.addEventListener('click', function (event) {
-    //     if (empNoInput.value.trim() === '') {
-    //         empNoInput.classList.add('is-invalid');
-    //     } else {
-    //         empNoInput.classList.remove('is-invalid');
-    //     }
-    // });
 </script>

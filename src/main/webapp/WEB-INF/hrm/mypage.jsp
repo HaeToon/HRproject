@@ -7,10 +7,10 @@
         <li class="nav-item">
             <c:choose>
                 <c:when test="${not empty hrmDto.renameProfile}">
-                    <img src="${request.contextPath}/upload/${hrmDto.renameProfile}" class="myPageProfile">
+                    <img src="${request.contextPath}/upload/${hrmDto.renameProfile}" id="renameProfile_view" class="myPageProfile">
                 </c:when>
                 <c:otherwise>
-                    <img src="../images/profile01.jpg">
+                    <img src="../images/profile01.jpg" id="renameProfile_view">
                 </c:otherwise>
             </c:choose>
         </li>
@@ -52,7 +52,8 @@
                 <label for="long" class="col-sm-2 col-form-label">주소</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="long"
-                           value="${hrmDto.address}" readonly>
+
+                           value="${hrmDto.address} ${hrmDto.addressDetail}" readonly>
                 </div>
             </div>
             <div class="row mb-sm-1 reduce-gap">
@@ -82,15 +83,15 @@
                 <div class="col-sm-12">
                     <label for="remarks" class="form-label">비고</label>
                     <textarea class="form-control" id="remarks" name="remarks" value="${hrmDto.remarks}"
-                              readonly>비고란</textarea>
+                              readonly>${hrmDto.remarks}</textarea>
                 </div>
             </div>
-            <div class="text-end mt-3">
+            <div class="text-center mt-3">
                 <jsp:include page="mypage-passwordChange-modal.jsp" />
                 <button type="button" class="btn btn-primary"
                         data-bs-toggle="modal" data-bs-target="#passwordChange">비밀번호변경
                 </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">인쇄</button>
+                <%--<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-print">인쇄</button>--%>
             </div>
         </div>
     </div>
