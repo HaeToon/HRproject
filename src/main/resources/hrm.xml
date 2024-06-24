@@ -168,6 +168,72 @@
 
     </select>
 
+    <select id="getEvaluation" resultType="EvaluationDto">
+<!--        select * from evaluations where empno = #{value}-->
+        SELECT *,
+        TIMESTAMPDIFF(YEAR, e.evaluation_YEAR, CURDATE()) AS yosYear,
+        TIMESTAMPDIFF(MONTH, e.evaluation_YEAR, CURDATE()) - TIMESTAMPDIFF(YEAR, e.evaluation_YEAR , CURDATE()) * 12 AS yosMonth,
+        (
+        (SELECT COUNT(ws.STATUS)
+        FROM WORK_SCHEDULE ws
+        WHERE ws.EMPNO = hrm.EMPNO AND ws.STATUS = '퇴근' AND ws.WORKDATE > e.evaluation_YEAR) /
+        (
+        (DATEDIFF(CURDATE(), e.evaluation_YEAR) + 1) -  -- 총 일수에 1을 더해서 오늘날짜도 포함시킴
+        (DATEDIFF(CURDATE(), e.evaluation_YEAR) DIV 7 * 2) -  -- 주말 수를 고려해서 두 번 제거
+        (CASE WHEN WEEKDAY(e.evaluation_YEAR) = 6 THEN 1 ELSE 0 END) -  -- 입사일이 일요일인 경우 하루를 빼줌
+        (CASE WHEN WEEKDAY(CURDATE()) = 5 THEN 1 ELSE 0 END)  -- 오늘이 토요일인 경우 하루를 더해줌
+        ) * 100  -- 퍼센트 비율로 계산
+        ) AS attendanceRate
+        FROM (
+        SELECT HRM.*, ROW_NUMBER() OVER () AS num
+        FROM HRM
+        WHERE HRM.showAble = 1
+        ) AS hrm join evaluations e where hrm.empno = e.empno and e.empno = #{value} ORDER BY e.evaluation_YEAR desc LIMIT 1
+    </select>
+    <select id="getHrmEvaluationList" resultType="HrmDto" parameterType="EvaluationDto">
+        SELECT hrm.*, e.evaluation_year, e.performance_grade, e.comments,
+        TIMESTAMPDIFF(YEAR, hrm.HIREDATE, CURDATE()) AS yosYear,
+        TIMESTAMPDIFF(MONTH, hrm.HIREDATE, CURDATE()) - TIMESTAMPDIFF(YEAR, hrm.HIREDATE, CURDATE()) * 12 AS yosMonth,
+        (
+        (SELECT COUNT(ws.STATUS)
+        FROM WORK_SCHEDULE ws
+        WHERE ws.EMPNO = hrm.EMPNO AND ws.STATUS = '퇴근') /
+        (
+        (DATEDIFF(CURDATE(), hrm.HIREDATE) + 1) -  -- Total days including today
+        (DATEDIFF(CURDATE(), hrm.HIREDATE) DIV 7 * 2) -  -- Adjust for weekends
+        (CASE WHEN WEEKDAY(hrm.HIREDATE) = 6 THEN 1 ELSE 0 END) -  -- Subtract one day if hire date is a Sunday
+        (CASE WHEN WEEKDAY(CURDATE()) = 5 THEN 1 ELSE 0 END)  -- Add one day if today is a Saturday
+        ) * 100  -- Calculate attendance rate as a percentage
+        ) AS attendanceRate
+        FROM (
+        SELECT hrm.*, ROW_NUMBER() OVER () AS num
+        FROM HRM
+        WHERE HRM.showAble = 1
+        ) AS hrm
+        JOIN (
+        SELECT empno, evaluation_year, performance_grade, comments,
+        ROW_NUMBER() OVER (PARTITION BY empno ORDER BY evaluation_year DESC) AS row_num
+        FROM evaluations
+        WHERE promote = 1
+        ) AS e ON hrm.empno = e.empno
+        WHERE e.row_num = 1
+    </select>
+
+    <insert id="createEvaluation" parameterType="EvaluationDto">
+        INSERT INTO EVALUATIONS (
+        EMPNO, evaluation_YEAR, performance_grade, promote, comments
+        ) VALUES (
+        #{empNo}, #{evaluationYear}, #{performanceGrade}, #{promote}, #{comments}
+        )
+    </insert>
+    <update id="updateEvaluation" parameterType="EvaluationDto">
+        UPDATE EVALUATIONS SET
+        performance_grade = #{performanceGrade},
+        promote = #{promote}
+        WHERE EMPNO = #{empNo}
+    </update>
+
+
 
     <select id="getEvalHrmList" resultType="HrmDto" parameterType="HrmPageDto">
         <![CDATA[
@@ -222,7 +288,7 @@
     LIMIT #{start}, #{end}
     </select>
     <update id="promote" parameterType="HrmDto">
-        UPDATE HRM SET posNo = #{posNo}
+        UPDATE HRM SET posNo = #{posNo}, posName = #{posName}
         WHERE EMPNO = #{empNo}
     </update>
 </mapper>

@@ -22,6 +22,7 @@
      <typeAlias alias="WorkScheduleLogDto" type="com.hrproject.hrproject.dto.WorkScheduleLogDto"/>
      <typeAlias alias="CommunityDto" type="com.hrproject.hrproject.dto.CommunityDto"/>
      <typeAlias alias="NoticeDto" type="com.hrproject.hrproject.dto.NoticeDto"/>
+     <typeAlias alias="EvaluationDto" type="com.hrproject.hrproject.dto.EvaluationDto"/>
 
  </typeAliases>
 <!--  자바 타입이랑 db타입 맞춰줘야 할때 typeHandler씀  -->

@@ -1,8 +1,10 @@
 package com.hrproject.hrproject.controller.hrm;
 
 import com.hrproject.hrproject.dao.HrmDao;
+import com.hrproject.hrproject.dto.EvaluationDto;
 import com.hrproject.hrproject.dto.HrmDto;
 import com.hrproject.hrproject.dto.HrmPageDto;
+import com.hrproject.hrproject.utils.ScriptWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -31,27 +33,83 @@ public class Evaluations extends HttpServlet {
         int endPage = calculateEndPage(totalPage, startPage, paginationPerPage);
 
         HrmPageDto hrmPageDto = createPageDto(currentPage, listPerPage, search, searchWord);
-        List<HrmDto> hrmList = getHrmList(hrmPageDto);
 
-        for (HrmDto hrmDto : hrmList) {
-            int score = 0;
-            if (hrmDto.getAttendanceRate()*100 > 95) hrmDto.setAttendanceGrade("A");
-            else if (hrmDto.getAttendanceRate()*100 > 90) hrmDto.setAttendanceGrade("B");
-            else if (hrmDto.getAttendanceRate()*100 > 85) hrmDto.setAttendanceGrade("C");
-            else hrmDto.setAttendanceGrade("D");
 
-            if (hrmDto.getAttendanceGrade().equals("A")) score = hrmDto.getYosYear() * 50;
-            else if (hrmDto.getAttendanceGrade().equals("B")) score = hrmDto.getYosYear() * 25;
-            else if (hrmDto.getAttendanceGrade().equals("C")) score = hrmDto.getYosYear() * 10;
-            else score = hrmDto.getYosYear() * 5;
-
-            int requireScore = hrmDto.getPosNo()*hrmDto.getPosNo();
-            if (score > requireScore) hrmDto.setIsPromo("O");
-            else hrmDto.setIsPromo("X");
+        List<HrmDto> hrmList = null;
+        List<EvaluationDto> evaluationList = new ArrayList<>();
+        String promoteParam = req.getParameter("promote");
+        if ("true".equals(promoteParam)) {
+            HrmDao hrmdao = new HrmDao();
+            hrmList = hrmdao.getHrmEvaluationList();
+        } else {
+            hrmList = getHrmList(hrmPageDto);
         }
 
-        setRequestAttributes(req, totalPage, startPage, endPage, listPerPage, paginationPerPage, search, searchWord, hrmList);
+        for (HrmDto hrmDto : hrmList) {
+            String grade = "";
+            boolean promote = false;
 
+            /* 근무 성과 A ~ D (출석률) */
+            if (hrmDto.getAttendanceRate() > 98) grade = "A";
+            else if (hrmDto.getAttendanceRate() > 95) grade = "B";
+            else if (hrmDto.getAttendanceRate() > 90) grade = "C";
+            else if (hrmDto.getAttendanceRate() > 80) grade = "D";
+            else grade = "F";
+
+            int yosMonth = 0;
+            if (hrmDto.getPosNo() == 10) yosMonth = hrmDto.getYosYear() * 12 + hrmDto.getYosMonth();
+            else {
+                HrmDao hrmDao = new HrmDao();
+                EvaluationDto evaluationDto = hrmDao.getEvaluation(hrmDto.getEmpNo());
+                if (evaluationDto == null) {
+                    HrmDao hrmDaoCreateEvaluation = new HrmDao();
+                    evaluationDto = EvaluationDto.builder()
+                            .empNo(hrmDto.getEmpNo())
+                            .evaluationYear(hrmDto.getHireDate())
+                            .comments("...")
+                            .build();
+                    hrmDaoCreateEvaluation.createEvaluation(evaluationDto);
+                }
+                yosMonth = evaluationDto.getYosYear() * 12 + evaluationDto.getYosMonth();
+            }
+            if (grade.equals("A")) yosMonth += 24;
+            else if (grade.equals("B")) yosMonth += 12;
+            else if (grade.equals("C")) yosMonth += 0;
+            else if (grade.equals("D")) yosMonth -= 12;
+            else yosMonth -= 60;
+
+            if (hrmDto.getPosNo() == 10 && yosMonth > 60) promote = true;
+            else if (hrmDto.getPosNo() == 20 && yosMonth > 72) promote = true;
+            else if (hrmDto.getPosNo() == 30 && yosMonth > 84) promote = true;
+            else if (hrmDto.getPosNo() == 40 && yosMonth > 96) promote = true;
+
+            /* 사원 평가 Evaluation 테이블 생성 및 업데이트 */
+            HrmDao hrmDao = new HrmDao();
+            if (hrmDao.getEvaluation(hrmDto.getEmpNo()) == null) {
+                HrmDao hrmDaoCreateEvaluation = new HrmDao();
+                EvaluationDto evaluationDto = EvaluationDto.builder()
+                        .empNo(hrmDto.getEmpNo())
+                        .evaluationYear(hrmDto.getHireDate())
+                        .performanceGrade(grade)
+                        .promote(promote)
+                        .comments("...")
+                        .build();
+                hrmDaoCreateEvaluation.createEvaluation(evaluationDto);
+            } else {
+                HrmDao hrmDaoUpdateEvaluation = new HrmDao();
+                EvaluationDto evaluationDto = EvaluationDto.builder()
+                        .performanceGrade(grade)
+                        .promote(promote)
+                        .empNo(hrmDto.getEmpNo())
+                        .build();
+                hrmDaoUpdateEvaluation.updateEvaluation(evaluationDto);
+            }
+            HrmDao hrmGetEvaluationDao = new HrmDao();
+            EvaluationDto evaluationDto = hrmGetEvaluationDao.getEvaluation(hrmDto.getEmpNo());
+            evaluationList.add(evaluationDto);
+        }
+
+        setRequestAttributes(req, totalPage, startPage, endPage, listPerPage, paginationPerPage, search, searchWord, hrmList, evaluationList);
         req.getRequestDispatcher("/WEB-INF/hrm/evaluation-board.jsp").forward(req, resp);
     }
 
@@ -116,7 +174,7 @@ public class Evaluations extends HttpServlet {
         }
     }
 
-    private void setRequestAttributes(HttpServletRequest req, int totalPage, int startPage, int endPage, int listPerPage, int paginationPerPage, String search, String searchWord, List<HrmDto> hrmList) {
+    private void setRequestAttributes(HttpServletRequest req, int totalPage, int startPage, int endPage, int listPerPage, int paginationPerPage, String search, String searchWord, List<HrmDto> hrmList, List<EvaluationDto> evaluationList) {
         req.setAttribute("totalPage", totalPage);
         req.setAttribute("startPage", startPage);
         req.setAttribute("endPage", endPage);
@@ -126,6 +184,7 @@ public class Evaluations extends HttpServlet {
         req.setAttribute("search", search);
         req.setAttribute("searchWord", searchWord);
         req.setAttribute("hrmList", hrmList); // 여기가 evaluation-board.jsp 에서 근속년월이랑 등급 등등 관계지어서 함
+        req.setAttribute("evaluationList", evaluationList); // 여기가 evaluation-board.jsp 에서 근속년월이랑 등급 등등 관계지어서 함
         HrmMap hrmMap = new HrmMap();
         req.setAttribute("deptMap", hrmMap.getDeptMap());
         req.setAttribute("positionMap", hrmMap.getPositionMap());
@@ -133,8 +192,13 @@ public class Evaluations extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        /* 사원 승진 승인 반려 */
+        /* 사원 승진 승인 */
         int empNo = Integer.parseInt(req.getParameter("empNo"));
         HrmDao hrmDao = new HrmDao();
+        int result = 0;
+        result = hrmDao.promote(empNo);
+        if (result > 0){
+            ScriptWriter.alertAndNext(resp,"승진 처리 완료","../hrm/evaluation?promote=true");
+        } else ScriptWriter.alertAndBack(resp,"알수 없는 에러");
     }
 }
