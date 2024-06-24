@@ -20,7 +20,7 @@ public class GradeTypeHandler implements TypeHandler<Grade> {
 
     @Override
     public Grade getResult(ResultSet rs, String columnName) throws SQLException {
-        String grade = rs.getString(columnName); // member, manager, admin
+        String grade = rs.getString(columnName);
         Grade result = null;
         if (grade.equalsIgnoreCase("admin")) result = Grade.ADMIN;
         else if (grade.equalsIgnoreCase("a")) result = Grade.A;
@@ -33,7 +33,7 @@ public class GradeTypeHandler implements TypeHandler<Grade> {
 
     @Override
     public Grade getResult(ResultSet rs, int columnIndex) throws SQLException {
-        String grade = rs.getString(columnIndex); // member, manager, admin
+        String grade = rs.getString(columnIndex);
         Grade result = null;
         if (grade.equalsIgnoreCase("admin")) result = Grade.ADMIN;
         else if (grade.equalsIgnoreCase("a")) result = Grade.A;
@@ -46,7 +46,7 @@ public class GradeTypeHandler implements TypeHandler<Grade> {
 
     @Override
     public Grade getResult(CallableStatement cs, int columnIndex) throws SQLException {
-        String grade = cs.getString(columnIndex); // member, manager, admin
+        String grade = cs.getString(columnIndex);
         Grade result = null;
         if (grade.equalsIgnoreCase("admin")) result = Grade.ADMIN;
         else if (grade.equalsIgnoreCase("a")) result = Grade.A;

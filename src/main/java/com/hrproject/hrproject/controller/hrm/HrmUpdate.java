@@ -93,7 +93,6 @@ public class HrmUpdate extends HttpServlet {
                     .ename(req.getParameter("ename"))
                     .foreignName(req.getParameter("foreignName"))
                     .birthDate(req.getParameter("birthDate"))
-                    .password("password")
 
                     .deptNo(deptNo)
                     .deptName(deptMap.get(deptNo))
