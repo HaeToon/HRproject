@@ -37,6 +37,8 @@ public class HrmDto {
     private String renameProfile; // 프로필사진
     private String etcFile; // 기타첨부파일
     private String remarks; // 비고?
+    private Grade grade;
+    private boolean showable;
 
 
 
@@ -50,14 +52,12 @@ public class HrmDto {
     private String atdCode; // 근태 코드
     private int remainingAnnualLeaveDays; // 남은 연차 일수
     private int salary;
-    private Grade grade;
-    private boolean showable;
     private int yosYear; // 근속년수
     private int yosMonth; // 근속월수
     private int workedDays; // 출퇴근한 일수
     private double attendanceRate;
-    private String attendanceGrade;
-    private boolean isPromotable;
-    private String isPromo;
+//    private String attendanceGrade;
+//    private boolean isPromotable;
+//    private String isPromo;
 }
 

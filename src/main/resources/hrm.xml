@@ -47,6 +47,21 @@
             </when>
         </choose>
     </sql>
+    <sql id="evaluation">
+        TIMESTAMPDIFF(YEAR, hrm.HIREDATE, CURDATE()) AS yosYear,
+        TIMESTAMPDIFF(MONTH, hrm.HIREDATE, CURDATE()) - TIMESTAMPDIFF(YEAR, hrm.HIREDATE, CURDATE()) * 12 AS yosMonth,
+        (
+        (SELECT COUNT(ws.STATUS)
+        FROM WORK_SCHEDULE ws
+        WHERE ws.EMPNO = hrm.EMPNO AND ws.STATUS = '퇴근') /
+        (
+        (DATEDIFF(CURDATE(), hrm.HIREDATE) + 1) -  -- 총 일수에 1을 더해서 오늘날짜도 포함시킴
+        (DATEDIFF(CURDATE(), hrm.HIREDATE) DIV 7 * 2) -  -- 주말 수를 고려해서 두 번 제거
+        (CASE WHEN WEEKDAY(hrm.HIREDATE) = 6 THEN 1 ELSE 0 END) -  -- 입사일이 일요일인 경우 하루를 빼줌
+        (CASE WHEN WEEKDAY(CURDATE()) = 5 THEN 1 ELSE 0 END)  -- 오늘이 토요일인 경우 하루를 더해줌
+        ) * 100  -- 퍼센트 비율로 계산
+        ) AS attendanceRate
+    </sql>
 
     <select id="getHrmTotal" resultType="int">
         SELECT COUNT(*) AS TOTAL FROM HRM WHERE showAble = 1
@@ -169,7 +184,6 @@
     </select>
 
     <select id="getEvaluation" resultType="EvaluationDto">
-<!--        select * from evaluations where empno = #{value}-->
         SELECT *,
         TIMESTAMPDIFF(YEAR, e.evaluation_YEAR, CURDATE()) AS yosYear,
         TIMESTAMPDIFF(MONTH, e.evaluation_YEAR, CURDATE()) - TIMESTAMPDIFF(YEAR, e.evaluation_YEAR , CURDATE()) * 12 AS yosMonth,
@@ -190,21 +204,10 @@
         WHERE HRM.showAble = 1
         ) AS hrm join evaluations e where hrm.empno = e.empno and e.empno = #{value} ORDER BY e.evaluation_YEAR desc LIMIT 1
     </select>
+
     <select id="getHrmEvaluationList" resultType="HrmDto" parameterType="EvaluationDto">
         SELECT hrm.*, e.evaluation_year, e.performance_grade, e.comments,
-        TIMESTAMPDIFF(YEAR, hrm.HIREDATE, CURDATE()) AS yosYear,
-        TIMESTAMPDIFF(MONTH, hrm.HIREDATE, CURDATE()) - TIMESTAMPDIFF(YEAR, hrm.HIREDATE, CURDATE()) * 12 AS yosMonth,
-        (
-        (SELECT COUNT(ws.STATUS)
-        FROM WORK_SCHEDULE ws
-        WHERE ws.EMPNO = hrm.EMPNO AND ws.STATUS = '퇴근') /
-        (
-        (DATEDIFF(CURDATE(), hrm.HIREDATE) + 1) -  -- Total days including today
-        (DATEDIFF(CURDATE(), hrm.HIREDATE) DIV 7 * 2) -  -- Adjust for weekends
-        (CASE WHEN WEEKDAY(hrm.HIREDATE) = 6 THEN 1 ELSE 0 END) -  -- Subtract one day if hire date is a Sunday
-        (CASE WHEN WEEKDAY(CURDATE()) = 5 THEN 1 ELSE 0 END)  -- Add one day if today is a Saturday
-        ) * 100  -- Calculate attendance rate as a percentage
-        ) AS attendanceRate
+        <include refid="evaluation"></include>
         FROM (
         SELECT hrm.*, ROW_NUMBER() OVER () AS num
         FROM HRM
@@ -228,7 +231,9 @@
     </insert>
     <update id="updateEvaluation" parameterType="EvaluationDto">
         UPDATE EVALUATIONS SET
+        <if test="performanceGrade != null">
         performance_grade = #{performanceGrade},
+        </if>
         promote = #{promote}
         WHERE EMPNO = #{empNo}
     </update>
@@ -236,57 +241,41 @@
 
 
     <select id="getEvalHrmList" resultType="HrmDto" parameterType="HrmPageDto">
-        <![CDATA[
     SELECT *,
-           TIMESTAMPDIFF(YEAR, hrm.HIREDATE, CURDATE()) AS yosYear,
-           TIMESTAMPDIFF(MONTH, hrm.HIREDATE, CURDATE()) - TIMESTAMPDIFF(YEAR, hrm.HIREDATE, CURDATE()) * 12 AS yosMonth,
-           (
-               (SELECT COUNT(ws.STATUS)
-                FROM WORK_SCHEDULE ws
-                WHERE ws.EMPNO = hrm.EMPNO AND ws.STATUS = '퇴근') /
-               (
-                   (DATEDIFF(CURDATE(), hrm.HIREDATE) + 1) -  -- 총 일수에 1을 더해서 오늘날짜도 포함시킴
-                   (DATEDIFF(CURDATE(), hrm.HIREDATE) DIV 7 * 2) -  -- 주말 수를 고려해서 두 번 제거
-                   (CASE WHEN WEEKDAY(hrm.HIREDATE) = 6 THEN 1 ELSE 0 END) -  -- 입사일이 일요일인 경우 하루를 빼줌
-                   (CASE WHEN WEEKDAY(CURDATE()) = 5 THEN 1 ELSE 0 END)  -- 오늘이 토요일인 경우 하루를 더해줌
-               ) * 100  -- 퍼센트 비율로 계산
-           ) AS attendanceRate
+        <include refid="evaluation"></include>
     FROM (
         SELECT HRM.*, ROW_NUMBER() OVER () AS num
         FROM HRM
         WHERE HRM.showAble = 1
     ) AS hrm
+        <if test="start != null and end != null">
     LIMIT #{start}, #{end}
-    ]]>
+        </if>
+    </select>
+
+    <select id="getAllEvalHrmList" resultType="HrmDto">
+        SELECT *,
+        <include refid="evaluation"></include>
+        FROM (
+        SELECT HRM.*, ROW_NUMBER() OVER () AS num
+        FROM HRM
+        WHERE HRM.showAble = 1
+        ) AS hrm
     </select>
 
     <select id="getEvalSearchHrmList" resultType="HrmDto" parameterType="HrmPageDto">
-    SELECT *,
-           TIMESTAMPDIFF(YEAR, HRM.HIREDATE, CURDATE()) AS yosYear,
-           TIMESTAMPDIFF(MONTH, HRM.HIREDATE, CURDATE()) - TIMESTAMPDIFF(YEAR, HRM.HIREDATE, CURDATE()) * 12 AS yosMonth,
-           (SELECT COUNT(ws.STATUS)
-            FROM WORK_SCHEDULE ws
-            WHERE ws.EMPNO = hrm.EMPNO AND ws.STATUS = '퇴근') /
-           (
-               DATEDIFF(CURDATE(), HRM.HIREDATE) -
-               (
-                   DATEDIFF(CURDATE(), HRM.HIREDATE) DIV 7 * 2 +
-                   <![CDATA[
-                   CASE WHEN WEEKDAY(HRM.HIREDATE) + 1 > 7 OR WEEKDAY(CURDATE()) + 1 < 2 THEN 0 ELSE 1 END +
-                   CASE WHEN WEEKDAY(HRM.HIREDATE) + 1 > 7 OR WEEKDAY(CURDATE()) + 1 < 3 THEN 0 ELSE 1 END
-                   ]]>
-               )
-           ) AS attendanceRate
-    FROM (
+        SELECT *,
+        <include refid="evaluation"></include>
         SELECT HRM.*, ROW_NUMBER() OVER () AS num
-        FROM HRM HRM
+        FROM HRM
         WHERE HRM.showAble = 1
         <if test="search != null and searchWord != null">
             and hrm.<include refid="search"></include>
         </if>
-    ) AS hrm
-    LIMIT #{start}, #{end}
+        ) AS hrm
+        LIMIT #{start}, #{end}
     </select>
+
     <update id="promote" parameterType="HrmDto">
         UPDATE HRM SET posNo = #{posNo}, posName = #{posName}
         WHERE EMPNO = #{empNo}

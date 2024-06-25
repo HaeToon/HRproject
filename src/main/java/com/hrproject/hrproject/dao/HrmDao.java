@@ -200,10 +200,19 @@ public int getUsedAnnualLeaveDays(int empNo) {
         return hrmList;
     }
 
+
     public List<HrmDto> getHrmEvalSearchBoardList(HrmPageDto hrmPageDto) {
         List<HrmDto> hrmList = null;
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
         hrmList = sqlSession.selectList("getEvalSearchHrmList", hrmPageDto);
+        sqlSession.close();
+        return hrmList;
+    }
+
+    public List<HrmDto> getAllHrmEvalList() {
+        List<HrmDto> hrmList = null;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        hrmList = sqlSession.selectList("getEvalHrmList");
         sqlSession.close();
         return hrmList;
     }
