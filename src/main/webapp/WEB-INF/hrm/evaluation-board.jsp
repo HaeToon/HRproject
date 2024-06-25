@@ -93,9 +93,10 @@
                 <c:when test="${param.promote eq true}">
                     <a href="../hrm/evaluation?page=1" type="button" class="btn btn-primary">평가업무</a>
                 </c:when>
-                <c:otherwise>
+                <c:when test="${loginDto.grade eq 'ADMIN'}">
                     <a href="../hrm/evaluation?promote=true" type="button" class="btn btn-primary">승진대상자</a>
-                </c:otherwise>
+                </c:when>
+                <c:otherwise></c:otherwise>
             </c:choose>
         </div>
     </div>

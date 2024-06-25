@@ -231,9 +231,7 @@
     </insert>
     <update id="updateEvaluation" parameterType="EvaluationDto">
         UPDATE EVALUATIONS SET
-        <if test="performanceGrade != null">
         performance_grade = #{performanceGrade},
-        </if>
         promote = #{promote}
         WHERE EMPNO = #{empNo}
     </update>
@@ -251,16 +249,6 @@
         <if test="start != null and end != null">
     LIMIT #{start}, #{end}
         </if>
-    </select>
-
-    <select id="getAllEvalHrmList" resultType="HrmDto">
-        SELECT *,
-        <include refid="evaluation"></include>
-        FROM (
-        SELECT HRM.*, ROW_NUMBER() OVER () AS num
-        FROM HRM
-        WHERE HRM.showAble = 1
-        ) AS hrm
     </select>
 
     <select id="getEvalSearchHrmList" resultType="HrmDto" parameterType="HrmPageDto">

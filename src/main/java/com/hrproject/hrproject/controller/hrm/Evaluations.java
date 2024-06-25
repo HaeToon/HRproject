@@ -6,17 +6,16 @@ import com.hrproject.hrproject.dto.HrmDto;
 import com.hrproject.hrproject.dto.HrmPageDto;
 import com.hrproject.hrproject.utils.ScriptWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.*;
 
 @WebServlet("/hrm/evaluation")
-@MultipartConfig
 public class Evaluations extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,26 +33,15 @@ public class Evaluations extends HttpServlet {
         int endPage = calculateEndPage(totalPage, startPage, paginationPerPage);
         HrmPageDto hrmPageDto = createPageDto(currentPage, listPerPage, search, searchWord);
 
-
-        /* 승진대상자 페이지면(param 값으로 판단) 승진대상자만 보임 */
-        List<HrmDto> hrmList = null;
-        String promoteParam = req.getParameter("promote");
-        if ("true".equals(promoteParam)) {
-            HrmDao hrmdao = new HrmDao();
-            hrmList = hrmdao.getHrmEvaluationList();
-        } else {
-//            HrmDao hrmdao = new HrmDao();
-//            hrmList = hrmdao.getAllHrmEvalList();
-            hrmList = getHrmList(hrmPageDto);
-        }
-
         /* 사원별 Evaluations table 생성 및 업데이트 */
-        List<EvaluationDto> evaluationList = new ArrayList<>(); // board에 내려줄때 씀
+        List<HrmDto> hrmList = null;
+        HrmDao hrmdao2 = new HrmDao();
+        hrmList = hrmdao2.getAllHrmEvalList();
         for (HrmDto hrmDto : hrmList) {
             String grade = "";
             boolean promote = false;
 
-             /* 근무 성과 A ~ D (출석률) */
+            /* 근무 성과 A ~ D (출석률) */
             if (hrmDto.getAttendanceRate() > 98) grade = "A";
             else if (hrmDto.getAttendanceRate() > 95) grade = "B";
             else if (hrmDto.getAttendanceRate() > 90) grade = "C";
@@ -89,7 +77,7 @@ public class Evaluations extends HttpServlet {
             else if (hrmDto.getPosNo() == 30 && yosMonth > 84) promote = true;
             else if (hrmDto.getPosNo() == 40 && yosMonth > 96) promote = true;
 
-             /*사원 평가 Evaluation 테이블 생성 및 업데이트*/
+            /*사원 평가 Evaluation 테이블 생성 및 업데이트*/
             HrmDao hrmDao = new HrmDao();
             if (hrmDao.getEvaluation(hrmDto.getEmpNo()) == null) {
                 HrmDao hrmDaoCreateEvaluation = new HrmDao();
@@ -110,7 +98,24 @@ public class Evaluations extends HttpServlet {
                         .build();
                 hrmDaoUpdateEvaluation.updateEvaluation(evaluationDto);
             }
+        }
 
+        /* 승진대상자 페이지면(param 값으로 판단) 승진대상자만 보임 */
+        String promoteParam = req.getParameter("promote");
+        if ("true".equals(promoteParam)) {
+            HttpSession session = req.getSession();
+            HrmDto loginDto = (HrmDto) session.getAttribute("loginDto");
+            if (!loginDto.getGrade().equals("admin")){
+                resp.sendRedirect("../index/index");
+            }
+            HrmDao hrmdao = new HrmDao();
+            hrmList = hrmdao.getHrmEvaluationList();
+        } else {
+            hrmList = getHrmList(hrmPageDto);
+        }
+
+        List<EvaluationDto> evaluationList = new ArrayList<>(); // board에 내려줄때 씀
+        for (HrmDto hrmDto : hrmList) {
             HrmDao hrmGetEvaluationDao = new HrmDao();
             EvaluationDto evaluationDto = hrmGetEvaluationDao.getEvaluation(hrmDto.getEmpNo());
             evaluationList.add(evaluationDto);
@@ -206,12 +211,6 @@ public class Evaluations extends HttpServlet {
         int result = 0;
         result = hrmDao.promote(empNo);
         if (result > 0){
-            HrmDao hrmSetPromoteFalse = new HrmDao();
-            EvaluationDto evaluationDto = EvaluationDto.builder()
-                    .empNo(empNo)
-                    .promote(false)
-                    .build();
-            hrmSetPromoteFalse.updateEvaluation(evaluationDto);
             ScriptWriter.alertAndNext(resp,"승진 처리 완료","../hrm/evaluation?promote=true");
         } else ScriptWriter.alertAndBack(resp,"알수 없는 에러");
     }
