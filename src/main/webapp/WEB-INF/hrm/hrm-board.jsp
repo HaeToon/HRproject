@@ -256,9 +256,14 @@
                 $('select#bankName_update').val(response.bankName);
                 $('input#account_update').val(response.account);
                 $('input#accountHolder_update').val(response.accountHolder);
-                // $('input#profile_update').val(response.renameProfile);
+                // $('file#profile_update').val(response.renameProfile);
                 $('textarea#remarks_update').val(response.remarks);
 
+                if (response.renameProfile && response.renameProfile.trim() !== "") {
+                    $('#update_preview').attr('src', '../upload/' + response.renameProfile);
+                } else {
+                    $('#update_preview').attr('src', '../images/profile01.jpg');
+                }
                 // 나머지 필드들도 동일한 방식으로 처리
                 // 예: $('input#hireDate_view').val(response.hireDate);
 

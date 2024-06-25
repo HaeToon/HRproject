@@ -112,6 +112,7 @@ public class HrmUpdate extends HttpServlet {
                     .address(req.getParameter("address"))
                     .addressDetail(req.getParameter("addressDetail"))
 
+
                     .originalProfile(fileName)
                     .renameProfile(renameProfile)
                     .remarks(req.getParameter("remarks"))

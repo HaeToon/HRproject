@@ -151,7 +151,9 @@
         RESIGNDATE = #{resignDate},
         OUTREASONS = #{outReasons},
         ORIGINAL_PROFILE = #{originalProfile},
+        <if test="renameProfile != ''">
         RENAME_PROFILE = #{renameProfile},
+        </if>
         REMARKS = #{remarks}
         WHERE EMPNO = #{empNo}
     </update>

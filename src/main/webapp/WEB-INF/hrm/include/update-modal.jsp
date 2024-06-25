@@ -73,12 +73,12 @@
                         </div>
                         <div class="col">부서</div>
                         <div class="col col-md-4">
-                                <select class="form-select form-select" id="deptNo_update" aria-label="select"
-                                        name="deptNo">
-                                    <c:forEach var="dept" items="${deptMap}">
+                            <select class="form-select form-select" id="deptNo_update" aria-label="select"
+                                    name="deptNo">
+                                <c:forEach var="dept" items="${deptMap}">
                                     <option value="${dept.key}">부서코드:${dept.key} | 부서명:${dept.value}</option>
-                                    </c:forEach>
-                                </select>
+                                </c:forEach>
+                            </select>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -137,6 +137,8 @@
                                 <span class="input-group-text">통장번호</span>
                                 <input type="text" class="form-control col-6" aria-label="account"
                                        name="account" id="account_update">
+                                <button class="btn btn-outline-secondary btn-update-duplicate" type="button">확인
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -173,7 +175,10 @@
                         </div>
                         <div class="col-md-4 preview" style="width: 170px; height: 170px; object-fit: contain">
                             <%--                        <div id="preview"></div>--%>
-                            <img id="update_preview" src="../../../images/profile01.jpg">
+                            <%--                            <img class="preview" id="update_preview" src="../../../images/profile01.jpg">--%>
+                            <li class="nav-item">
+                                <img id="update_preview" class="preview" src="" alt="Profile Image">
+                            </li>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -211,6 +216,7 @@
     let emailChecked_update = true;
     let mobileChecked_update = true;
     let passportChecked_update = true;
+    let accountChecked_update = true;
 
     // 사원정보 입력시에 토요일이나 일요일 입력 못하게 막는 function
     function validateHireDate(input) {
@@ -254,33 +260,38 @@
         }
         if ($("#account_update").val().trim() === "") {
             alert("통장번호은 필수입력 사항입니다.");
-            $("#account").focus();
+            $("#account_update").focus();
             return false;
         }
         if ($("#postCode_update").val().trim() === "") {
-            alert("통장번호은 필수입력 사항입니다.");
-            $("#postCode").focus();
+            alert("우편번호는 필수입력 사항입니다.");
+            $("#postCode_update").focus();
             return false;
         }
         if ($("#address_update").val().trim() === "") {
-            alert("통장번호은 필수입력 사항입니다.");
-            $("#address").focus();
+            alert("주소는 필수입력 사항입니다.");
+            $("#address_update").focus();
             return false;
         }
-        /* 아이디 중복 체크 */
+        /* 중복 체크 */
         if (!emailChecked_update) {
             alert("이메일 중복확인 필요")
-            $("#email").focus();
+            $("#email_update").focus();
             return false;
         }
         if (!mobileChecked_update) {
             alert("휴대폰번호 중복확인 필요")
-            $("#mobile").focus();
+            $("#mobile_update").focus();
             return false;
         }
         if (!passportChecked_update) {
             alert("여권번호 중복확인 필요")
-            $("#passport").focus();
+            $("#passport_update").focus();
+            return false;
+        }
+        if (!accountChecked_update) {
+            alert("계좌번호 중복확인 필요")
+            $("#account_update").focus();
             return false;
         }
 
@@ -305,6 +316,12 @@
                     return; // 이미 중복 확인을 완료한 경우, 추가 확인 방지
                 }
                 data = {check: "email", checkValue: checkValue};
+                break;
+            case "account_update":
+                if (accountChecked_update) {
+                    return;
+                }
+                data = {check: "account", checkValue: checkValue};
                 break;
             case "passport_update":
                 if (passportChecked_update) {
@@ -346,6 +363,11 @@
                                 $("#" + inputId).removeClass('is-invalid');
                                 $("#" + inputId).addClass('is-valid');
                                 emailChecked_update = true;
+                                break;
+                            case "account_update":
+                                $("#" + inputId).removeClass('is-invalid');
+                                $("#" + inputId).addClass('is-valid');
+                                accountChecked_update = true;
                                 break;
                             case "passport_update":
                                 $("#" + inputId).removeClass('is-invalid');
@@ -415,6 +437,7 @@
     let emailValue;
     let mobileValue;
     let passportValue;
+    let accountValue;
     $("#email_update").on("focus", function () {
         emailValue = $("#email_update").val();
     });
@@ -423,6 +446,9 @@
     });
     $("#passport_update").on("focus", function () {
         passportValue = $("#passport_update").val();
+    });
+    $("#account_update").on("focus", function () {
+        accountValue = $("#account_update").val();
     });
 
     $("#email_update").on("keyup", function () {
@@ -444,13 +470,15 @@
             $(this).removeClass('is-invalid');
         }
     });
-    // $("#account_update").on("keyup", function () {
-    //     if ($(this).val() !== '') {
-    //         $(this).addClass('is-invalid');
-    //     } else {
-    //         $(this).removeClass('is-invalid');
-    //     }
-    // });
+    $("#account_update").on("keyup", function () {
+        if ($(this).val() !== accountValue) {
+            $(this).addClass('is-invalid');
+            accountChecked_update = false;
+        } else {
+            accountChecked_update = true;
+            $(this).removeClass('is-invalid');
+        }
+    });
     $("#passport_update").on("keyup", function () {
         if ($(this).val() !== passportValue && $(this).val().trim() !== "") {
             passportChecked_update = false;
@@ -460,6 +488,4 @@
             $(this).removeClass('is-invalid');
         }
     });
-
-
 </script>
