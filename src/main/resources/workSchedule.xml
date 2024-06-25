@@ -5,36 +5,6 @@
 <mapper namespace="com.hrproject.hrproject.mybatis">
 
 
-    <!--    <insert id="getWorkScheduleByWorkIdx" parameterType="workScheduleLogDto">-->
-    <!--        INSERT INTO WORK_SCHEDULE_LOG (-->
-    <!--        WORKIDX,-->
-    <!--        ATDNO,-->
-    <!--        ATDCODE,-->
-    <!--        EMPNO,-->
-    <!--        WORKDATE,-->
-    <!--        STARTTIME,-->
-    <!--        ENDTIME,-->
-    <!--        STATUS,-->
-    <!--        modifyReason,-->
-    <!--        WHOMODIFY,-->
-    <!--        LOGDATE,-->
-    <!--        LOGSTATUS-->
-    <!--        ) VALUES (-->
-    <!--        #{workIdx},-->
-    <!--        #{atdNo},-->
-    <!--        #{vacationCode},-->
-    <!--        #{empNo},-->
-    <!--        #{workDate},-->
-    <!--        #{startTime},-->
-    <!--        #{endTime},-->
-    <!--        #{status},-->
-    <!--        #{modifyReason},-->
-    <!--        #{whoModify},-->
-    <!--        CURRENT_TIMESTAMP,-->
-    <!--        #{logStatus}-->
-    <!--        )-->
-    <!--    </insert>-->
-
 
 
 
@@ -53,7 +23,9 @@
         work_schedule
         WHERE
         empNo = #{empNo}
+        ORDER BY WORKDATE DESC
     </select>
+
     <select id="getWorkMonthList" resultType="WorkScheduleDto" parameterType="WorkScheduleDto">
         select * from work_schedule where empNo = #{empNo} and workDate LIKE CONCAT('%', #{workMonth}, '%')
     </select>
@@ -91,8 +63,56 @@
         ws.WORKDATE DESC
     </select>
 
+    <select id="getCountOfRecords" resultType="int">
+        SELECT COUNT(*) FROM WORK_SCHEDULE
+    </select>
 
-    <select id="getAdminWorkList" resultType="WorkScheduleAdminDto" parameterType="WorkScheduleAdminDto">
+    <select id="getCountOfRecordsByEmpNo" resultType="int">
+        SELECT COUNT(*) FROM WORK_SCHEDULE where empNo = #{empNo}
+    </select>
+
+    <select id="getAdminWorkList" resultType="WorkScheduleAdminDto" parameterType="map">
+        SELECT
+        ws.WORKIDX,
+        ws.EMPNO,
+        ws.ATDCODE AS vacationCode,
+        ws.WORKDATE,
+        hr.DEPTNAME,
+        hr.ENAME,
+        ws.STARTTIME,
+        ws.ENDTIME,
+        ws.STATUS,
+        ws.ETC
+        FROM
+        WORK_SCHEDULE ws
+        JOIN
+        HRM hr ON ws.EMPNO = hr.EMPNO
+        WHERE
+        1 = 1
+        <!-- 필요한 조건을 추가할 수 있습니다 -->
+        <if test="workScheduleAdminDto.workDate != null and workScheduleAdminDto.workDate != ''">
+            AND ws.WORKDATE = #{workScheduleAdminDto.workDate}
+        </if>
+        <if test="workScheduleAdminDto.empNo != null and workScheduleAdminDto.empNo != 0">
+            AND ws.EMPNO = #{workScheduleAdminDto.empNo}
+        </if>
+        <if test="workScheduleAdminDto.deptName != null and workScheduleAdminDto.deptName != ''">
+            AND hr.DEPTNAME = #{workScheduleAdminDto.deptName}
+        </if>
+        <if test="workScheduleAdminDto.ename != null and workScheduleAdminDto.ename != ''">
+            AND hr.ENAME = #{workScheduleAdminDto.ename}
+        </if>
+        <if test="workScheduleAdminDto.status != null and workScheduleAdminDto.status != ''">
+            AND ws.STATUS = #{workScheduleAdminDto.status}
+        </if>
+        <if test="workScheduleAdminDto.vacationCode != null and workScheduleAdminDto.vacationCode != ''">
+            AND ws.ATDCODE = #{workScheduleAdminDto.vacationCode}
+        </if>
+        ORDER BY WORKDATE DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getAdminWorkList01" resultType="WorkScheduleAdminDto" parameterType="WorkScheduleAdminDto">
 
         SELECT
         ws.WORKIDX,
@@ -139,6 +159,15 @@
         </foreach>
     </insert>
 
+    <insert id="createAllEmpScheduleWeekend" parameterType="list">
+        INSERT INTO WORK_SCHEDULE (EMPNO, WORKDATE,status) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.empNo}, CURDATE(),'주말')
+        </foreach>
+    </insert>
+
+
+
 
     <update id="updateWorkSchedule" parameterType="WorkScheduleDto">
         UPDATE work_schedule
@@ -161,10 +190,6 @@
     </update>
 
     <update id="modifyWorkTime" parameterType="Map">
-<!--        UPDATE work_schedule-->
-<!--        SET STARTTIME = #{startTime}, ENDTIME = #{endTime}-->
-<!--        WHERE WORKIDX = #{workIdx}-->
-
 
         UPDATE work_schedule
         SET
@@ -260,10 +285,6 @@
         #{logStatus}
         )
     </insert>
-
-
-
-
 
     <delete id="deleteWorkSchedule" parameterType="int">
         delete from WORK_SCHEDULE where WORKIDX = #{workIdx}

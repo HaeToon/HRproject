@@ -17,30 +17,25 @@ import java.util.List;
 public class SalarySearchBoard extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
+        // 서치하기 위한 DTO를 만드는 과정
+        // 마이바티스에서 예외처리해도 괜찮지만 자바에서 해보고 싶어서.. 로직이 길어요~
         SalarySearchDto.SalarySearchDtoBuilder builder =SalarySearchDto.builder();
         String empNoParam = req.getParameter("searchEmpNo");
         if (empNoParam != null && !empNoParam.isEmpty()) {
             try {
                 builder.empNo(Integer.parseInt(empNoParam));
-                System.out.println("EmpNo: " + empNoParam);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
         }
-
         String ename = req.getParameter("searchEName");
         if (ename != null && !ename.isEmpty()) {
             builder.ename(ename);
-            System.out.println("EName: " + ename);
         }
-
         String salaryNoParam = req.getParameter("searchSalary_No");
         if (salaryNoParam != null && !salaryNoParam.isEmpty()) {
             try {
                 builder.salary_No(Integer.parseInt(salaryNoParam));
-                System.out.println("SalaryNo: " + salaryNoParam);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
@@ -48,32 +43,26 @@ public class SalarySearchBoard extends HttpServlet {
 
         String accountingPeriod = req.getParameter("searchAccountingPeriod");
         if (accountingPeriod != null && !accountingPeriod.isEmpty()) {
-            builder.accountingPeriod(accountingPeriod);
-            System.out.println("AccountingPeriod: " + accountingPeriod);
+            builder.accountingPeriod(accountingPeriod);;
         }
-
         String salaryCategory = req.getParameter("searchSalaryCategory");
         if (salaryCategory != null && !salaryCategory.isEmpty()) {
             builder.salaryCategory(salaryCategory);
-            System.out.println("SalaryCategory: " + salaryCategory);
         }
 
         String salaryName = req.getParameter("searchSalaryName");
         if (salaryName != null && !salaryName.isEmpty()) {
             builder.salaryName(salaryName);
-            System.out.println("SalaryName: " + salaryName);
         }
 
         String salaryDay = req.getParameter("searchSalaryDay");
         if (salaryDay != null && !salaryDay.isEmpty()) {
             builder.salaryDay(salaryDay);
-            System.out.println("SalaryDay: " + salaryDay);
         }
 
         String salaryInfo = req.getParameter("searchSalaryInfo");
         if (salaryInfo != null && !salaryInfo.isEmpty()) {
             builder.salaryInfo(salaryInfo);
-            System.out.println("SalaryInfo: " + salaryInfo);
         }
 
         String strSalaryMin = req.getParameter("searchMinSalary");
@@ -87,16 +76,13 @@ public class SalarySearchBoard extends HttpServlet {
         }
 
 
-
         SalarySearchDto salarySearchDto = builder.build();
-        System.out.println("salarySearchDto >>>> " + salarySearchDto);
         SalaryDao salaryDao = new SalaryDao();
+
+        //서치를 위한 Dto를 통해 salary_DB에서 값 조회 후 list에 담는다.
         List<SalaryPlusEmpNameDto> searchDtoList = salaryDao.getSearchSalaryList(salarySearchDto);
 
-        // 검색 결과를 요청 속성에 추가
         req.setAttribute("salaryList", searchDtoList);
-
-        // 결과를 보여줄 JSP로 포워드
         req.getRequestDispatcher("/WEB-INF/salary/salary-board.jsp").forward(req, resp);
     }
 }

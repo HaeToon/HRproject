@@ -4,7 +4,7 @@
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
     <%--  제목 영역  --%>
     <div class="board-title">
-        <h2 class="title">Attend list</h2>
+        <h2 class="title">휴가 신청 대기 목록</h2>
     </div>
     <%--검색 영역--%>
     <div class="attend-content-area p-3 bg-body-tertiary">
@@ -50,7 +50,7 @@
             <c:forEach items="${attendList}" var="attendDto" varStatus="loop">
                 <tr>
                     <td>${attendDto.empNo}</td>
-                    <td class="updateModal">${attendDto.atdNo}</td> <%--근태번호 수정키--%>
+                    <td><button type="button" class="updateModal btn btn-link" data-id="${attendDto.atdNo}">${attendDto.atdNo}</button></td>
                     <td>${attendDto.ename}</td>
                     <td>${attendDto.atdCode}</td>
                     <td>${attendDto.atdNum}</td>
@@ -121,16 +121,16 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="atdNum" class="col-sm-2 col-form-label">근태수</label>
-                            <div class="col-sm-10">
-                                <input type="number" class="form-control" id="atdNum" name="atdNum" step="0.1">
+                            <label class="col-sm-2 col-form-label">근태기간</label>
+                            <div class="col-sm-10 col-auto">
+                                <input type="date" class="form-control" id="startAtdDate" name="startAtdDate"> ~ <input type="date" class="form-control" id="endAtdDate" name="endAtdDate">
                             </div>
                         </div>
 
                         <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label">근태기간</label>
-                            <div class="col-sm-10 col-auto">
-                                <input type="date" class="form-control" id="startAtdDate" name="startAtdDate"> ~ <input type="date" class="form-control" id="endAtdDate" name="endAtdDate">
+                            <label for="atdNum" class="col-sm-2 col-form-label">근태수</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="atdNum" name="atdNum" step="0.1">
                             </div>
                         </div>
 
@@ -171,6 +171,52 @@
             </div>
         </div>
     </div>
+<br><br><br><br>
+<%--처리 완료된 근태 목록 --%>
+        <div>
+            <h3> 처리 완료된 휴가 목록</h3>
+            <hr>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">사원번호</th>
+                    <th scope="col">근태번호</th>
+                    <th scope="col">사원명</th>
+                    <th scope="col">근태코드</th>
+                    <th scope="col">근태수</th>
+                    <th scope="col">근태기간</th>
+                    <th scope="col">시작 근태일</th>
+                    <th scope="col">마지막 근태일</th>
+                    <th scope="col">휴가명</th>
+                    <th scope="col">휴가사유</th>
+                    <th scope="col">인쇄</th>
+                    <th scope="col">승인여부</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${acceptedAttendList}" var="attendDto" varStatus="loop">
+                    <tr>
+                        <td>${attendDto.empNo}</td>
+                        <td>${attendDto.atdNo}</td>
+                            <%--근태번호 수정키--%>
+                        <td>${attendDto.ename}</td>
+                        <td>${attendDto.atdCode}</td>
+                        <td>${attendDto.atdNum}</td>
+                        <td>${attendDto.atdDate}</td>
+                            <%--근태일--%>
+                        <td>${attendDto.startAtdDate}</td>
+                            <%--시작 근태일--%>
+                        <td>${attendDto.endAtdDate}</td>
+                            <%--마지막 근태일--%>
+                        <td>${attendDto.offDay}</td>
+                        <td>${attendDto.offDayRs}</td>
+                        <td>${attendDto.print}</td>
+                        <td>${attendDto.approval}</td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
 
 
 </div>
@@ -246,9 +292,33 @@
 </div>
 <script>
 
+    //근태수 계산
+    document.addEventListener("DOMContentLoaded", function() {
+        const startAtdDate = document.getElementById("startAtdDate");
+        const endAtdDate = document.getElementById("endAtdDate");
+        const atdNum = document.getElementById("atdNum");
+
+        function calculateDays() {
+            const startDate = new Date(startAtdDate.value);
+            const endDate = new Date(endAtdDate.value);
+
+            if (!isNaN(startDate) && !isNaN(endDate) && startDate <= endDate) {
+                const timeDifference = endDate - startDate;
+                const dayDifference = timeDifference / (1000 * 3600 * 24) + 1;
+                atdNum.value = dayDifference.toFixed(1);
+            } else {
+                atdNum.value = "";
+            }
+        }
+
+        startAtdDate.addEventListener("change", calculateDays);
+        endAtdDate.addEventListener("change", calculateDays);
+    });
+
+
     window.onload = function () {
         var urlParams = new URLSearchParams(window.location.search);
-
+        AttendInsertSuccess === insertAttend
         if (urlParams.get('insertAttend') === 'true') {
             alert('등록 되었습니다.');
         }
@@ -327,17 +397,20 @@
             });
         }
     });
+    // 근태번호 클릭하여 수정 모달창 열기
+    $(document).ready(function () {
+        $(document).on("click", ".updateModal", function () {
+            const selectName = $(this).data("id");  // 클릭된 버튼의 data-id 속성에서 ID를 가져옵니다
+            console.log("클릭된 ID: " + selectName);  // 클릭된 ID를 콘솔에 출력합니다
 
 
-    //수정 모달 클릭 이벤트
-    $(document).ready(function (){
-        $(document).on("click", ".updateModal", function (){
-            const selectName=$(this).text();
+
             $.ajax({
                 url: "/attend/attendUpdateInfo",
                 method: "POST",
-                data: {ATDNO: selectName},
+                data: { ATDNO: selectName },  // 요청 데이터에 ID를 포함하여 전송합니다
                 success: function (response) {
+                    // 받은 응답 데이터로 모달 창 필드를 채웁니다
                     $("#editEmpNo").val(response.empNo);
                     $("#editAtdno").val(response.atdNo);
                     $("#editEname").val(response.ename);
@@ -347,15 +420,17 @@
                     $("#editOffDay").val(response.offDay);
                     $("#editOffDayRs").val(response.offDayRs);
                     $("#editPrint").val(response.print);
-                    // Show the modal
+
+                    // 모달 창을 표시합니다
                     $("#editModal").modal("show");
                 },
                 error: function () {
-
+                    // 오류 처리
+                    alert("데이터를 가져오는 도중 오류가 발생했습니다.");
                 }
-            })
-        })
-    })
+            });
+        });
+    });
 
     // 삭제 버튼 클릭 이벤트
     $(document).on("click", ".attend-delete-button", function () {

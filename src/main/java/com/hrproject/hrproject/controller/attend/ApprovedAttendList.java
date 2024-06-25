@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/approvedAttendList")
 public class ApprovedAttendList extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServerException, IOException {
         // 서버에서 가져올 데이터를 예시로 생성

@@ -16,8 +16,7 @@ import java.io.IOException;
 public class SalaryModify extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        super.doPost(req, resp);
-
+        // 수정 전 백업 준비 과정 _ 쓸떼 없이 길다.(워크스케쥴 백업 과정이 더 최적화된 방법)
         SalaryDao salaryDao = new SalaryDao();
         SalaryLogDto salaryLogDto = SalaryLogDto.builder()
                 .salary_No(Integer.parseInt(req.getParameter("salary_No_orig")))
@@ -33,12 +32,12 @@ public class SalaryModify extends HttpServlet {
                 .whoModify("admin __ 로그인 세션으로 값 받아야함!")
                 .logStatus("M")
                 .build();
-
+        // 백업
         int result= salaryDao.insertSalaryLogDao(salaryLogDto);
         if (result>0){
             System.out.println("logDB insert is Successfully");
         }
-
+        //수정하기 위한 Dto 준비하는 과정
         SalaryPlusEmpNameDto salaryPlusEmpNameDto = SalaryPlusEmpNameDto.builder()
                 .salary_No(Integer.parseInt(req.getParameter("salary_No_modify")))
                 .accountingPeriod(req.getParameter("accountingPeriod_modify"))
@@ -48,7 +47,7 @@ public class SalaryModify extends HttpServlet {
                 .salary(Integer.parseInt(req.getParameter("salary_modify")))
                 .salaryInfo(req.getParameter("salaryInfo_modify"))
                 .build();
-
+        // DB 수정
         int result02 = salaryDao.updateSalaryDao(salaryPlusEmpNameDto);
         if (result02>0){
             System.out.println("update salary qry good");

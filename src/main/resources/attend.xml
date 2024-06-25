@@ -4,6 +4,19 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hrproject.hrproject.mybatis">
 
+    <!--  로그인한 사원의 근태 정보만 출력-->
+    <select id="getAttendListByLogin" resultType="AttendDto">
+        select * from attend
+        where empNo = #{empNo}
+    </select>
+
+    <!--  처리 상태의 근태만 띄울거임-->
+    <select id="getAcceptedAttendList" resultType="AttendDto">
+        select * from attend
+        where APPROVAL = '승인' OR APPROVAL = '반려'
+    </select>
+
+
 <!--    대기 상태의 근태만 띄울거임-->
     <select id="getWaitingAttendList" resultType="AttendDto">
         select * from attend
@@ -37,30 +50,38 @@
     </delete>
 
 
-    <sql id="searchCondition">
+<!--    로그인 상태 검색-->
+    <select id="searchLoginAttend" resultType="AttendDto">
+        SELECT * FROM ATTEND
+        <where>
+            <include refid="searchLoginCondition"/>
+        </where>
+    </select>
+
+    <sql id="searchLoginCondition">
         <choose>
-            <when test="search == 'empNo'">
-                empNo LIKE CONCAT('%', #{searchWord}, '%')
-            </when>
             <when test="search == 'atdNo'">
-                atdNo LIKE CONCAT('%', #{searchWord}, '%')
-            </when>
-            <when test="search == 'ename'">
-                ename LIKE CONCAT('%', #{searchWord}, '%')
+                atdNo LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo}
             </when>
             <when test="search == 'atdCode'">
-                atdCode LIKE CONCAT('%', #{searchWord}, '%')
+                atdCode LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo}
+            </when>
+            <when test="search == 'offDay'">
+                offDay LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo}
+            </when>
+            <when test="search == 'approval'">
+                approval LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo}
             </when>
             <otherwise>
-                empNo LIKE CONCAT('%', #{searchWord}, '%') OR
-                atdNo LIKE CONCAT('%', #{searchWord}, '%') OR
-                ename LIKE CONCAT('%', #{searchWord}, '%') OR
-                atdCode LIKE CONCAT('%', #{searchWord}, '%')
+                atdNo LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo} OR
+                atdCode LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo} OR
+                offDay LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo} OR
+                approval LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo}
             </otherwise>
         </choose>
     </sql>
 
-    <sql id="searchApprovedCondition">
+    <sql id="searchWaitingCondition">
         <choose>
             <when test="search == 'empNo'">
                 empNo LIKE CONCAT('%', #{searchWord}, '%') AND
@@ -82,24 +103,18 @@
                 empNo LIKE CONCAT('%', #{searchWord}, '%') AND approval = '대기' OR
                 atdNo LIKE CONCAT('%', #{searchWord}, '%') AND approval = '대기' OR
                 ename LIKE CONCAT('%', #{searchWord}, '%') AND approval = '대기' OR
-                atdCode LIKE CONCAT('%', #{searchWord}, '%') AND approval = '대기
-                '
+                atdCode LIKE CONCAT('%', #{searchWord}, '%') AND approval = '대기'
             </otherwise>
         </choose>
     </sql>
 
-    <select id="searchAttend" resultType="AttendDto">
-        SELECT * FROM ATTEND
-        <where>
-            <include refid="searchCondition"/>
-        </where>
-    </select>
+
 
 <!--대기상태 검색-->
     <select id="searchWaitingAttend" resultType="AttendDto">
         SELECT * FROM ATTEND
         <where>
-            <include refid="searchApprovedCondition"/>
+            <include refid="searchWaitingCondition"/>
         </where>
     </select>
 
@@ -195,8 +210,6 @@
         WHERE
         ENAME = #{empName}
     </select>
-
-
 
 
 </mapper>

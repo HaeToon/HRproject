@@ -75,7 +75,7 @@
                 <tr>
                     <c:forEach items="${week}" var="day">
                         <td><c:if test="${day != 0}">
-                            <h5 class="calendar-day">${day}
+                            <h5 class="calendar-day">${day} <br>
                                 <c:choose>
                                     <c:when test="${day < 10}">
                                         <c:set var="localDate" value="${year}${month}0${day}" />
@@ -84,17 +84,15 @@
                                         <c:set var="localDate" value="${year}${month}${day}" />
                                     </c:otherwise>
                                 </c:choose>
-
                                 <c:set var="intLocalDate" value="${localDate+0}" />
 
 
                                 <c:forEach items="${approvedAttendList}" var="attendDto" varStatus="loop">
-
                                     <c:set var="startDay" value="${fn:replace(attendDto.startAtdDate, '-', '')+0}" />
                                     <c:set var="endDay" value="${fn:replace(attendDto.endAtdDate, '-', '')+0}" />
 
                                     <c:if test="${startDay <= intLocalDate && endDay >= intLocalDate}">
-                                        <br>${attendDto.ename}
+                                        <br> ${attendDto.ename}
                                     </c:if>
                                 </c:forEach>
                             </h5></c:if></td>
@@ -106,67 +104,25 @@
     </div>
     <br><br><br>
 
-    <div>
-        <h3> 승인 상태만 따로 보기</h3>
-        <hr>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th scope="col">사원번호</th>
-                <th scope="col">근태번호</th>
-                <th scope="col">사원명</th>
-                <th scope="col">근태코드</th>
-                <th scope="col">근태수</th>
-                <th scope="col">근태기간</th>
-                <th scope="col">시작 근태일</th>
-                <th scope="col">마지막 근태일</th>
-                <th scope="col">휴가명</th>
-                <th scope="col">휴가사유</th>
-                <th scope="col">인쇄</th>
-                <th scope="col">승인여부</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach items="${approvedAttendList}" var="attendDto" varStatus="loop">
-                <tr>
-                    <td>${attendDto.empNo}</td>
-                    <td>${attendDto.atdNo}</td>
-                        <%--근태번호 수정키--%>
-                    <td>${attendDto.ename}</td>
-                    <td>${attendDto.atdCode}</td>
-                    <td>${attendDto.atdNum}</td>
-                    <td>${attendDto.atdDate}</td>
-                        <%--근태일--%>
-                    <td>${attendDto.startAtdDate}</td>
-                        <%--시작 근태일--%>
-                    <td>${attendDto.endAtdDate}</td>
-                        <%--마지막 근태일--%>
-                    <td>${attendDto.offDay}</td>
-                    <td>${attendDto.offDayRs}</td>
-                    <td>${attendDto.print}</td>
-                    <td>${attendDto.approval}</td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </div>
+
 
     <br><br><br><br>
 
+<%--    로그인한 사원의 근태 신청 목록만 출력--%>
     <div>
-        <h3> 휴가 신청 내역 </h3>
+        <h3> ${loginDto.ename}님의 신청 내역 </h3>
         <hr>
-        <%--    검색--%>
+        <%--검색--%>
         <form action="../attend/check" class="row d-flex align-items-center justify-content-start m-0">
             <div class="attend-search-area col-sm-5">
                 <div class="row">
                     <div class="col">
                         <select class="form-select" aria-label="Default select example" name="search">
                             <option value="all" ${search eq "all" ? "selected": ""}>전체</option>
-                            <option value="empNo" ${search eq "empno" ? "selected": ""}>사원번호</option>
                             <option value="aptNo" ${search eq "aptNo" ? "selected": ""}>근태번호</option>
-                            <option value="ename" ${search eq "ename" ? "selected": ""}>사원명</option>
                             <option value="atdCode" ${search eq "atdCode" ? "selected": ""}>근태코드</option>
+                            <option value="offDay" ${search eq "offDay" ? "selected": ""}>휴가명</option>
+                            <option value="approval" ${search eq "approval" ? "selected": ""}>승인여부</option>
                         </select>
                     </div>
                     <div class="col w-auto">
@@ -195,7 +151,7 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach items="${attendList}" var="attendDto" varStatus="loop">
+            <c:forEach items="${loginAttendList}" var="attendDto" varStatus="loop">
                 <tr>
                     <td>${attendDto.empNo}</td>
                     <td>${attendDto.atdNo}</td>
@@ -238,21 +194,21 @@
                         <div class="row mb-3">
                             <label for="insertEmpNo" class="col-sm-2 col-form-label">사원번호</label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" id="insertEmpNo" name="insertEmpNo">
+                                <input type="number" class="form-control" id="insertEmpNo" name="insertEmpNo" value="${loginDto.empNo}" readonly>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <label for="atdNo" class="col-sm-2 col-form-label">근태번호</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="atdNo" name="atdNo">
+                                <input type="text" class="form-control" id="atdNo" name="atdNo" placeholder="근태번호를 입력하세요.">
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <label for="eName" class="col-sm-2 col-form-label">사원명</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="ename" name="ename">
+                                <input type="text" class="form-control" id="ename" name="ename" value="${loginDto.ename}" readonly>
                             </div>
                         </div>
 
@@ -273,17 +229,17 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="atdNum" class="col-sm-2 col-form-label">근태수</label>
-                            <div class="col-sm-10">
-                                <input type="number" class="form-control" id="atdNum" name="atdNum" step="0.1">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
                             <label class="col-sm-2 col-form-label">근태기간</label>
                             <div class="col-sm-10 col-auto">
                                 <input type="date" class="form-control" id="startAtdDate" name="startAtdDate"> ~ <input
                                     type="date" class="form-control" id="endAtdDate" name="endAtdDate">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="atdNum" class="col-sm-2 col-form-label">근태수</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="atdNum" name="atdNum" step="0.1">
                             </div>
                         </div>
 
@@ -329,6 +285,29 @@
 
 
     <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const startAtdDate = document.getElementById("startAtdDate");
+            const endAtdDate = document.getElementById("endAtdDate");
+            const atdNum = document.getElementById("atdNum");
+
+            function calculateDays() {
+                const startDate = new Date(startAtdDate.value);
+                const endDate = new Date(endAtdDate.value);
+
+                if (!isNaN(startDate) && !isNaN(endDate) && startDate <= endDate) {
+                    const timeDifference = endDate - startDate;
+                    const dayDifference = timeDifference / (1000 * 3600 * 24) + 1;
+                    atdNum.value = dayDifference.toFixed(1);
+                } else {
+                    atdNum.value = "";
+                }
+            }
+
+            startAtdDate.addEventListener("change", calculateDays);
+            endAtdDate.addEventListener("change", calculateDays);
+        });
+
 
         //달력
         // Ajax 요청 후 달력 생성 예시
@@ -392,8 +371,12 @@
                             calendarBody.append(weekRow);
                         });
                     },
-                    error: function () {
+                    error: function (xhr, status, error) {
+                        console.log("XHR: " + JSON.stringify(xhr));
                         alert("서브밋 에러");
+                        alert("XHR: " + JSON.stringify(xhr)); // XHR 객체를 문자열로 변환하여 출력
+                        alert("Status: " + status);
+                        alert("Error: " + error);
                     },
                 });
             });

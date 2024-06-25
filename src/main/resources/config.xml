@@ -50,5 +50,6 @@
         <mapper resource="notice.xml"/>
         <mapper resource="workSchedule.xml"/>
         <mapper resource="community.xml"/>
+        <mapper resource="util.xml"/>
     </mappers>
 </configuration>

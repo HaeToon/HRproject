@@ -10,25 +10,15 @@ import java.util.Map;
 
 public class AttendDao {
 
-    //승인 상태의 근태만 출력
-    public List<AttendDto> getApprovedAttendList() {
+    public List<AttendDto> searchLoginAttend(String search, String searchWord, int empNo) {
         try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
-            List<AttendDto> attendList = sqlSession.selectList("getApprovedAttendList");
-            System.out.println("select query is successfully");
-            //System.out.println(attendList); // 가져온 데이터 로깅/
+            Map<String, Object> parameterMap = new HashMap<>();
+            parameterMap.put("search", search);
+            parameterMap.put("searchWord", "%" + searchWord + "%");
+            parameterMap.put("empNo", empNo);
 
-            return attendList;
-        } catch (Exception e) {
-            // 예외 발생 시 처리
-            e.printStackTrace(); // 혹은 로깅
-            return null; // 또는 예외를 상위로 다시 throw
-        }
-    }
-    //승인 상태의 근태만 출력
-    public List<AttendDto> getApprovedAttendList(AttendDto attendDto) {
-        try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
-            List<AttendDto> attendList = sqlSession.selectList("getApprovedAttendMonthList");
-            System.out.println("select query is successfully");
+            List<AttendDto> attendList = sqlSession.selectList("searchLoginAttend", parameterMap);
+            System.out.println("search query is successful");
             //System.out.println(attendList); // 가져온 데이터 로깅
 
             return attendList;
@@ -39,13 +29,40 @@ public class AttendDao {
         }
     }
 
+
+    //처리 완료된 근태 출력
+    public List<AttendDto> getAcceptedAttendList() {
+        try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
+            List<AttendDto> acceptedAttendList = sqlSession.selectList("getAcceptedAttendList");
+            System.out.println("acceptedAttendList = " + acceptedAttendList);
+            return acceptedAttendList;
+        } catch (Exception e) {
+            // 예외 발생 시 처리
+            e.printStackTrace(); // 혹은 로깅
+            System.out.println(" acceptedAttendList fail ....................." + e);
+            return null; // 또는 예외를 상위로 다시 throw
+        }
+    }
+
+    //승인 상태의 근태만 출력
+    public List<AttendDto> getApprovedAttendList() {
+        try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
+            List<AttendDto> attendList = sqlSession.selectList("getApprovedAttendList");
+            return attendList;
+        } catch (Exception e) {
+            // 예외 발생 시 처리
+            e.printStackTrace(); // 혹은 로깅
+            return null; // 또는 예외를 상위로 다시 throw
+        }
+    }
+
+
+
     //대기 중인 근태만 출력
     public List<AttendDto> getWaitingAttendList() {
         try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
             List<AttendDto> attendList = sqlSession.selectList("getWaitingAttendList");
             System.out.println("select query is successfully");
-           // System.out.println(attendList); // 가져온 데이터 로깅
-
             return attendList;
         } catch (Exception e) {
             // 예외 발생 시 처리
@@ -77,23 +94,7 @@ public class AttendDao {
     }
 
 
-    public List<AttendDto> searchAttend(String search, String searchWord) {
-        try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
-            Map<String, Object> parameterMap = new HashMap<>();
-            parameterMap.put("search", search);
-            parameterMap.put("searchWord", "%" + searchWord + "%");
 
-            List<AttendDto> attendList = sqlSession.selectList("searchAttend", parameterMap);
-            System.out.println("search query is successful");
-            //System.out.println(attendList); // 가져온 데이터 로깅
-
-            return attendList;
-        } catch (Exception e) {
-            // 예외 발생 시 처리
-            e.printStackTrace(); // 혹은 로깅
-            return null; // 또는 예외를 상위로 다시 throw
-        }
-    }
 
     public List<AttendDto> searchWaiting(String search, String searchWord) {
         try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
@@ -250,6 +251,9 @@ public class AttendDao {
             return null;
         }
     }
+
+
+
 }
 
 

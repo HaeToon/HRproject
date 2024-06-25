@@ -29,30 +29,6 @@ public class AttendDto {
     private int yearsOfWork;      // 근속 연수
     private String annualLeaveDays;  // 연차 일수
 
-    @Override
-    public String toString() {
-        return "AttendDto{" +
-                "empNo=" + empNo +
-                ", atdNo='" + atdNo + '\'' +
-                ", ename='" + ename + '\'' +
-                ", atdCode='" + atdCode + '\'' +
-                ", atdNum=" + atdNum +
-                ", atdDate='" + atdDate + '\'' +
-                ", startAtdDate='" + startAtdDate + '\'' +
-                ", endAtdDate='" + endAtdDate + '\'' +
-                ", offDay='" + offDay + '\'' +
-                ", offDayRs='" + offDayRs + '\'' +
-                ", print='" + print + '\'' +
-                ", hireDate=" + hireDate +
-                ", yearsOfWork=" + yearsOfWork +
-                ", annualLeaveDays=" + annualLeaveDays +
-                '}';
-    }
 
-    public void setRemainingAnnualLeaveDays(int i) {
-    }
-
-    public void setEmpName(String ename) {
-    }
 }
 

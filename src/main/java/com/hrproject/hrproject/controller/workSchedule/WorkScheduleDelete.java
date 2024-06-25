@@ -17,9 +17,9 @@ public class WorkScheduleDelete extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int workIdx = Integer.parseInt(req.getParameter("workIdx"));
         WorkScheduleDao workScheduleDao = new WorkScheduleDao();
+        // 클라이언트에서 받은 workIdx를 통해 워크스케쥴러 값 조회
         WorkScheduleLogDto workScheduleLogDto01 = workScheduleDao.getWorkScheduleByWorkIdx(workIdx);
-        System.out.println("workScheduleLogDto01 >>>> " + workScheduleLogDto01);
-
+        //Delete하기 전에 워크 스케쥴러 로그_DB에 백업하기 위한 과정
         WorkScheduleLogDto workScheduleLogDto02;
         workScheduleLogDto02 = WorkScheduleLogDto.builder()
                 .workIdx(workScheduleLogDto01.getWorkIdx())
@@ -34,10 +34,9 @@ public class WorkScheduleDelete extends HttpServlet {
                 .whoModify("세션 아이디 받아와야합니다~")
                 .logStatus("D")
                 .build();
-
-
+        //워크 스케쥴러 로그_DB에 백업
         workScheduleDao.insertWorkScheduleLog(workScheduleLogDto02);
-
+        //workIdx로 DB에서 삭제
         workScheduleDao.deleteWorkSchedule(workIdx);
         resp.sendRedirect("/workSchedule/adminWorkBoard");
     }

@@ -16,19 +16,13 @@ import java.io.PrintWriter;
 
 @WebServlet("/attend/delete")
 public class AttendDelete extends HttpServlet {
-    private AttendDao attendDao;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        attendDao = new AttendDao(); // AttendDao 인스턴스 생성
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 요청 파라미터에서 atdNo 가져오기
         String atdNo = request.getParameter("atdNo");
 
+        AttendDao attendDao = new AttendDao();
         // atdNo를 사용하여 데이터베이스에서 데이터 삭제
         int result = attendDao.deleteAttend(atdNo);
 

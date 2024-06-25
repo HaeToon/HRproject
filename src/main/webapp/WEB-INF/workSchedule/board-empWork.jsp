@@ -3,7 +3,6 @@
 
 
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
-    <%--     style="width: calc(100% - 520px);">--%>
     <div class="board-title"><h2 class="title">출퇴근 list</h2></div>
 
     <div class="attend-content-area p-3 bg-body-tertiary">
@@ -39,6 +38,38 @@
             </tbody>
         </table>
     </div>
+
+    <nav aria-label="Page navigation example" class="">
+        <ul class="pagination d-flex justify-content-center" style="margin-bottom: 0">
+            <c:if test="${currentPage > 1}">
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="First">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=${currentPage - 1}" aria-label="Previous">&laquo;</a>
+                </li>
+            </c:if>
+            <c:forEach begin="1" end="${noOfPages}" var="i">
+                <c:choose>
+                    <c:when test="${i == currentPage}">
+                        <li class="page-item active"><span class="page-link">${i}</span></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="page-item"><a class="page-link" href="?page=${i}">${i}</a></li>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+            <c:if test="${currentPage < noOfPages}">
+                <li class="page-item">
+                    <a class="page-link" href="?page=${currentPage + 1}" aria-label="Next">&raquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=${noOfPages}" aria-label="Last">Last</a>
+                </li>
+            </c:if>
+        </ul>
+    </nav>
+
 
 
     <script>

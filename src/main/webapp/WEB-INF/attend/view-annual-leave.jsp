@@ -49,8 +49,6 @@
 
                     <p>사용한 연차의 개수: ${usedAnnualCount}개</p>
                     <p> ${hrmDto.ename}님의 남은 연차의 개수는 ${annualLeave}개 입니다.</p>
-
-
                 </div>
             </div>
         </c:if>

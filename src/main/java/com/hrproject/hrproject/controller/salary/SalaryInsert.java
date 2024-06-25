@@ -17,16 +17,12 @@ import java.util.List;
 public class SalaryInsert extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        HrmDao hrmDao = new HrmDao();
-        List<HrmDto> hrmList = null;
-
         req.getRequestDispatcher("/WEB-INF/salary/insert-salary.jsp").forward(req, resp);
-
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 클라이언트에서 받은 값을 통해 Dto 준비
         SalaryDto salaryDto = SalaryDto.builder()
                 .empNo(Integer.parseInt(req.getParameter("empNo")))
                 .accountingPeriod(req.getParameter("accountingPeriod"))
@@ -39,23 +35,19 @@ public class SalaryInsert extends HttpServlet {
 
         SalaryDao salaryDao = new SalaryDao();
 
-        System.out.println("SalaryInsert.java __ salaryDto >>> " + salaryDto);
-
+        //salary_DB에 값 insert
         int result = salaryDao.insertSalaryDao(salaryDto);
         if (result > 0) {
             System.out.println("salary data input successfully");
             resp.sendRedirect("/salary/board");
         } else if (result == -1) {
-            // Display alert message using JavaScript
+            //만약 해당 사원이 없으면 자바스크립트를 통해 경고창 송출
             String alertMessage = "Employee number does not exist.";
             String script = "alert('" + alertMessage + "');";
             resp.getWriter().println("<script>" + script + "</script>");
-
-            // Add JavaScript to delay redirection after alert is acknowledged
             resp.getWriter().println("<script>setTimeout(function() { window.location.href = '/salary/board'; }, 100);</script>");
         } else {
             System.out.println("salary data input failed");
         }
-
     }
 }

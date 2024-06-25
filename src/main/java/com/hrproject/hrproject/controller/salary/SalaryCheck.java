@@ -3,9 +3,11 @@ package com.hrproject.hrproject.controller.salary;
 import com.google.gson.Gson;
 import com.hrproject.hrproject.dao.HrmDao;
 import com.hrproject.hrproject.dao.NoticeDao;
+import com.hrproject.hrproject.dao.SalaryDao;
 import com.hrproject.hrproject.dao.WorkScheduleDao;
 import com.hrproject.hrproject.dto.HrmDto;
 import com.hrproject.hrproject.dto.NoticeDto;
+import com.hrproject.hrproject.dto.SalaryDto;
 import com.hrproject.hrproject.dto.WorkScheduleDto;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -66,7 +68,7 @@ public class SalaryCheck extends HttpServlet {
         Calendar cal = Calendar.getInstance();
         cal.set(year, month - 1, 1); // 1월 = 0
         int dayLast = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-
+        int workTime = 0;
         boolean isWork = false;
         workDayList.put(0,0); // 일수가 1부터 시작하게 0번에 임의의값 넣기
         //해당월의 근무리스트에서 일을 했다면 근무시간 기입식
@@ -76,14 +78,30 @@ public class SalaryCheck extends HttpServlet {
                 if(i == Integer.parseInt(workScheduleDtoList.get(j).getWorkDate().substring(8))){
                     workDayList.put(i,8);
                     isWork=true;
+                    workTime++;
                 }
             }
             if(!isWork) {
                 workDayList.put(i,0);
             }
         }
-        req.setAttribute("workDayList",workDayList);
 
+        int weekdaysCount = 0;
+        //매달의 평일수 계산
+        for (int day = 1; day <= dayLast; day++) {
+            cal.set(Calendar.DAY_OF_MONTH, day);
+            int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+            // 월요일부터 금요일까지를 평일로 간주
+            if (dayOfWeek != Calendar.SATURDAY && dayOfWeek != Calendar.SUNDAY) {
+                weekdaysCount++;
+            }
+        }
+        System.out.println("평일수=="+weekdaysCount);
+        double workRate=((double)workTime/weekdaysCount)*100;
+        String formattedRate = String.format("%.1f", workRate);
+
+        req.setAttribute("workDayList",workDayList);
+        req.setAttribute("formattedRate",formattedRate);
         // 첫 번째 날의 요일 인덱스 구하기 (일요일: 1 ~ 토요일: 7)
         int firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 
@@ -153,6 +171,9 @@ public class SalaryCheck extends HttpServlet {
         req.setAttribute("diffMonth",diffMonth);
         req.setAttribute("diffDay",hireDateToSysDate);
 
+        SalaryDao salarycheckListDao = new SalaryDao();
+        List<SalaryDto>salarycheckList = salarycheckListDao.getSalaryList(empNo);
+        req.setAttribute("salarycheckList",salarycheckList);
         RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/salary/salary-check.jsp");
         dispatcher.forward(req, resp);
     }
@@ -162,6 +183,10 @@ public class SalaryCheck extends HttpServlet {
         int empNo = Integer.parseInt(req.getParameter("empNo"));
         int searchYear = Integer.parseInt(req.getParameter("year"));
         int searchMonth = Integer.parseInt(req.getParameter("month"));
+
+        String month = req.getParameter("month");
+        String year = req.getParameter("year");
+
         String workMonth = "";
         if(searchMonth<10){
             workMonth = req.getParameter("year").concat("-0"+req.getParameter("month"));
@@ -188,12 +213,14 @@ public class SalaryCheck extends HttpServlet {
         Map<Integer,Integer> workDayList = new HashMap<>(); //일한날짜 리스트
 
         boolean isWork = false;
+        int workTime = 0;
         workDayList.put(0,0);
         for(int i=1; i<=dayLast; i++){
             isWork=false;
             for(int j=0; j<workScheduleDtoList.size(); j++){
                 if(i == Integer.parseInt(workScheduleDtoList.get(j).getWorkDate().substring(8))){
                     workDayList.put(i,8);
+                    workTime++;
                     isWork=true;
                 }
             }
@@ -219,8 +246,21 @@ public class SalaryCheck extends HttpServlet {
         }
         int numberOfWeeks = weekDates.size();
 
+        int weekdaysCount = 0;
+        //매달의 평일수 계산
+        for (int day = 1; day <= dayLast; day++) {
+            cal.set(Calendar.DAY_OF_MONTH, day);
+            int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+            // 월요일부터 금요일까지를 평일로 간주
+            if (dayOfWeek != Calendar.SATURDAY && dayOfWeek != Calendar.SUNDAY) {
+                weekdaysCount++;
+            }
+        }
+        double workRate=((double)workTime/weekdaysCount)*100;
+        String formattedRate = String.format("%.1f", workRate);
+
         // 응답 객체 생성
-        ResponseData responseData = new ResponseData(weekDates, numberOfWeeks,workDayList);
+        ResponseData responseData = new ResponseData(weekDates, numberOfWeeks,workDayList,formattedRate,searchYear,searchMonth);
 
         Gson gson = new Gson();
         String json = gson.toJson(responseData);
@@ -234,11 +274,18 @@ public class SalaryCheck extends HttpServlet {
     private static class ResponseData {
         List<List<Integer>> weekDates;
         Map<Integer,Integer> workDayList;
+        List<SalaryDto>salarycheckList;
+        String workRate;
+        int month;
+        int year;
         int numberOfWeeks;
-        public ResponseData(List<List<Integer>> weekDates, int numberOfWeeks ,Map<Integer,Integer> workDayList) {
+        public ResponseData(List<List<Integer>> weekDates, int numberOfWeeks ,Map<Integer,Integer> workDayList,String workRate,int year , int month) {
             this.weekDates = weekDates;
             this.numberOfWeeks = numberOfWeeks;
             this.workDayList=workDayList;
+            this.workRate=workRate;
+            this.year=year;
+            this.month=month;
         }
     }
 }

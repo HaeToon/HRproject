@@ -3,7 +3,6 @@
 
 
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
-    <%--     style="width: calc(100% - 520px);">--%>
     <div class="board-title"><h2 class="title">출퇴근 list</h2></div>
 
     <div class="attend-content-area p-3 bg-body-tertiary">
@@ -65,6 +64,38 @@
     </div>
 
 
+    <nav aria-label="Page navigation example" class="">
+        <ul class="pagination d-flex justify-content-center" style="margin-bottom: 0">
+            <c:if test="${currentPage > 1}">
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="First">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=${currentPage - 1}" aria-label="Previous">&laquo;</a>
+                </li>
+            </c:if>
+            <c:forEach begin="1" end="${noOfPages}" var="i">
+                <c:choose>
+                    <c:when test="${i == currentPage}">
+                        <li class="page-item active"><span class="page-link">${i}</span></li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="page-item"><a class="page-link" href="?page=${i}">${i}</a></li>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+            <c:if test="${currentPage < noOfPages}">
+                <li class="page-item">
+                    <a class="page-link" href="?page=${currentPage + 1}" aria-label="Next">&raquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page=${noOfPages}" aria-label="Last">Last</a>
+                </li>
+            </c:if>
+        </ul>
+    </nav>
+
+<%--검색 모달--%>
     <div class="modal fade" id="searchModal_work" aria-hidden="true" aria-labelledby="searchModal"
          data-bs-backdrop="static"
          tabindex="-1">
@@ -77,15 +108,12 @@
                 <div class="modal-body">
                     <form action="../workSchedule/adminWorkBoard" id="searchModalForm" method="post">
                         <div class="row">
-                            <%-- form body --%>
                             <div class="col">날짜</div>
                             <div class="col col-md-4">
                                 <input type="date" class="form-control" id="search_work_date" name="searchWorkDate">
                             </div>
                         </div>
-
                         <div class="row">
-                            <%-- form body --%>
                             <div class="col">사원번호</div>
                             <div class="col col-md-4">
                                 <input type="text" class="form-control" placeholder="00008" aria-label="empNo"
@@ -95,7 +123,6 @@
 
 
                         <div class="row">
-                            <%-- form body --%>
                             <div class="col">부서</div>
                             <div class="col col-md-4">
                                 <select class="form-control" id="" name="searchWorkDept">
@@ -109,7 +136,6 @@
 
 
                         <div class="row">
-                            <%-- form body --%>
                             <div class="col">사원 이름</div>
                             <div class="col col-md-4">
                                 <input type="text" class="form-control" placeholder="00008" aria-label="empNo"
@@ -119,7 +145,6 @@
 
 
                         <div class="row">
-                            <%-- form body --%>
                             <div class="col">상태</div>
                             <div class="col col-md-4">
                                 <select class="form-control" name="searchWorkStatus">
@@ -131,7 +156,6 @@
                         </div>
 
                         <div class="row">
-                            <%-- form body --%>
                             <div class="col">휴가</div>
                             <div class="col col-md-4">
                                 <select class="form-control" name="searchWorkVacationCode">
@@ -165,11 +189,7 @@
                 <div class="modal-body">
                     <input type="password" class="form-control" id="modifyPasswordInput"
                            placeholder="비밀번호 1234/ 로그인 세션에서 값 받아서 비교해야함">
-
-
                 </div>
-
-
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" onclick="confirmModifyPassword()">확인</button>
@@ -229,7 +249,6 @@
                             </div>
                         </div>
                         <div class="row">
-                            <%-- form body --%>
                             <div class="col">상태</div>
                             <div class="col col-md-4">
                                 <select class="form-control" name="searchWorkStatus">

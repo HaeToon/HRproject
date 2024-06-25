@@ -35,10 +35,10 @@ public class AttendUpdate extends HttpServlet {
                 .offDayRs(req.getParameter("offDayRs")) //휴가사유
                 .print(req.getParameter("print")) //인쇄
                 .build();
-       /* System.out.println("atdCode===="+req.getParameter("atdCode"));
+        System.out.println("atdCode===="+req.getParameter("atdCode"));
         System.out.println("empNo===="+req.getParameter("empNo"));
         System.out.println("atdNo===="+req.getParameter("atdNo"));
-        System.out.println("atdNo===="+req.getParameter("print"));*/
+        System.out.println("atdNo===="+req.getParameter("print"));
 
         AttendDao attendDao = new AttendDao();
         int result = attendDao.updateAttend(attendDto);
