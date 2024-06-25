@@ -35,79 +35,75 @@ public class Evaluations extends HttpServlet {
 
         /* 사원별 Evaluations table 생성 및 업데이트 */
         List<HrmDto> hrmList = null;
-        HrmDao hrmdao2 = new HrmDao();
-        hrmList = hrmdao2.getAllHrmEvalList();
-        for (HrmDto hrmDto : hrmList) {
-            String grade = "";
-            boolean promote = false;
+        if (req.getParameter("page") == null) {
+            HrmDao hrmdao2 = new HrmDao();
+            hrmList = hrmdao2.getAllHrmEvalList();
+            for (HrmDto hrmDto : hrmList) {
+                String grade = "";
+                boolean promote = false;
 
-            /* 근무 성과 A ~ D (출석률) */
-            if (hrmDto.getAttendanceRate() > 98) grade = "A";
-            else if (hrmDto.getAttendanceRate() > 95) grade = "B";
-            else if (hrmDto.getAttendanceRate() > 90) grade = "C";
-            else if (hrmDto.getAttendanceRate() > 80) grade = "D";
-            else grade = "F";
+                /* 근무 성과 A ~ D (출석률) */
+                if (hrmDto.getAttendanceRate() > 98) grade = "A";
+                else if (hrmDto.getAttendanceRate() > 95) grade = "B";
+                else if (hrmDto.getAttendanceRate() > 90) grade = "C";
+                else if (hrmDto.getAttendanceRate() > 80) grade = "D";
+                else grade = "F";
 
-            /* 입사일 or 진급일부터 오늘까지 일한 날(개월) */
-            int yosMonth = 0;
-            if (hrmDto.getPosNo() == 10) yosMonth = hrmDto.getYosYear() * 12 + hrmDto.getYosMonth();
-            else {
+                /* 입사일 or 진급일부터 오늘까지 일한 날(개월) */
+                int yosMonth = 0;
+                if (hrmDto.getPosNo() == 10) yosMonth = hrmDto.getYosYear() * 12 + hrmDto.getYosMonth();
+                else {
+                    HrmDao hrmDao = new HrmDao();
+                    EvaluationDto evaluationDto = hrmDao.getEvaluation(hrmDto.getEmpNo());
+                    if (evaluationDto == null) {
+                        HrmDao hrmDaoCreateEvaluation = new HrmDao();
+                        evaluationDto = EvaluationDto.builder()
+                                .empNo(hrmDto.getEmpNo())
+                                .evaluationYear(hrmDto.getHireDate())
+                                .comments("...")
+                                .build();
+                        hrmDaoCreateEvaluation.createEvaluation(evaluationDto);
+                    }
+                    yosMonth = evaluationDto.getYosYear() * 12 + evaluationDto.getYosMonth();
+                }
+                /* 근무성과 진급 가산점 계산 */
+                if (grade.equals("A")) yosMonth += 24;
+                else if (grade.equals("B")) yosMonth += 12;
+                else if (grade.equals("C")) yosMonth += 0;
+                else if (grade.equals("D")) yosMonth -= 12;
+                else yosMonth -= 60;
+                /* 직급별 진급에 필요한 근무개월수 */
+                if (hrmDto.getPosNo() == 10 && yosMonth > 60) promote = true;
+                else if (hrmDto.getPosNo() == 20 && yosMonth > 72) promote = true;
+                else if (hrmDto.getPosNo() == 30 && yosMonth > 84) promote = true;
+                else if (hrmDto.getPosNo() == 40 && yosMonth > 96) promote = true;
+
+                /*사원 평가 Evaluation 테이블 생성 및 업데이트*/
                 HrmDao hrmDao = new HrmDao();
-                EvaluationDto evaluationDto = hrmDao.getEvaluation(hrmDto.getEmpNo());
-                if (evaluationDto == null) {
+                if (hrmDao.getEvaluation(hrmDto.getEmpNo()) == null) {
                     HrmDao hrmDaoCreateEvaluation = new HrmDao();
-                    evaluationDto = EvaluationDto.builder()
+                    EvaluationDto evaluationDto = EvaluationDto.builder()
                             .empNo(hrmDto.getEmpNo())
                             .evaluationYear(hrmDto.getHireDate())
+                            .performanceGrade(grade)
+                            .promote(promote)
                             .comments("...")
                             .build();
                     hrmDaoCreateEvaluation.createEvaluation(evaluationDto);
+                } else {
+                    HrmDao hrmDaoUpdateEvaluation = new HrmDao();
+                    EvaluationDto evaluationDto = EvaluationDto.builder()
+                            .performanceGrade(grade)
+                            .promote(promote)
+                            .empNo(hrmDto.getEmpNo())
+                            .build();
+                    hrmDaoUpdateEvaluation.updateEvaluation(evaluationDto);
                 }
-                yosMonth = evaluationDto.getYosYear() * 12 + evaluationDto.getYosMonth();
-            }
-            /* 근무성과 진급 가산점 계산 */
-            if (grade.equals("A")) yosMonth += 24;
-            else if (grade.equals("B")) yosMonth += 12;
-            else if (grade.equals("C")) yosMonth += 0;
-            else if (grade.equals("D")) yosMonth -= 12;
-            else yosMonth -= 60;
-            /* 직급별 진급에 필요한 근무개월수 */
-            if (hrmDto.getPosNo() == 10 && yosMonth > 60) promote = true;
-            else if (hrmDto.getPosNo() == 20 && yosMonth > 72) promote = true;
-            else if (hrmDto.getPosNo() == 30 && yosMonth > 84) promote = true;
-            else if (hrmDto.getPosNo() == 40 && yosMonth > 96) promote = true;
-
-            /*사원 평가 Evaluation 테이블 생성 및 업데이트*/
-            HrmDao hrmDao = new HrmDao();
-            if (hrmDao.getEvaluation(hrmDto.getEmpNo()) == null) {
-                HrmDao hrmDaoCreateEvaluation = new HrmDao();
-                EvaluationDto evaluationDto = EvaluationDto.builder()
-                        .empNo(hrmDto.getEmpNo())
-                        .evaluationYear(hrmDto.getHireDate())
-                        .performanceGrade(grade)
-                        .promote(promote)
-                        .comments("...")
-                        .build();
-                hrmDaoCreateEvaluation.createEvaluation(evaluationDto);
-            } else {
-                HrmDao hrmDaoUpdateEvaluation = new HrmDao();
-                EvaluationDto evaluationDto = EvaluationDto.builder()
-                        .performanceGrade(grade)
-                        .promote(promote)
-                        .empNo(hrmDto.getEmpNo())
-                        .build();
-                hrmDaoUpdateEvaluation.updateEvaluation(evaluationDto);
             }
         }
-
         /* 승진대상자 페이지면(param 값으로 판단) 승진대상자만 보임 */
         String promoteParam = req.getParameter("promote");
         if ("true".equals(promoteParam)) {
-            HttpSession session = req.getSession();
-            HrmDto loginDto = (HrmDto) session.getAttribute("loginDto");
-            if (!loginDto.getGrade().equals("admin")){
-                resp.sendRedirect("../index/index");
-            }
             HrmDao hrmdao = new HrmDao();
             hrmList = hrmdao.getHrmEvaluationList();
         } else {
@@ -210,8 +206,8 @@ public class Evaluations extends HttpServlet {
         HrmDao hrmDao = new HrmDao();
         int result = 0;
         result = hrmDao.promote(empNo);
-        if (result > 0){
-            ScriptWriter.alertAndNext(resp,"승진 처리 완료","../hrm/evaluation?promote=true");
-        } else ScriptWriter.alertAndBack(resp,"알수 없는 에러");
+        if (result > 0) {
+            ScriptWriter.alertAndNext(resp, "승진 처리 완료", "../hrm/evaluation?promote=true");
+        } else ScriptWriter.alertAndBack(resp, "알수 없는 에러");
     }
 }

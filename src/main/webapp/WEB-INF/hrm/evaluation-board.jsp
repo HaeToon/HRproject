@@ -48,7 +48,7 @@
                 <th scope="col">사원명</th>
                 <th scope="col">입사일</th>
                 <th scope="col">근속연수</th>
-                <th scope="col">마지막 진급일</th>
+                <th scope="col">최근 진급</th>
                 <th scope="col">사원평가등급</th>
                 <th scope="col">승진대상</th>
                 <c:if test="${param.promote eq true}">
@@ -73,7 +73,7 @@
                     <td>${hrmDto.ename}</td>
                     <td>${hrmDto.hireDate}</td>
                     <td>${hrmDto.yosYear}년${hrmDto.yosMonth}개월</td>
-                    <td>${evalDto.evaluationYear}</td>
+                    <td>${evalDto.evaluationYear}, ${evalDto.comments}</td>
                     <td>${evalDto.performanceGrade}</td>
                     <td><c:choose><c:when test="${evalDto.promote eq true}">O</c:when><c:otherwise>X</c:otherwise></c:choose></td>
                     <td>

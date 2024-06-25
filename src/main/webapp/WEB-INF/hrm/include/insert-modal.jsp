@@ -13,7 +13,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">인사카드등록</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="../hrm/insert" id="modalForm" method="post" enctype="multipart/form-data">
@@ -131,12 +131,12 @@
                                     <option value="기업은행">기업은행</option>
                                     <option value="외환은행">외환은행</option>
                                 </select>
-                                <span class="input-group-text">통장번호</span>
-                                <input type="text" class="form-control col-6 is-invalid" aria-label="account"
-                                       name="account" id="account">
                                 <span class="input-group-text">예금주</span>
                                 <input type="text" class="form-control col-2" aria-label="accountHolder"
                                        name="accountHolder">
+                                <span class="input-group-text">통장번호</span>
+                                <input type="text" class="form-control col-6 is-invalid" aria-label="account"
+                                       name="account" id="account">
                                 <button class="btn btn-outline-secondary btn-duplicate" type="button"
                                         id="btn-account-duplicate">확인
                                 </button>
@@ -187,7 +187,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="modalForm" class="btn btn-primary" id="btn-insert">Submit</button>
                 <button type="reset" form="modalForm" class="btn btn-danger" id="reset">Reset</button>
             </div>
@@ -197,8 +197,14 @@
 
 <script>
 
+    /* 닫기 버튼 클릭시 페이지 새로고침 */
+    $(".close").on("click", () => {
+        location.reload();
+    });
+
     let emailChecked = false;
     let mobileChecked = false;
+    let accountChecked = false;
     let passportChecked = true;
     $('#reset').click(function () {
         $('#birthDate').addClass('is-invalid');
@@ -215,17 +221,23 @@
         $('#mobile').addClass('is-invalid');
         $('#mobile').prop('readonly', false);
 
+        // 계좌번호 입력 필드 초기화
+        $('#account').removeClass('is-valid');
+        $('#account').addClass('is-invalid');
+        $('#account').prop('readonly', false);
+
         // 여권 입력 필드 초기화
         $('#passport').removeClass('is-valid');
         $('#passport').removeClass('is-invalid');
         $('#passport').prop('readonly', false);
         emailChecked = false;
         mobileChecked = false;
+        accountChecked = false;
         passportChecked = true;
     });
 
+    /* 제출시 필수 입력 사항 공백 없는지 확인 */
     $("#btn-insert").on("click", () => {
-        /* 필수 입력 사항 체크 */
         if ($("#ename").val().trim() === "") {
             alert("성명은 필수입력 사항입니다.");
             $("#ename").focus();
@@ -278,12 +290,19 @@
             return false;
         }
         if (!passportChecked) {
-            alert("여권번호 중복확인 필요 ㄱㄱ")
+            alert("여권번호 중복확인 필요")
             $("#passport").focus();
+            return false;
+        }
+        if (!accountChecked) {
+            alert("계좌번호 중복확인 필요")
+            $("#account").focus();
             return false;
         }
     });
 
+
+    /* 중복 체크 */
     $(".btn-duplicate").on("click", function () {
         var inputId = $(this).prev().attr("id");
         var checkField;
@@ -296,6 +315,13 @@
                     return; // 이미 중복 확인을 완료한 경우, 추가 확인 방지
                 }
                 checkField = "email";
+                data = {check: checkField, checkValue: checkValue};
+                break;
+            case "account":
+                if (accountChecked) {
+                    return; // 이미 중복 확인을 완료한 경우, 추가 확인 방지
+                }
+                checkField = "account";
                 data = {check: checkField, checkValue: checkValue};
                 break;
             case "passport":
@@ -340,6 +366,10 @@
                                 $("#" + inputId).addClass('is-valid');
                                 emailChecked = true;
                                 break;
+                            case "account":
+                                $("#" + inputId).addClass('is-valid');
+                                accountChecked = true;
+                                break;
                             case "passport":
                                 $("#" + inputId).removeClass('is-invalid');
                                 $("#" + inputId).addClass('is-valid');
@@ -363,6 +393,7 @@
     });
 
 
+    /* 생년월일 날짜 오늘 이후 선택 불가능, 입사일자 = 필수입력사항 선택하면 invalid 제거 */
     $(document).ready(function () {
         // 오늘 날짜를 yyyy-mm-dd 형식으로 가져오기
         var today = new Date().toISOString().split('T')[0];
@@ -390,6 +421,7 @@
         });
     });
 
+    /* 필수 입력사항 입력하면 invalid 제거 공백시 생성 */
     $("#ename").on("keyup", function () {
         if ($(this).val() !== '') {
             $(this).removeClass('is-invalid');

@@ -13,7 +13,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="modifyHrmToggleLabel">사원 정보 수정</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="../hrm/update" id="modifyModalForm" method="post" enctype="multipart/form-data">
@@ -131,12 +131,12 @@
                                     <option value="기업은행">기업은행</option>
                                     <option value="외환은행">외환은행</option>
                                 </select>
-                                <span class="input-group-text">통장번호</span>
-                                <input type="text" class="form-control col-6" aria-label="account"
-                                       name="account" id="account_update">
                                 <span class="input-group-text">예금주</span>
                                 <input type="text" class="form-control col-2" aria-label="accountHolder"
                                        name="accountHolder" id="accountHolder_update">
+                                <span class="input-group-text">통장번호</span>
+                                <input type="text" class="form-control col-6" aria-label="account"
+                                       name="account" id="account_update">
                             </div>
                         </div>
                     </div>
@@ -185,7 +185,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="modifyModalForm" class="btn btn-primary" id="btn-update">수정</button>
                 <form action="../hrm/change-password" method="post" id="password-reset-form">
                     <input type="hidden" id="empNo_password_update" name="empNoPasswordReset">
@@ -197,6 +197,9 @@
 </div>
 
 <script>
+    $(".close").on("click", () => {
+        location.reload();
+    });
 
     let empNo_password_reset;
     $("#password-reset-btn").on("click", function () {
@@ -276,7 +279,7 @@
             return false;
         }
         if (!passportChecked_update) {
-            alert("아이디 중복 체크 ㄱㄱ")
+            alert("여권번호 중복확인 필요")
             $("#passport").focus();
             return false;
         }
@@ -340,14 +343,17 @@
                         $("#" + inputId).attr("readonly", true);
                         switch (inputId) {
                             case "email_update":
+                                $("#" + inputId).removeClass('is-invalid');
                                 $("#" + inputId).addClass('is-valid');
                                 emailChecked_update = true;
                                 break;
                             case "passport_update":
+                                $("#" + inputId).removeClass('is-invalid');
                                 $("#" + inputId).addClass('is-valid');
                                 passportChecked_update = true;
                                 break;
                             case "mobile_update":
+                                $("#" + inputId).removeClass('is-invalid');
                                 $("#" + inputId).addClass('is-valid');
                                 mobileChecked_update = true;
                                 break;

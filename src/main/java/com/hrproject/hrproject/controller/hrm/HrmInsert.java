@@ -91,7 +91,7 @@ public class HrmInsert extends HttpServlet {
 
         HrmDao hrmGetMaxDao = new HrmDao();
         int maxEmpNo = hrmGetMaxDao.getMaxEmpNo();
-        if (Integer.parseInt(req.getParameter("empNo")) == maxEmpNo + 1 || !isNullCheck(req)) {
+        if (Integer.parseInt(req.getParameter("empNo")) == maxEmpNo + 1 && !isNullCheck(req) && duplicateCheck(req) == 0) {
             Part profile = req.getPart("profile");
             String renameProfile = "";
             //String originalProfile = "";
@@ -194,5 +194,20 @@ public class HrmInsert extends HttpServlet {
                 || req.getParameter("postCode") == null || req.getParameter("postCode").equals("")
                 || req.getParameter("address") == null || req.getParameter("address").equals("");
         return nullCheck;
+    }
+
+    private static int duplicateCheck(HttpServletRequest req) {
+        HrmDao hrmDao = new HrmDao();
+        HrmDao hrmDao2 = new HrmDao();
+        HrmDao hrmDao3 = new HrmDao();
+        int result = 0;
+        result += hrmDao.duplicateCheck("email",req.getParameter("email"));
+        result += hrmDao2.duplicateCheck("mobile",req.getParameter("mobile"));
+        result += hrmDao3.duplicateCheck("account",req.getParameter("account"));
+        if (req.getParameter("passport") != null && !req.getParameter("passport").equals("")){
+            HrmDao hrmDao4 = new HrmDao();
+            result += hrmDao4.duplicateCheck("passport",req.getParameter("passport"));
+        }
+        return result;
     }
 }
