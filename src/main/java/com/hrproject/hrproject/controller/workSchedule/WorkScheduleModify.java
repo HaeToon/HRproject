@@ -26,7 +26,7 @@ public class WorkScheduleModify extends HttpServlet {
         String startTime = req.getParameter("modifyStartTime");
         String endTime = req.getParameter("modifyEndTime");
         int workIdx = Integer.parseInt(req.getParameter("workIdx_modify"));
-        String status = req.getParameter(" searchWorkStatus");
+        String status = req.getParameter("searchWorkStatus");
         String startTimeFormat = "";
         String endTimeFormat = "";
 
