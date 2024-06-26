@@ -202,9 +202,6 @@
 </div>
 
 <script>
-    $(".close").on("click", () => {
-        location.reload();
-    });
 
     let empNo_password_reset;
     $("#password-reset-btn").on("click", function () {

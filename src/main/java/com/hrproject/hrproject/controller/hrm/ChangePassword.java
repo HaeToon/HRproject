@@ -59,7 +59,7 @@ public class ChangePassword extends HttpServlet {
             HrmDao changePWDao = new HrmDao();
             int changePWResult = changePWDao.changePW(hrmDto);
             if (changePWResult > 0) {
-                ScriptWriter.alertAndNext(resp, "사원 비밀번호가 변경되었습니다.", "../hrm/mypage");
+                ScriptWriter.alertAndNext(resp, "사원 비밀번호가 변경되었습니다.", "../index/index");
             } else {
                 ScriptWriter.alertAndBack(resp, "오류가 발생했습니다. 다시 시도해주세요.");
             }

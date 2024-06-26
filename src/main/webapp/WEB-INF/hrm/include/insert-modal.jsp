@@ -197,11 +197,6 @@
 
 <script>
 
-    /* 닫기 버튼 클릭시 페이지 새로고침 */
-    $(".close").on("click", () => {
-        location.reload();
-    });
-
     let emailChecked = false;
     let mobileChecked = false;
     let accountChecked = false;

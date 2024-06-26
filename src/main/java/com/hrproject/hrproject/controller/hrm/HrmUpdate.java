@@ -144,6 +144,13 @@ public class HrmUpdate extends HttpServlet {
         return nullCheck;
     }
 
+    private static boolean isChanged(HttpServletRequest req, int empNo) {
+        HrmDao hrmDao = new HrmDao();
+        HrmDto hrmDto = hrmDao.getHrm(empNo);
+
+        return true;
+    }
+
     private static int duplicateCheck(HttpServletRequest req) {
         HrmDao hrmDao = new HrmDao();
         HrmDto hrmDto = hrmDao.getHrm(Integer.parseInt(req.getParameter("empNo")));

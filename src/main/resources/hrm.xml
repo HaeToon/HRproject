@@ -24,10 +24,7 @@
                 email LIKE CONCAT('%', #{searchWord}, '%')
             </when>
             <otherwise>
-                empno LIKE CONCAT('%', #{searchWord}, '%') OR
-                ename LIKE CONCAT('%', #{searchWord}, '%') OR
-                deptname LIKE CONCAT('%', #{searchWord}, '%') OR
-                email LIKE CONCAT('%', #{searchWord}, '%')
+                empno LIKE CONCAT('%', #{searchWord}, '%')
             </otherwise>
         </choose>
     </sql>
@@ -55,11 +52,11 @@
         FROM WORK_SCHEDULE ws
         WHERE ws.EMPNO = hrm.EMPNO AND ws.STATUS = '퇴근') /
         (
-        (DATEDIFF(CURDATE(), hrm.HIREDATE) + 1) -  -- 총 일수에 1을 더해서 오늘날짜도 포함시킴
-        (DATEDIFF(CURDATE(), hrm.HIREDATE) DIV 7 * 2) -  -- 주말 수를 고려해서 두 번 제거
-        (CASE WHEN WEEKDAY(hrm.HIREDATE) = 6 THEN 1 ELSE 0 END) -  -- 입사일이 일요일인 경우 하루를 빼줌
-        (CASE WHEN WEEKDAY(CURDATE()) = 5 THEN 1 ELSE 0 END)  -- 오늘이 토요일인 경우 하루를 더해줌
-        ) * 100  -- 퍼센트 비율로 계산
+        (DATEDIFF(CURDATE(), hrm.HIREDATE) + 1) - -- 총 일수에 1을 더해서 오늘날짜도 포함시킴
+        (DATEDIFF(CURDATE(), hrm.HIREDATE) DIV 7 * 2) - -- 주말 수를 고려해서 두 번 제거
+        (CASE WHEN WEEKDAY(hrm.HIREDATE) = 6 THEN 1 ELSE 0 END) - -- 입사일이 일요일인 경우 하루를 빼줌
+        (CASE WHEN WEEKDAY(CURDATE()) = 5 THEN 1 ELSE 0 END) -- 오늘이 토요일인 경우 하루를 더해줌
+        ) * 100 -- 퍼센트 비율로 계산
         ) AS attendanceRate
     </sql>
 
@@ -98,7 +95,7 @@
     </select>
 
     <!--    출퇴근 기록에 필요해서 만들었습니다.!! -->
-    <select id="getEmpNoList" resultType="HrmDto" >
+    <select id="getEmpNoList" resultType="HrmDto">
         select empNo from hrm
     </select>
 
@@ -114,7 +111,8 @@
 
     <insert id="insertHrm" parameterType="HrmDto">
         INSERT INTO HRM (
-        EMPNO, ENAME, FOREIGN_NAME, BIRTHDATE, PASSWORD, DEPTNO, DEPTNAME, POSNO, POSNAME, ROLENAME, MOBILE, PASSPORT, EMAIL,
+        EMPNO, ENAME, FOREIGN_NAME, BIRTHDATE, PASSWORD, DEPTNO, DEPTNAME, POSNO, POSNAME, ROLENAME, MOBILE, PASSPORT,
+        EMAIL,
         BANK_NAME, ACCOUNT, ACCOUNT_HOLDER, POSTCODE, ADDRESS, ADDRESS_DETAIL, HIREDATE, HIRETYPE, RESIGNDATE,
         OUTREASONS, ORIGINAL_PROFILE, RENAME_PROFILE, REMARKS, GRADE, SHOWABLE
         ) VALUES (
@@ -152,20 +150,11 @@
         OUTREASONS = #{outReasons},
         ORIGINAL_PROFILE = #{originalProfile},
         <if test="renameProfile != ''">
-        RENAME_PROFILE = #{renameProfile},
+            RENAME_PROFILE = #{renameProfile},
         </if>
         REMARKS = #{remarks}
         WHERE EMPNO = #{empNo}
     </update>
-
-
-    <!--    <update id="setShowAbleHrm">-->
-    <!--        &lt;!&ndash; 한번에 여러개 삭제할때 씀 &ndash;&gt;-->
-    <!--        UPDATE HRM SET SHOWABLE = 0 WHERE EMPNO IN-->
-    <!--        <foreach collection="array" item="item" open="(" close=")" separator=",">-->
-    <!--            #{item}-->
-    <!--        </foreach>-->
-    <!--    </update>-->
 
     <update id="changeHrmPw" parameterType="HrmDto">
         UPDATE HRM SET PASSWORD = #{password}
@@ -188,23 +177,25 @@
     <select id="getEvaluation" resultType="EvaluationDto">
         SELECT *,
         TIMESTAMPDIFF(YEAR, e.evaluation_YEAR, CURDATE()) AS yosYear,
-        TIMESTAMPDIFF(MONTH, e.evaluation_YEAR, CURDATE()) - TIMESTAMPDIFF(YEAR, e.evaluation_YEAR , CURDATE()) * 12 AS yosMonth,
+        TIMESTAMPDIFF(MONTH, e.evaluation_YEAR, CURDATE()) - TIMESTAMPDIFF(YEAR, e.evaluation_YEAR , CURDATE()) * 12 AS
+        yosMonth,
         (
         (SELECT COUNT(ws.STATUS)
         FROM WORK_SCHEDULE ws
         WHERE ws.EMPNO = hrm.EMPNO AND ws.STATUS = '퇴근' AND ws.WORKDATE > e.evaluation_YEAR) /
         (
-        (DATEDIFF(CURDATE(), e.evaluation_YEAR) + 1) -  -- 총 일수에 1을 더해서 오늘날짜도 포함시킴
-        (DATEDIFF(CURDATE(), e.evaluation_YEAR) DIV 7 * 2) -  -- 주말 수를 고려해서 두 번 제거
-        (CASE WHEN WEEKDAY(e.evaluation_YEAR) = 6 THEN 1 ELSE 0 END) -  -- 입사일이 일요일인 경우 하루를 빼줌
-        (CASE WHEN WEEKDAY(CURDATE()) = 5 THEN 1 ELSE 0 END)  -- 오늘이 토요일인 경우 하루를 더해줌
-        ) * 100  -- 퍼센트 비율로 계산
+        (DATEDIFF(CURDATE(), e.evaluation_YEAR) + 1) - -- 총 일수에 1을 더해서 오늘날짜도 포함시킴
+        (DATEDIFF(CURDATE(), e.evaluation_YEAR) DIV 7 * 2) - -- 주말 수를 고려해서 두 번 제거
+        (CASE WHEN WEEKDAY(e.evaluation_YEAR) = 6 THEN 1 ELSE 0 END) - -- 입사일이 일요일인 경우 하루를 빼줌
+        (CASE WHEN WEEKDAY(CURDATE()) = 5 THEN 1 ELSE 0 END) -- 오늘이 토요일인 경우 하루를 더해줌
+        ) * 100 -- 퍼센트 비율로 계산
         ) AS attendanceRate
         FROM (
         SELECT HRM.*, ROW_NUMBER() OVER () AS num
         FROM HRM
         WHERE HRM.showAble = 1
-        ) AS hrm join evaluations e where hrm.empno = e.empno and e.empno = #{value} ORDER BY e.evaluation_YEAR desc LIMIT 1
+        ) AS hrm join evaluations e where hrm.empno = e.empno and e.empno = #{value} ORDER BY e.evaluation_YEAR desc
+        LIMIT 1
     </select>
 
     <select id="getHrmEvaluationList" resultType="HrmDto" parameterType="EvaluationDto">
@@ -239,28 +230,29 @@
     </update>
 
 
-
     <select id="getEvalHrmList" resultType="HrmDto" parameterType="HrmPageDto">
-    SELECT *,
+        SELECT *,
         <include refid="evaluation"></include>
-    FROM (
+        FROM (
         SELECT HRM.*, ROW_NUMBER() OVER () AS num
         FROM HRM
         WHERE HRM.showAble = 1
-    ) AS hrm
+        ) AS hrm
         <if test="start != null and end != null">
-    LIMIT #{start}, #{end}
+            LIMIT #{start}, #{end}
         </if>
     </select>
 
     <select id="getEvalSearchHrmList" resultType="HrmDto" parameterType="HrmPageDto">
         SELECT *,
         <include refid="evaluation"></include>
+        FROM (
         SELECT HRM.*, ROW_NUMBER() OVER () AS num
         FROM HRM
         WHERE HRM.showAble = 1
         <if test="search != null and searchWord != null">
-            and hrm.<include refid="search"></include>
+            and hrm.
+            <include refid="search"></include>
         </if>
         ) AS hrm
         LIMIT #{start}, #{end}

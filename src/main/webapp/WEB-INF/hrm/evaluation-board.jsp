@@ -18,7 +18,6 @@
                         <div class="row g-3">
                             <div class="col">
                                 <select class="form-select" aria-label="Default select example" name="search">
-                                    <option value="all" ${search eq "all" ? "selected": ""}>전체</option>
                                     <option value="empno" ${search eq "empno" ? "selected": ""}>사원번호</option>
                                     <option value="ename" ${search eq "ename" ? "selected": ""}>사원명</option>
                                     <option value="deptname" ${search eq "deptname" ? "selected": ""}>부서명</option>

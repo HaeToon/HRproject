@@ -15,7 +15,6 @@
                     <div class="row g-3">
                         <div class="col">
                             <select class="form-select" aria-label="Default select example" name="search">
-                                <option value="all" ${search eq "all" ? "selected": ""}>전체</option>
                                 <option value="empno" ${search eq "empno" ? "selected": ""}>사원번호</option>
                                 <option value="ename" ${search eq "ename" ? "selected": ""}>사원명</option>
                                 <option value="deptname" ${search eq "deptname" ? "selected": ""}>부서명</option>
@@ -37,7 +36,6 @@
         <table class="table table-sm">
             <thead>
             <tr>
-                <%-- 9개 --%>
                 <th scope="col">번호</th>
                 <th scope="col">입사일자</th>
                 <th scope="col">사원번호</th>
@@ -45,13 +43,40 @@
                 <th scope="col">부서번호(명)</th>
                 <th scope="col">직위/직급명</th>
                 <th scope="col">Email</th>
-                <th scope="col">계좌번호</th>
-                <th scope="col">새로운 항목 추가???</th>
+                <th scope="col" class="mobileData" style="display: none;">전화번호</th>
+                <th scope="col" class="birthDateData" style="display: none;">생일</th>
+                <th scope="col" class="roleData" style="display: none;">직책</th>
+                <th scope="col" class="accountData" style="display: none;">계좌</th>
+                <th scope="col" class="addressData" style="display: none;">주소</th>
+                <th scope="col">
+                    <div class="btn-group dropdown">
+                        <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            기타정보
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><label class="dropdown-item"><input type="checkbox" class="chk me-2"
+                                                                    id="chkMobile" onclick="toggleData('chkMobile','mobileData')">전화번호</label>
+                            </li>
+                            <li><label class="dropdown-item"><input type="checkbox" class="chk me-2"
+                                                                    id="chkBirthDate" onclick="toggleData('chkBirthDate', 'birthDateData')">생일</label>
+                            </li>
+                            <li><label class="dropdown-item"><input type="checkbox" class="chk me-2"
+                                                                    id="chkRole" onclick="toggleData('chkRole', 'roleData')">직책</label>
+                            </li>
+                            <li><label class="dropdown-item"><input type="checkbox" class="chk me-2"
+                                                                    id="chkAccount" onclick="toggleData('chkAccount', 'accountData')">계좌</label>
+                            </li>
+                            <li><label class="dropdown-item"><input type="checkbox" class="chk me-2"
+                                                                    id="chkAddress" onclick="toggleData('chkAddress', 'addressData')">주소</label>
+                            </li>
+                        </ul>
+                    </div>
+                </th>
                 <th scope="col">조회 / 수정 / 삭제</th>
             </tr>
             </thead>
             <tbody>
-
             <c:forEach items="${hrmList}" var="hrmDto" varStatus="loop">
                 <c:choose>
                     <%-- 현재 주소창에 '?page=' param이 없을시 page=1로 설정 --%>
@@ -60,7 +85,7 @@
                 </c:choose>
                 <tr>
                     <td>
-                        <input type="checkbox" class="chk btn-check" id="btn-check-${loop.index}"
+                        <input type="checkbox" class="btn-check" id="btn-check-${loop.index}"
                                autocomplete="off"
                                value="${hrmDto.empNo}" name="check"
                                style="width: 20px; height: 20px">
@@ -73,16 +98,19 @@
                     <td>${hrmDto.deptName}</td>
                     <td>${hrmDto.posName}</td>
                     <td>${hrmDto.email}</td>
-                    <td>${hrmDto.account}</td>
-                    <td><input type="text" value="일단빈칸"></td>
+                    <td class="mobileData" style="display: none;">${hrmDto.mobile}</td>
+                    <td class="birthDateData" style="display: none;">${hrmDto.birthDate}</td>
+                    <td class="roleData" style="display: none;">${hrmDto.roleName}</td>
+                    <td class="accountData" style="display: none;">${hrmDto.bankName} ${hrmDto.account}</td>
+                    <td class="addressData" style="display: none;">${hrmDto.address}</td>
+                    <td></td>
                     <td>
                         <button type="button" class="btn btn-primary view-button" data-empno="${hrmDto.empNo}"
                                 data-bs-toggle="modal" data-bs-target="#viewModal">상세
                         </button>
                         <button type="button" class="btn btn-primary modify-button"
-                                data-bs-target="#modifyModal"
-                                data-empno="${hrmDto.empNo}"
-                                data-bs-toggle="modal" data-bs-target="#modifyModal">수정
+                                data-bs-target="#modifyModal" data-empno="${hrmDto.empNo}"
+                                data-bs-toggle="modal">수정
                         </button>
                         <button type="button" class="btn btn-danger delete-button"
                                 data-empno="${hrmDto.empNo}"
@@ -158,9 +186,6 @@
                 </ul>
             </nav>
             <div class="text-end">
-                <%--                <a href="#" data-bs-toggle="modal" class="openModal btn btn-danger"--%>
-                <%--                   data-bs-target="#staticBackdropView" onclick="return chk_form()"--%>
-                <%--                   data-show="delete">삭제</a>--%>
                 <button type="button" class="btn btn-primary" style="width: 100px" data-bs-toggle="modal"
                         data-bs-target="#insertModal">신규
                 </button>
@@ -180,6 +205,32 @@
     <jsp:include page="include/delete-modal.jsp" flush="true"/>
 </div>
 <script>
+    function toggleData(checkboxId, className) {
+        var checkbox = document.getElementById(checkboxId);
+        var dataElements = document.getElementsByClassName(className);
+
+        for (var i = 0; i < dataElements.length; i++) {
+            if (checkbox.checked) {
+                dataElements[i].style.display = "none";
+            } else {
+                dataElements[i].style.display = "table-cell";
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        // 클릭된 라벨 안의 체크박스를 토글
+        $('.dropdown-menu label.dropdown-item').on('click', function (e) {
+            e.stopPropagation(); // 드롭다운 메뉴가 닫히는 것을 방지
+            const checkbox = $(this).find('input[type="checkbox"]');
+            checkbox.prop('checked', !checkbox.prop('checked'));
+        });
+    });
+
+    $(".close").on("click", () => {
+        location.reload();
+    });
+
     // 상세 보기 버튼 클릭 이벤트 핸들러
     $('.view-button').click(function () {
         var empNo = $(this).attr('data-empno');
@@ -267,33 +318,24 @@
         });
     });
 
+
     let empNo;
     document.querySelectorAll('.delete-button').forEach(button => {
         button.addEventListener('click', function () {
             empNo = this.getAttribute('data-empno');
         });
     });
-
     function confirmDelete() {
         const password = document.getElementById('deletePasswordInput').value;
+        const outReasons = document.getElementById('outReasons').value;
+        const resignDate = document.getElementById('resignDate').value;
         if (password === '1234') {
-            window.location.href = '../hrm/delete?empNo=' + empNo;
+            window.location.href = '../hrm/delete?empNo=' + empNo + '&outReasons=' + outReasons + '&resignDate=' + resignDate;
         } else {
             alert('비밀번호가 틀렸습니다.');
             return false;
         }
     }
-
-
-    $("#check-all").on("change", function () {
-// is(":checked") - 제이쿼리에서 체크박스 감지할때 씀
-        if ($(this).is(":checked")) {
-            $(".chk").prop("checked", true);
-// while문 안의 checkbox들 class명으로 접근
-        } else {
-            $(".chk").prop("checked", false);
-        }
-    })
 
     $("#profile").on("change", function (e) {
         const file = e.currentTarget.files[0];
