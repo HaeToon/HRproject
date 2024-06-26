@@ -38,12 +38,7 @@
             <thead>
             <tr>
                 <%-- 9개 --%>
-                <th scope="col">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="check-all">
-                        <label class="form-check-label" for="check-all"></label>
-                    </div>
-                </th>
+                <th scope="col">번호</th>
                 <th scope="col">입사일자</th>
                 <th scope="col">사원번호</th>
                 <th scope="col">성명</th>
@@ -65,10 +60,6 @@
                 </c:choose>
                 <tr>
                     <td>
-                            <%--                    <div class="form-check form-check-inline">--%>
-                            <%--                        <input class="chk form-check-input" type="checkbox" name="check" value="${hrmDto.empNo}">--%>
-                            <%--                        <label class="chk form-check-label">${((page -1) * listPerPage) + loop.count}</label>--%>
-                            <%--                    </div>--%>
                         <input type="checkbox" class="chk btn-check" id="btn-check-${loop.index}"
                                autocomplete="off"
                                value="${hrmDto.empNo}" name="check"

@@ -91,7 +91,6 @@
                 <button type="button" class="btn btn-primary"
                         data-bs-toggle="modal" data-bs-target="#passwordChange">비밀번호변경
                 </button>
-                <%--<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-print">인쇄</button>--%>
             </div>
         </div>
     </div>

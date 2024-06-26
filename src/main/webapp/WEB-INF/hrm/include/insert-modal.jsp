@@ -460,17 +460,4 @@
             $(this).removeClass('is-invalid');
         }
     });
-
-
-    // var empNoInput = document.getElementById('empNo');
-    // var submitBtn = document.getElementById('submitBtn');
-    //
-    // // 제출 버튼 클릭 시 유효성 검사
-    // submitBtn.addEventListener('click', function (event) {
-    //     if (empNoInput.value.trim() === '') {
-    //         empNoInput.classList.add('is-invalid');
-    //     } else {
-    //         empNoInput.classList.remove('is-invalid');
-    //     }
-    // });
 </script>

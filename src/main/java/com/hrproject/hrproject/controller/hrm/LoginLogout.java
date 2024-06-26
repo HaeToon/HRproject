@@ -29,7 +29,7 @@ public class LoginLogout extends HttpServlet {
         } else {
             /* 관리자 로그인 임시 */
             if (req.getParameter("loginEmpNo").equals("admin") && req.getParameter("loginPassword").equals("1234")) {
-                adminLogin(req, resp, "Admin", Grade.ADMIN, "관리자");
+                adminLogin(req, resp,  "관리자");
             } else {
                 /* 로그인 */
                 String empNoStr = req.getParameter("loginEmpNo");
@@ -66,11 +66,11 @@ public class LoginLogout extends HttpServlet {
         }
     }
 
-    private static void adminLogin(HttpServletRequest req, HttpServletResponse resp, String ename, Grade grade, String msg) {
+    private static void adminLogin(HttpServletRequest req, HttpServletResponse resp, String msg) {
         HrmDto adminDto = HrmDto.builder()
                 .empNo(0)
-                .ename(ename)
-                .grade(grade)
+                .ename("Admin")
+                .grade(Grade.ADMIN)
                 .build();
         HttpSession session = req.getSession();
         session.setAttribute("loginDto", adminDto);

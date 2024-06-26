@@ -17,7 +17,7 @@
             <div class="modal-body">
                 <input type="password" class="form-control" id="deletePasswordInput"
                        placeholder="비밀번호 1234/ 로그인 세션에서 값 받아서 비교해야함">
-                <input type="text" class="form-control" placeholder="퇴사사유 아직작동안함" name ="outReasons">
+                <input type="text" class="form-control mt-3" placeholder="퇴사사유 아직작동안함" name ="outReasons">
                 퇴사일자 <input type="date" class="form-control" name ="resignDate">
             </div>
             <div class="modal-footer">
