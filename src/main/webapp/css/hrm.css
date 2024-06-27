@@ -1,6 +1,7 @@
 .employee-card {
-    border: 1px solid #ddd;
+
     padding: 20px;
+    box-shadow: 10px 10px 20px rgba(126, 126, 126, 0.42);
 }
 
 .profile-container {
@@ -50,13 +51,22 @@
         font-size: 48px;
     }
 }
-
-
 #renameProfile_view {
     width: 140px;
     height: 180px;
 }
+.hrm-content-area{
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin-top: 30px;
 
-.nav-item {
-    list-style-type: none;
+}
+.hrm-ev-area{
+    background-color: #ffffff;
+    border-radius: 20px;
+}
+.mypage-profile{
+    width:250px;
+    height:310px;
+    border:1px solid #ccc;
 }

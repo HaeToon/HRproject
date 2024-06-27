@@ -22,9 +22,7 @@
                                  class="myPageProfile">
                         </c:when>
                         <c:otherwise>
-                            <img src="../images/profile01.jpg"
-                                 id="renameProfile_view"
-                                 class="myPageProfile">
+                            <img src="../images/profile03.jpg" class="myPageProfile" id="renameProfile_view">
                         </c:otherwise>
                     </c:choose>
 

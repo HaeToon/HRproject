@@ -1,19 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@include file="../include/header.jsp" %>
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
-<div class="employee-card">
+<div class="employee-card  notice-content-area p-3">
     <h1 class="text-center">사원 카드</h1>
     <div class="profile-container">
-        <li class="nav-item">
             <c:choose>
                 <c:when test="${not empty hrmDto.renameProfile}">
                     <img src="${request.contextPath}/upload/${hrmDto.renameProfile}" id="renameProfile_view" class="myPageProfile">
                 </c:when>
                 <c:otherwise>
-                    <img src="../images/profile01.jpg" id="renameProfile_view">
+                    <img src="../images/profile03.jpg" class="mypage-profile" id="renameProfile_view">
                 </c:otherwise>
             </c:choose>
-        </li>
         <div class="profile-details">
             <div class="row mb-sm-1 reduce-gap">
                 <label for="hireDate" class="col-sm col-form-label">입사일</label>

@@ -9,11 +9,17 @@
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 16px;
+
+}
+.salary-check-bigarea{
+    background-color: #ffffff;
+    border-radius: 20px;
 }
 .salary-check-search-area{
     display: flex; /* 부모 요소를 플렉스 컨테이너로 설정 */
     align-items: center;
     margin-top:40px;
+
 }
 .center-section {
     align-items: center;
@@ -26,13 +32,16 @@
     text-align: center;
 }
 .salary-check-area{
+    background-color: #ffffff;
+    margin-bottom: 30px;
+    border-radius: 20px;
     .salary-check-profile{
         border: 1px solid #ccc;
-        width:250px;
-        height:300px;
+        width:310px;
+        height:365px;
     }
     .salary-check-info{
-        border: 1px solid #ccc;
+
         height:300px;
         width:100%;
         margin-left:30px;
@@ -114,8 +123,19 @@
     width:100%;
 }
 .salary-check-list-area{
+    background-color: #ffffff;
+    border-radius: 20px;
     width:100%;
     margin-top:50px;
-    border:1px solid #ccc;
-    margin-bottom: 500px;
+    margin-bottom: 50px;
+}
+.salary-profile{
+    width: 300px;
+    height:300px;
+
+}
+.salary-content-area{
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin-top: 30px;
 }

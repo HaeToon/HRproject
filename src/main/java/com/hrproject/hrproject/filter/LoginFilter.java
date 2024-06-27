@@ -51,19 +51,19 @@ public class LoginFilter implements Filter {
     }
 
     private boolean filterRequest(String requestUrl, HrmDto hrmDto, ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (requestUrl.startsWith("/workSchedule/adminWorkBoard") || requestUrl.startsWith("/hrm/evaluation")) {
-            if (hrmDto.getGrade() == Grade.ADMIN) return true;
-            else return false;
+        if (hrmDto.getGrade() == Grade.ADMIN) {
+            return true;
+        } else if (requestUrl.startsWith("/workSchedule/adminWorkBoard") || requestUrl.startsWith("/hrm/evaluation")) {
+            return false;
         } else if (requestUrl.startsWith("/hrm/board")) {
-            if (hrmDto.getGrade() == Grade.ADMIN || hrmDto.getDeptNo() == 30) return true;
+            if (hrmDto.getDeptNo() == 30) return true;
             else return false;
         } else if (requestUrl.startsWith("/attend/board")) {
-            if (hrmDto.getGrade() == Grade.ADMIN || hrmDto.getDeptNo() == 10) return true;
+            if (hrmDto.getDeptNo() == 10) return true;
             else return false;
         } else if (requestUrl.startsWith("/salary/board")) {
-            if (hrmDto.getGrade() == Grade.ADMIN || hrmDto.getDeptNo() == 20) return true;
+            if (hrmDto.getDeptNo() == 20) return true;
             else return false;
         } else return true;
-
     }
 }

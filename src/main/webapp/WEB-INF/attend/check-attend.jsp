@@ -3,29 +3,29 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
-    <div class="salary-check-area d-flex col-12">
+    <div class="attend-check-area d-flex col-12">
         <div class="employee-card col-12">
             <div class="profile-container">
-                <div class="salary-check-profile">
-                    <li class="nav-item">
+
+                <div class="attend-check-profile">
+
                         <c:choose>
                             <c:when test="${not empty loginDto.renameProfile}">
                                 <img src="${request.contextPath}/upload/${loginDto.renameProfile}" class="myPageProfile">
                             </c:when>
                             <c:otherwise>
-                                <img src="../images/profile01.jpg">
+                                <img src="../images/profile03.jpg" class="attend-profile">
                             </c:otherwise>
                         </c:choose>
-                    </li>
                 </div>
                 <div class="salary-profile-details">
-                    <h2 class="">이름 : ${loginDto.ename} </h2>
+                    <h5 class="">이름 : ${loginDto.ename} </h5>
                     <hr>
-                    <h4>부서 : ${loginDto.deptName}</h4>
-                    <h4>직책 : ${loginDto.posName}</h4>
-                    <h4>직급 : ${loginDto.roleName}</h4>
-                    <h4>입사일 : ${loginDto.hireDate}</h4>
-                    <h4>근속연수 :
+                    <h5>부서 : ${loginDto.deptName}</h5>
+                    <h5>직책 : ${loginDto.posName}</h5>
+                    <h5>직급 : ${loginDto.roleName}</h5>
+                    <h5>입사일 : ${loginDto.hireDate}</h5>
+                    <h5>근속연수 :
                         <c:if test="${diffYear != 0}">
                             ${diffYear}년
                         </c:if>
@@ -34,17 +34,18 @@
                         </c:if>
                         <c:if test="${diffDay != 0}">
                             ${diffDay}일
-                        </c:if> </h4>
-                    <h4>${year}년 ${month}월 발생연차 : ${annualLeave+usedAnnualCount}</h4>
-                    <h4>사용가능한 연차 : ${annualLeave}</h4>
-                    <h4>사용한 연차 : ${usedAnnualCount}</h4>
+                        </c:if> </h5>
+                    <h5>${year}년 ${month}월 발생연차 : ${annualLeave+usedAnnualCount}</h5>
+                    <h5>사용가능한 연차 : ${annualLeave}</h5>
+                    <h5>사용한 연차 : ${usedAnnualCount}</h5>
                 </div>
             </div>
         </div>
     </div>
+    <div class="attend-check-big-area p-3">
     <div class="attend-check-search-area col-12">
         <div class="left-section col-4">
-            <h2>검색</h2>
+            <h4>검색</h4>
             <div class="d-flex input-group">
                 <input type="number" class="form-control attend-check-search-year-text " placeholder="연도를 입력하세요"
                        id="attend-check-search-year" name="attendCheckYear">
@@ -54,7 +55,7 @@
             </div>
         </div>
         <div class="center-section col-4">
-            <h1 class="sattend-check-calendar-date" id="attend-check-calendar-date">2024년 06월 근태표</h1>
+            <h2 class="sattend-check-calendar-date" id="attend-check-calendar-date">2024년 06월 근태 현황</h2>
         </div>
     </div>
     <div class="attend-check-calendar-area d-flex">
@@ -102,14 +103,11 @@
             </tbody>
         </table>
     </div>
-    <br><br><br>
+    </div>
 
-
-
-    <br><br><br><br>
 
 <%--    로그인한 사원의 근태 신청 목록만 출력--%>
-    <div>
+    <div class="attend-check-bottom p-3">
         <h3> ${loginDto.ename}님의 신청 내역 </h3>
         <hr>
         <%--검색--%>
@@ -329,7 +327,7 @@
                         month: month,
                     },
                     success: function (response) {
-                        $("#attend-check-calendar-date").text(response.year + "년 " + response.month + "월 근태표");
+                        $("#attend-check-calendar-date").text(response.year + "년 " + response.month + "월 근태 현황");
 
                         var calendarBody = $("#calendar-body");
                         calendarBody.empty();
@@ -519,7 +517,5 @@
                 alert('등록 되었습니다.');
             }
         };
-
-
 
     </script>

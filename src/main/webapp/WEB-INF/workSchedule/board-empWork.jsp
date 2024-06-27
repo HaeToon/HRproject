@@ -3,16 +3,16 @@
 
 
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
-    <div class="board-title"><h2 class="title">출퇴근 list</h2></div>
+    <div class="board-title"><h2 class="title">출/퇴근 목록</h2></div>
 
-    <div class="attend-content-area p-3 bg-body-tertiary">
+    <div class="attend-content-area p-3 ">
         <form id="myForm" action="../workSchedule/empWorkBoard" method="post">
             <button id="workRecord" class="btn btn-primary">출/퇴근</button>
         </form>
 
 
         <%--보드--%>
-        <table class="table table-striped">
+        <table class="table ">
             <thead>
             <tr>
 
