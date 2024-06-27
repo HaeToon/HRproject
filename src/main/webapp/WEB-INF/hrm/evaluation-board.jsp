@@ -100,72 +100,6 @@
         </div>
     </div>
     <%--      hrm page 영역      --%>
-<<<<<<< HEAD
-    <c:if test="${not param.promote eq true}">
-        <div class="d-flex justify-content-between align-items-center ">
-            <c:choose>
-                <c:when test="${empty search}">
-                    <c:set var="firstPage" value="../hrm/evaluation?page=1"></c:set>
-                    <c:set var="prePage" value="../hrm/evaluation?page=${previousPage}"></c:set>
-                    <c:set var="selectPage" value="../hrm/evaluation?page="></c:set>
-                    <c:set var="nextPage" value="../hrm/evaluation?page=${nextPage}"></c:set>
-                    <c:set var="lastPage" value="../hrm/evaluation?page=${totalPage}"></c:set>
-                </c:when>
-                <c:otherwise>
-                    <c:set var="firstPage"
-                           value="../hrm/evaluation?search=${search}&searchWord=${searchWord}&page=1"></c:set>
-                    <c:set var="prePage"
-                           value="../hrm/evaluation?search=${search}&searchWord=${searchWord}&page=${previousPage}"></c:set>
-                    <c:set var="selectPage"
-                           value="../hrm/evaluation?search=${search}&searchWord=${searchWord}&page="></c:set>
-                    <c:set var="nextPage"
-                           value="../hrm/evaluation?search=${search}&searchWord=${searchWord}&page=${nextPage}"></c:set>
-                    <c:set var="lastPage"
-                           value="../hrm/evaluation?search=${search}&searchWord=${searchWord}&page=${totalPage}"></c:set>
-                </c:otherwise>
-            </c:choose>
-            <nav aria-label="Page navigation example" class="">
-                <ul class="pagination d-flex justify-content-center " style="margin-bottom: 0">
-                    <c:if test="${startPage ne 1}">
-                        <li class="page-item">
-                            <a class="page-link" href="${firstPage}" aria-label="Previous">
-                                First
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="${prePage}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                    </c:if>
-                    <c:forEach var="i" begin="${startPage}" end="${endPage}" step="1">
-                        <c:choose>
-                            <c:when test="${page eq i}">
-                                <li class="page-item active"><span class="page-link">${i}</span></li>
-                            </c:when>
-                            <c:otherwise>
-                                <li class="page-item"><a class="page-link" href="${selectPage}${i}">${i}</a>
-                                </li>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-                    <c:if test="${endPage ne totalPage}">
-                        <li class="page-item">
-                            <a class="page-link" href="${nextPage}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="${lastPage}" aria-label="Next">
-                                Last
-                            </a>
-                        </li>
-                    </c:if>
-                </ul>
-            </nav>
-        </div>
-    </c:if>
-=======
     <div class="hrm-ev-area d-flex justify-content-between align-items-center ">
         <c:choose>
             <c:when test="${empty search}">
@@ -240,6 +174,5 @@
             </form>
         </div>--%>
     </div>
->>>>>>> 51c510c114b8a44ac80c7a265cbc8974b5d5fc07
     <%--      hrm page 영역 끝      --%>
 </div>

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@include file="../include/header.jsp" %>
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
-<div class="employee-card  notice-content-area p-3">
+<div class="employee-mypage-card  notice-content-area p-3">
     <h1 class="text-center">사원 카드</h1>
     <div class="profile-container">
             <c:choose>
