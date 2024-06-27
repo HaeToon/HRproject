@@ -3,8 +3,31 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hrproject.hrproject.mybatis">
+
+
+
+
+
     <select id="getWorkList" resultType="WorkScheduleDto">
-        select * from work_schedule where empNo = #{empNo}
+        SELECT
+        WORKIDX,
+        ATDNO,
+        ATDCODE AS VACATIONCODE,
+        EMPNO,
+        WORKDATE,
+        STARTTIME,
+        ENDTIME,
+        STATUS,
+        ETC
+        FROM
+        work_schedule
+        WHERE
+        empNo = #{empNo}
+        ORDER BY WORKDATE DESC
+    </select>
+
+    <select id="getWorkMonthList" resultType="WorkScheduleDto" parameterType="WorkScheduleDto">
+        select * from work_schedule where empNo = #{empNo} and workDate LIKE CONCAT('%', #{workMonth}, '%')
     </select>
 
 
@@ -14,6 +37,121 @@
 
     </select>
 
+    <select id="getWorkScheduleOne" resultType="WorkScheduleDto" parameterType="map">
+        select * from work_schedule
+        where EMPNO = #{empNo}  and workDate = #{date}
+    </select>
+
+
+    <select id="selectAllByAdmin" resultType="WorkScheduleAdminDto">
+        SELECT
+        ws.WORKIDX,
+        ws.EMPNO,
+        ws.atdCode AS vacationCode,
+        ws.WORKDATE,
+        hr.DEPTNAME,
+        hr.ENAME,
+        ws.STARTTIME,
+        ws.ENDTIME,
+        ws.STATUS,
+        ws.ETC
+        FROM
+        WORK_SCHEDULE ws
+        JOIN
+        HRM hr ON ws.EMPNO = hr.EMPNO
+        ORDER BY
+        ws.WORKDATE DESC
+    </select>
+
+    <select id="getCountOfRecords" resultType="int">
+        SELECT COUNT(*) FROM WORK_SCHEDULE
+    </select>
+
+    <select id="getCountOfRecordsByEmpNo" resultType="int">
+        SELECT COUNT(*) FROM WORK_SCHEDULE where empNo = #{empNo}
+    </select>
+
+    <select id="getAdminWorkList" resultType="WorkScheduleAdminDto" parameterType="map">
+        SELECT
+        ws.WORKIDX,
+        ws.EMPNO,
+        ws.ATDCODE AS vacationCode,
+        ws.WORKDATE,
+        hr.DEPTNAME,
+        hr.ENAME,
+        ws.STARTTIME,
+        ws.ENDTIME,
+        ws.STATUS,
+        ws.ETC
+        FROM
+        WORK_SCHEDULE ws
+        JOIN
+        HRM hr ON ws.EMPNO = hr.EMPNO
+        WHERE
+        1 = 1
+        <!-- 필요한 조건을 추가할 수 있습니다 -->
+        <if test="workScheduleAdminDto.workDate != null and workScheduleAdminDto.workDate != ''">
+            AND ws.WORKDATE = #{workScheduleAdminDto.workDate}
+        </if>
+        <if test="workScheduleAdminDto.empNo != null and workScheduleAdminDto.empNo != 0">
+            AND ws.EMPNO = #{workScheduleAdminDto.empNo}
+        </if>
+        <if test="workScheduleAdminDto.deptName != null and workScheduleAdminDto.deptName != ''">
+            AND hr.DEPTNAME = #{workScheduleAdminDto.deptName}
+        </if>
+        <if test="workScheduleAdminDto.ename != null and workScheduleAdminDto.ename != ''">
+            AND hr.ENAME = #{workScheduleAdminDto.ename}
+        </if>
+        <if test="workScheduleAdminDto.status != null and workScheduleAdminDto.status != ''">
+            AND ws.STATUS = #{workScheduleAdminDto.status}
+        </if>
+        <if test="workScheduleAdminDto.vacationCode != null and workScheduleAdminDto.vacationCode != ''">
+            AND ws.ATDCODE = #{workScheduleAdminDto.vacationCode}
+        </if>
+        ORDER BY WORKDATE DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getAdminWorkList01" resultType="WorkScheduleAdminDto" parameterType="WorkScheduleAdminDto">
+
+        SELECT
+        ws.WORKIDX,
+        ws.EMPNO,
+        ws.ATDCODE AS vacationCode,
+        ws.WORKDATE,
+        hr.DEPTNAME,
+        hr.ENAME,
+        ws.STARTTIME,
+        ws.ENDTIME,
+        ws.STATUS,
+        ws.ETC
+        FROM
+        WORK_SCHEDULE ws
+        JOIN
+        HRM hr ON ws.EMPNO = hr.EMPNO
+        WHERE
+        1 = 1
+        <!-- 필요한 조건을 추가할 수 있습니다 -->
+        <if test="workDate != null and workDate !=''">
+            AND ws.WORKDATE = #{workDate}
+        </if>
+        <if test="empNo != null and empNo!=0" >
+            AND ws.EMPNO = #{empNo}
+        </if>
+        <if test="deptName != null and deptName !=''">
+            AND hr.DEPTNAME = #{deptName}
+        </if>
+        <if test="ename != null and ename != ''" >
+            AND hr.ENAME = #{ename}
+        </if>
+        <if test="status != null and status !=''">
+            AND ws.STATUS = #{status}
+        </if>
+        <if test="vacationCode != null and vacationCode != ''">
+            AND ws.ATDCODE = #{vacationCode}
+        </if>
+    </select>
+
     <insert id="createAllEmpSchedule" parameterType="list">
         INSERT INTO WORK_SCHEDULE (EMPNO, WORKDATE) VALUES
         <foreach collection="list" item="item" separator=",">
@@ -21,4 +159,134 @@
         </foreach>
     </insert>
 
+    <insert id="createAllEmpScheduleWeekend" parameterType="list">
+        INSERT INTO WORK_SCHEDULE (EMPNO, WORKDATE,status) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.empNo}, CURDATE(),'주말')
+        </foreach>
+    </insert>
+
+
+
+
+    <update id="updateWorkSchedule" parameterType="WorkScheduleDto">
+        UPDATE work_schedule
+        SET atdNo= #{atdNo}, atdCode = #{vacationCode}
+        WHERE empNo = #{empNo} AND workDate = #{workDate}
+    </update>
+
+
+
+    <update id="updateWorkStartTime" parameterType="WorkScheduleDto">
+        UPDATE work_schedule
+        SET STARTTIME = #{startTime}, status = #{status}
+        WHERE empNo = #{empNo} AND workDate = #{workDate}
+    </update>
+
+    <update id="updateWorkEndTime" parameterType="WorkScheduleDto">
+        UPDATE work_schedule
+        SET ENDTIME = #{endTime},status = #{status}
+        WHERE empNo = #{empNo} AND workDate = #{workDate}
+    </update>
+
+    <update id="modifyWorkTime" parameterType="Map">
+
+        UPDATE work_schedule
+        SET
+        STARTTIME =
+        <if test="startTime != null and startTime != ''">
+            #{startTime}
+        </if>
+        <if test="startTime == null or startTime == ''">
+            NULL
+        </if>,
+        ENDTIME =
+        <if test="endTime != null and endTime != ''">
+            #{endTime}
+        </if>
+        <if test="endTime == null or endTime == ''">
+            NULL
+        </if>,
+        status =
+        <if test="status != null and status != ''">
+            #{status}
+        </if>
+        <if test="status == null or status == ''">
+            NULL
+        </if>
+
+        WHERE WORKIDX = #{workIdx}
+    </update>
+
+
+    <update id="updateVacationCode" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";" >
+            UPDATE WORK_SCHEDULE
+            SET ATDCODE = #{item.vacationCode}
+            WHERE empNo = #{item.empNo}
+        </foreach>
+    </update>
+
+    <select id="getWorkScheduleByWorkIdx" parameterType="int" resultType="WorkScheduleLogDto">
+        SELECT *
+        FROM WORK_SCHEDULE
+        WHERE WORKIDX = #{workIdx}
+    </select>
+
+
+
+    <select id="refreshWorkDB" resultType="WorkScheduleDto">
+        SELECT
+        ws.WORKIDX,
+        a.ATDNO,
+        a.ATDCODE,
+        ws.EMPNO,
+        ws.WORKDATE,
+        ws.STARTTIME,
+        ws.ENDTIME,
+        ws.STATUS,
+        ws.ETC
+        FROM
+        WORK_SCHEDULE ws
+        JOIN
+        ATTEND a ON ws.EMPNO = a.EMPNO
+        Where workDate = CURDATE()
+    </select>
+
+    <insert id="insertWorkScheduleLog"  parameterType="WorkScheduleLogDto">
+
+        INSERT INTO  WORK_SCHEDULE_LOG (
+        workIdx,
+        empNo,
+        workDate,
+        startTime,
+        endTime,
+        status,
+        atdNo,
+        atdCode,
+        etc,
+        modifyReason,
+        whoModify,
+        logDate,
+        logStatus
+        ) VALUES (
+        #{workIdx},
+        #{empNo},
+        #{workDate},
+        #{startTime},
+        #{endTime},
+        #{status},
+        #{atdNo},
+        #{vacationCode},
+        #{etc},
+        #{modifyReason},
+        #{whoModify},
+        NOW(),
+        #{logStatus}
+        )
+    </insert>
+
+    <delete id="deleteWorkSchedule" parameterType="int">
+        delete from WORK_SCHEDULE where WORKIDX = #{workIdx}
+    </delete>
 </mapper>

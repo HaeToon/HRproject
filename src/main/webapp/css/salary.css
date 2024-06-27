@@ -1,12 +1,141 @@
 .salary-insert-button{
     width:120px;
 }
+.salary-search-button{
+    width:120px;
+}
 .salary-search-area {
     padding-left: 0;
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 16px;
+
 }
-.salary-search-button{
-    width:120px;
+.salary-check-bigarea{
+    background-color: #ffffff;
+    border-radius: 20px;
+}
+.salary-check-search-area{
+    display: flex; /* 부모 요소를 플렉스 컨테이너로 설정 */
+    align-items: center;
+    margin-top:40px;
+
+}
+.center-section {
+    align-items: center;
+    text-align: center; /* 내부 요소들을 가운데 정렬 */
+    justify-content: center;
+}
+.salary-check-calendar-date{
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.salary-check-area{
+    background-color: #ffffff;
+    margin-bottom: 30px;
+    border-radius: 20px;
+    .salary-check-profile{
+        border: 1px solid #ccc;
+        width:310px;
+        height:365px;
+    }
+    .salary-check-info{
+
+        height:300px;
+        width:100%;
+        margin-left:30px;
+    }
+}
+.salary-check-calendar-area{
+    border: 1px solid #ccc;
+    width:100%;
+    height:100%;
+    margin-top:10px;
+    .salary-check-calendar{
+        thead{
+            justify-content: center;
+            text-align: center;
+            tr{
+                th{
+                    width:100px;
+                    height:50px;
+                    border:1px solid #ccc;
+                }
+            }
+        }
+        tr{
+            width:200px;
+            td{
+                width:200px;
+                height:150px;
+                border:1px solid #ccc;
+                position: relative;
+                .calendar-day{
+                    position: absolute;
+                    color: #727272;
+                    top:0;
+                    left:0;
+                }
+            }
+
+        }
+    }
+}
+.salary-check-calendar-total{
+    width:500px;
+    height:100%;
+    border:1px solid #ccc;
+    thead{
+        justify-content: center;
+        text-align: center;
+        tr{
+            th{
+                width:250px;
+                height:50px;
+                border:1px solid #ccc;
+            }
+        }
+    }
+    tbody{
+        justify-content: center;
+        text-align: center;
+        tr{
+            td{
+                width:250px;
+                border:1px solid #ccc;
+                height:150px;
+            }
+        }
+    }
+}
+.salary-check-search-year-text{
+    width:100px;
+}
+.salary-check-search-month-text{
+    width:100px;
+}
+.salary-check-search-btn{
+    width:80px;
+}
+.salary-profile-details{
+    margin-left:100px;
+    width:100%;
+}
+.salary-check-list-area{
+    background-color: #ffffff;
+    border-radius: 20px;
+    width:100%;
+    margin-top:50px;
+    margin-bottom: 50px;
+}
+.salary-profile{
+    width: 300px;
+    height:300px;
+
+}
+.salary-content-area{
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin-top: 30px;
 }

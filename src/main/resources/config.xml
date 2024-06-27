@@ -3,8 +3,12 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-<!--  순서 properties > typeAliases > typeHandlers  -->
+    <!--  순서 properties > typeAliases > typeHandlers  -->
     <properties resource="db.properties"></properties>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
  <typeAliases>
      <typeAlias alias="SalaryDto" type="com.hrproject.hrproject.dto.SalaryDto"/>
      <typeAlias alias="SalaryPlusEmpNameDto" type="com.hrproject.hrproject.dto.SalaryPlusEmpNameDto"/>
@@ -14,12 +18,18 @@
      <typeAlias alias="HrmPageDto" type="com.hrproject.hrproject.dto.HrmPageDto"/>
      <typeAlias alias="AttendDto" type="com.hrproject.hrproject.dto.AttendDto"/>
      <typeAlias alias="WorkScheduleDto" type="com.hrproject.hrproject.dto.WorkScheduleDto"/>
+     <typeAlias alias="WorkScheduleAdminDto" type="com.hrproject.hrproject.dto.WorkScheduleAdminDto"/>
+     <typeAlias alias="WorkScheduleLogDto" type="com.hrproject.hrproject.dto.WorkScheduleLogDto"/>
+     <typeAlias alias="CommunityDto" type="com.hrproject.hrproject.dto.CommunityDto"/>
+     <typeAlias alias="NoticeDto" type="com.hrproject.hrproject.dto.NoticeDto"/>
+     <typeAlias alias="EvaluationDto" type="com.hrproject.hrproject.dto.EvaluationDto"/>
 
  </typeAliases>
 <!--  자바 타입이랑 db타입 맞춰줘야 할때 typeHandler씀  -->
-<!--    <typeHandlers>-->
-<!--        <typeHandler handler="com.heo96.mybatis.mybatis.GradeTypeHandler"></typeHandler>-->
-<!--    </typeHandlers>-->
+    <typeHandlers>
+        <typeHandler handler="com.hrproject.hrproject.mybatis.GradeTypeHandler"></typeHandler>
+    </typeHandlers>
+
     <!--  db.properties 연결?..  -->
     <environments default="development">
         <environment id="development">
@@ -32,12 +42,14 @@
             </dataSource>
         </environment>
     </environments>
-<!--  mapper resources의 xml resource  -->
+    <!--  mapper resources의 xml resource  -->
     <mappers>
         <mapper resource="salary.xml"/>
         <mapper resource="hrm.xml"/>
         <mapper resource="attend.xml"/>
         <mapper resource="notice.xml"/>
         <mapper resource="workSchedule.xml"/>
+        <mapper resource="community.xml"/>
+        <mapper resource="util.xml"/>
     </mappers>
 </configuration>

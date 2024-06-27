@@ -7,7 +7,7 @@
     <div class="notice-content-area p-3 bg-body-tertiary">
         <h3>${notice.title}</h3>
         <p><strong>작성자:</strong> ${notice.author}</p>
-        <p><strong>작성일:</strong> ${notice.created_date}</p>
+        <p><strong>작성일:</strong> ${notice.createdDate}</p>
         <p><strong>조회수:</strong> ${notice.views}</p>
         <hr>
         <p>${notice.content}</p>
@@ -22,14 +22,14 @@
 
 <script>
     // JSP 변수를 JavaScript 변수에 할당
-    var noticeNo = '${notice.notice_no}';
+    var noticeNo = '${notice.noticeNo}';
 
     // 수정 버튼 클릭 시 이벤트 처리
     document.addEventListener('DOMContentLoaded', function() {
         var updateBtn = document.getElementById('updateBtn');
         if (updateBtn) {
             updateBtn.addEventListener('click', function() {
-                window.location.href = '/notice/update?notice_no=' + noticeNo;
+                window.location.href = '/notice/update?noticeNo=' + noticeNo;
             });
         }
     });

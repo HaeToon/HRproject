@@ -23,7 +23,7 @@ public class NoticeDelete extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 요청 파라미터에서 noticeNo 가져오기
-        int noticeNo = Integer.parseInt(request.getParameter("notice_no"));
+        int noticeNo = Integer.parseInt(request.getParameter("noticeNo"));
 
         // noticeNo를 사용하여 데이터베이스에서 데이터 삭제
         int result = noticeDao.deleteNotice(noticeNo);

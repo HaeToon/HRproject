@@ -8,7 +8,7 @@
     </div>
     <div class="notice-content-area p-3 bg-body-tertiary">
         <form action="/notice/update" method="post">
-            <input type="hidden" name="notice_no" value="${notice.notice_no}">
+            <input type="hidden" name="noticeNo" value="${notice.noticeNo}">
             <div class="mb-3">
                 <label for="title" class="form-label">제목</label>
                 <input type="text" class="form-control" id="title" name="title" value="${notice.title}" required>

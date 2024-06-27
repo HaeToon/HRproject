@@ -4,44 +4,122 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hrproject.hrproject.mybatis">
 
+    <!--  로그인한 사원의 근태 정보만 출력-->
+    <select id="getAttendListByLogin" resultType="AttendDto">
+        select * from attend
+        where empNo = #{empNo}
+    </select>
+
+    <!--  처리 상태의 근태만 띄울거임-->
+    <select id="getAcceptedAttendList" resultType="AttendDto">
+        select * from attend
+        where APPROVAL = '승인' OR APPROVAL = '반려'
+    </select>
+
+
+<!--    대기 상태의 근태만 띄울거임-->
+    <select id="getWaitingAttendList" resultType="AttendDto">
+        select * from attend
+        where APPROVAL = '대기'
+    </select>
+
+    <!--    승인 상태의 근태만 띄울거임-->
+    <select id="getApprovedAttendList" resultType="AttendDto">
+        select * from attend
+        where APPROVAL = '승인'
+    </select>
+
+    <!--    승인 상태의 근태만 띄울거임-->
+    <select id="getApprovedAttendMonthList" parameterType="AttendDto" resultType="AttendDto">
+        SELECT * FROM attend
+        WHERE approval = '승인'
+        AND empNo = #{empNo}
+        AND startMonth LIKE CONCAT('%', #{startMonth}, '%')
+    </select>
+
+    <!-- 근태 승인 여부 업데이트 -->
+    <update id="updateApproval" parameterType="AttendDto">
+        UPDATE ATTEND
+        SET APPROVAL = #{approval}
+        WHERE ATDNO = #{atdNo}
+    </update>
+
     <!-- 삭제 쿼리 추가 -->
     <delete id="deleteAttend" parameterType="String">
         DELETE FROM ATTEND WHERE ATDNO = #{atdNo}
     </delete>
 
 
-    <sql id="searchCondition">
+<!--    로그인 상태 검색-->
+    <select id="searchLoginAttend" resultType="AttendDto">
+        SELECT * FROM ATTEND
+        <where>
+            <include refid="searchLoginCondition"/>
+        </where>
+    </select>
+
+    <sql id="searchLoginCondition">
         <choose>
-            <when test="search == 'empNo'">
-                empNo LIKE CONCAT('%', #{searchWord}, '%')
-            </when>
             <when test="search == 'atdNo'">
-                atdNo LIKE CONCAT('%', #{searchWord}, '%')
-            </when>
-            <when test="search == 'ename'">
-                ename LIKE CONCAT('%', #{searchWord}, '%')
+                atdNo LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo}
             </when>
             <when test="search == 'atdCode'">
-                atdCode LIKE CONCAT('%', #{searchWord}, '%')
+                atdCode LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo}
+            </when>
+            <when test="search == 'offDay'">
+                offDay LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo}
+            </when>
+            <when test="search == 'approval'">
+                approval LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo}
             </when>
             <otherwise>
-                empNo LIKE CONCAT('%', #{searchWord}, '%') OR
-                atdNo LIKE CONCAT('%', #{searchWord}, '%') OR
-                ename LIKE CONCAT('%', #{searchWord}, '%') OR
-                atdCode LIKE CONCAT('%', #{searchWord}, '%')
+                atdNo LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo} OR
+                atdCode LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo} OR
+                offDay LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo} OR
+                approval LIKE CONCAT('%', #{searchWord}, '%') AND empNo = #{empNo}
             </otherwise>
         </choose>
     </sql>
 
-    <select id="searchAttend" resultType="AttendDto">
+    <sql id="searchWaitingCondition">
+        <choose>
+            <when test="search == 'empNo'">
+                empNo LIKE CONCAT('%', #{searchWord}, '%') AND
+                approval = '대기'
+            </when>
+            <when test="search == 'atdNo'">
+                atdNo LIKE CONCAT('%', #{searchWord}, '%') AND
+                approval = '대기'
+            </when>
+            <when test="search == 'ename'">
+                ename LIKE CONCAT('%', #{searchWord}, '%') AND
+                approval = '대기'
+            </when>
+            <when test="search == 'atdCode'">
+                atdCode LIKE CONCAT('%', #{searchWord}, '%') AND
+                approval = '대기'
+            </when>
+            <otherwise>
+                empNo LIKE CONCAT('%', #{searchWord}, '%') AND approval = '대기' OR
+                atdNo LIKE CONCAT('%', #{searchWord}, '%') AND approval = '대기' OR
+                ename LIKE CONCAT('%', #{searchWord}, '%') AND approval = '대기' OR
+                atdCode LIKE CONCAT('%', #{searchWord}, '%') AND approval = '대기'
+            </otherwise>
+        </choose>
+    </sql>
+
+
+
+<!--대기상태 검색-->
+    <select id="searchWaitingAttend" resultType="AttendDto">
         SELECT * FROM ATTEND
         <where>
-            <include refid="searchCondition"/>
+            <include refid="searchWaitingCondition"/>
         </where>
     </select>
 
     <insert id="insertAttend" parameterType="AttendDto">
-        INSERT INTO ATTEND (EMPNO, ATDNO, ENAME, ATDCODE, ATDNUM, ATDDATE, OFFDAY, OFFDAYRS, PRINT)
+        INSERT INTO ATTEND (EMPNO, ATDNO, ENAME, ATDCODE, ATDNUM, ATDDATE, StartAtdDate, EndAtdDate, OFFDAY, OFFDAYRS, PRINT)
         VALUES (
         #{empNo}, <!--사원번호 -->
         #{atdNo}, <!--근태번호-->
@@ -49,6 +127,8 @@
         #{atdCode}, <!--근태코드-->
         #{atdNum}, <!--근태수-->
         CONCAT(#{startAtdDate}, ' ~ ', #{endAtdDate}), <!--근태기간 시작~ 끝 -->
+        #{startAtdDate}, <!--시작 근태기간 -->
+        #{endAtdDate}, <!--끝 근태기간 -->
         #{offDay}, <!--휴가명-->
         #{offDayRs}, <!--휴가사유-->
         #{print} <!--인쇄-->
@@ -60,21 +140,19 @@
         select * from attend where empNo = #{empNo}
     </select>
 
-
-
-
-
     <select id="getAttendList" resultType="AttendDto">
         select * from attend
     </select>
+
     <select id="getUpdateInfo" resultType="AttendDto" parameterType="String">
         SELECT * FROM ATTEND WHERE ATDNO = #{selectName}
     </select>
+
     <update id="updateAttend" parameterType="AttendDto">
         UPDATE ATTEND
         SET
         ATDNUM = #{atdNum},
-        ATDDATE = #{atdDate},
+        ATDDATE = CONCAT(#{startAtdDate}, ' ~ ', #{endAtdDate}),  -- 근태기간 시작~끝
         OFFDAY = #{offDay},
         OFFDAYRS = #{offDayRs},
         ATDCODE = #{atdCode},
@@ -93,4 +171,45 @@
     <select id="countByEmpNo" resultType="int" parameterType="java.lang.String" >
         SELECT COUNT(*) FROM HRM WHERE EMPNO = #{empNo}
     </select>
+
+    <!-- 사원 번호로 입사 날짜 조회 -->
+    <select id="getHireDateByEmpNo" resultType="java.time.LocalDate" parameterType="String">
+        SELECT hireDate FROM HRM WHERE empNo = #{empNo}
+    </select>
+
+    <!-- 휴가 조회 하기 -->
+    <select id="selectOffdaysByEmpNo" resultType="com.hrproject.hrproject.dto.AttendDto">
+        SELECT
+        ATDNO,
+        EMPNO,
+        ENAME,
+        ATDCODE,
+        ATDNUM,
+        ATDDATE,
+        OFFDAY,
+        OFFDAYRS,
+        PRINT
+        FROM
+        ATTEND
+        WHERE
+        EMPNO = #{empNo}
+    </select>
+    <select id="selectOffdaysByEmpName" resultType="com.hrproject.hrproject.dto.AttendDto">
+        SELECT
+        ATDNO AS atdNo,
+        EMPNO AS empNo,
+        ENAME AS ename,
+        ATDCODE AS atdCode,
+        ATDNUM AS atdNum,
+        ATDDATE AS atdDate,
+        OFFDAY AS offDay,
+        OFFDAYRS AS offDayRs,
+        PRINT AS print
+        FROM
+        ATTEND
+        WHERE
+        ENAME = #{empName}
+    </select>
+
+
 </mapper>

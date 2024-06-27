@@ -24,7 +24,6 @@ public class SalaryDao {
             System.err.println("Error inserting salary: " + e.getMessage());
             e.printStackTrace();
             result = -1;
-            // Handle or rethrow the exception as needed
         } finally {
             if (sqlSession != null) {
                 sqlSession.close();
@@ -40,7 +39,17 @@ public class SalaryDao {
         salaryList = sqlSession.selectList("getSalaryList");
         if (salaryList !=null){
             System.out.println("salary select query is successfully");
-//            System.out.println("SalaryDao.java__salaryList >>> "+salaryList);
+
+        }
+        sqlSession.close();
+        return salaryList;
+    }
+    public List<SalaryDto> getSalaryList(int empNo) {
+        List<SalaryDto> salaryList = null;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession();
+        salaryList = sqlSession.selectList("getSalaryListByEmpNo",empNo);
+        if (salaryList !=null){
+            System.out.println("salary select query is successfully");
         }
         sqlSession.close();
         return salaryList;
@@ -81,27 +90,21 @@ public class SalaryDao {
         }
         sqlSession.close();
         return result;
-
-
     }
-
     public int deleteSalary(int salary_No) {
         int result =0;
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession();
         result = sqlSession.insert("deleteSalary",salary_No);
-
         if (result>0){
             System.out.println("salary del Qry is successfully");
         }
         sqlSession.close();
         return result;
     }
-
     public int updateSalaryDao(SalaryPlusEmpNameDto salaryPlusEmpNameDto) {
         int result =0;
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession();
         result = sqlSession.insert("updateSalary",salaryPlusEmpNameDto);
-
         if (result>0){
             System.out.println("salary update Qry is successfully");
         }
@@ -121,7 +124,6 @@ public class SalaryDao {
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
         total = sqlSession.selectOne("getSalaryTotal");
         sqlSession.close();
-
         return total;
     }
     public int getSalaryTotal(String search , String searchWord) { //salary list 의 개수 얻기

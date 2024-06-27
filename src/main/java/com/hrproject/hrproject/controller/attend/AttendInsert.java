@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet("/attend/insert")
 public class AttendInsert extends HttpServlet {
@@ -16,13 +17,10 @@ public class AttendInsert extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/attend/insert-attend.jsp").forward(req, resp);
     }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String empNoStr = req.getParameter("empNo");
+        String empNoStr = req.getParameter("insertEmpNo");
         String atdNumStr = req.getParameter("atdNum");
-        System.out.println(req.getParameter("atdNo"));
-        System.out.println(req.getParameter("empNo"));
         int empNo = 0;
         double atdNum = 0.0;
 
@@ -72,7 +70,7 @@ public class AttendInsert extends HttpServlet {
 
         if (result > 0) {
             System.out.println("attend data input successfully");
-            resp.sendRedirect("/attend/board");
+            resp.sendRedirect("/attend/board?insertAttend=true");
         } else {
             System.out.println("attend data input failed");
         }

@@ -100,8 +100,6 @@
                     </div>
                 </form>
             </div>
-
-
             <div class="modal-footer">
                 <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">사원 찾기</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

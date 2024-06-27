@@ -14,7 +14,7 @@ import java.io.IOException;
 @WebServlet("/notice/detail")
 public class NoticeDetail extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int noticeNo = Integer.parseInt(request.getParameter("notice_no"));
+        int noticeNo = Integer.parseInt(request.getParameter("noticeNo"));
         System.out.println("noticeNo = " + noticeNo);
 
         // DAO를 사용하여 공지사항 정보를 가져옴

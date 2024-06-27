@@ -5,16 +5,17 @@
 <mapper namespace="com.hrproject.hrproject.dao.NoticeDao">
 
     <!-- 조회수 증가 쿼리 -->
-    <update id="incrementViews" parameterType="int">
-        UPDATE NOTICE SET VIEWS = VIEWS + 1 WHERE NOTICE_NO = #{noticeNo}
+    <update id="incrementViews" parameterType="int" >
+        UPDATE NOTICE
+        SET VIEWS = VIEWS + 1
+        WHERE NOTICENO = #{noticeNo}
     </update>
-
 
 <!--검색-->
     <sql id="searchCondition" >
         <choose>
-            <when test="search == 'notice_no'">
-                notice_no LIKE CONCAT('%', #{searchWord}, '%')
+            <when test="search == 'noticeNo'">
+                noticeNo LIKE CONCAT('%', #{searchWord}, '%')
             </when>
             <when test="search == 'title'">
                 title LIKE CONCAT('%', #{searchWord}, '%')
@@ -24,7 +25,7 @@
             </when>
 
             <otherwise>
-                notice_no LIKE CONCAT('%', #{searchWord}, '%') OR
+                noticeNo LIKE CONCAT('%', #{searchWord}, '%') OR
                 title LIKE CONCAT('%', #{searchWord}, '%') OR
                 author LIKE CONCAT('%', #{searchWord}, '%')
             </otherwise>
@@ -41,7 +42,7 @@
     <!--삭제-->
     <delete id="deleteNotice" parameterType="int" >
         DELETE FROM NOTICE
-        WHERE NOTICE_NO = #{noticeNo}
+        WHERE NOTICENO = #{noticeNo}
     </delete>
 
     <!--수정-->
@@ -50,7 +51,7 @@
         SET title = #{title},
         author = #{author},
         content = #{content}
-        WHERE notice_no = #{notice_no}
+        WHERE noticeNo = #{noticeNo}
     </update>
 
     <select id="getNoticeList">
@@ -59,7 +60,7 @@
 
     <select id="getNoticeByNoticeNo" parameterType="int" resultType="com.hrproject.hrproject.dto.NoticeDto">
         SELECT * FROM NOTICE
-        WHERE NOTICE_NO = #{noticeNo}
+        WHERE NOTICENO = #{noticeNo}
     </select>
 
 

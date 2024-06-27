@@ -16,7 +16,7 @@ public class NoticeUpdate extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int noticeNo = Integer.parseInt(req.getParameter("notice_no"));
+        int noticeNo = Integer.parseInt(req.getParameter("noticeNo"));
         NoticeDto notice = NoticeDao.getNoticeById(noticeNo); // 해당 공지사항 정보를 가져오는 메서드 필요
         req.setAttribute("notice", notice);
         req.getRequestDispatcher("/WEB-INF/notice/update-notice.jsp").forward(req, resp);
@@ -26,16 +26,17 @@ public class NoticeUpdate extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        int noticeNo = Integer.parseInt(request.getParameter("notice_no"));
+        int noticeNo = Integer.parseInt(request.getParameter("noticeNo"));
         String title = request.getParameter("title");
         String author = request.getParameter("author");
         String content = request.getParameter("content");
-
+        String createdDate = request.getParameter("createdDate");
         NoticeDto notice = NoticeDto.builder()
-                .notice_no(noticeNo)
+                .noticeNo(noticeNo)
                 .title(title)
                 .author(author)
                 .content(content)
+                .createdDate(createdDate)
                 .build();
 
         NoticeDao noticeDao = new NoticeDao();

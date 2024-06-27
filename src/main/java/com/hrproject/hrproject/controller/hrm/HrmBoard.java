@@ -46,10 +46,15 @@ public class HrmBoard extends HttpServlet {
 
         setRequestAttributes(req, totalPage, startPage, endPage, listPerPage, paginationPerPage, search, searchWord, hrmList);
 
+//        insert
+        HrmDao hrmDao = new HrmDao();
+        int maxEmpNo = hrmDao.getMaxEmpNo();
+        req.setAttribute("maxEmpNo", maxEmpNo);
 
         req.setAttribute("url", url);
         req.getRequestDispatcher("/WEB-INF/hrm/hrm-board.jsp").forward(req, resp);
     }
+
     private int getTotalHrmCount(String search, String searchWord) {
         HrmDao hrmTotalDao = new HrmDao();
         if (search != null && searchWord != null) {
@@ -68,6 +73,7 @@ public class HrmBoard extends HttpServlet {
             return 1;
         }
     }
+
     private int calculateTotalPage(int total, int listPerPage) {
         return (int) Math.ceil((double) total / listPerPage);
     }
@@ -88,7 +94,7 @@ public class HrmBoard extends HttpServlet {
 
     private HrmPageDto createPageDto(int page, int listPerPage, String search, String searchWord) {
         int start = (page - 1) * listPerPage;
-        int end =  listPerPage;
+        int end = listPerPage;
 
         HrmPageDto hrmPageDto = HrmPageDto.builder()
                 .start(start)
@@ -103,7 +109,7 @@ public class HrmBoard extends HttpServlet {
 
     private List<HrmDto> getHrmList(HrmPageDto hrmPageDto) {
         HrmDao hrmDao = new HrmDao();
-        if (hrmPageDto.getSearch() != null && hrmPageDto.getSearchWord() != null){
+        if (hrmPageDto.getSearch() != null && hrmPageDto.getSearchWord() != null) {
             return hrmDao.getSearchHrmBoardList(hrmPageDto);
         } else {
             return hrmDao.getHrmBoardList(hrmPageDto);
@@ -120,104 +126,11 @@ public class HrmBoard extends HttpServlet {
         req.setAttribute("search", search);
         req.setAttribute("searchWord", searchWord);
         req.setAttribute("hrmList", hrmList);
-
         req.setAttribute("showModal", "view");
-    }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Part profile = req.getPart("profile");
-        String renameProfile = "";
-        //String originalProfile = "";
-
-        String fileName = profile.getSubmittedFileName();
-        String serverUploadDir = this.getServletContext().getRealPath("upload");
-        File dir = new File(serverUploadDir);
-        if(!dir.exists()) {
-            dir.mkdir();
-        }
-        if(!fileName.isEmpty()) {
-            profile.write(serverUploadDir+File.separator+fileName); // 원본파일을 미리 써놓기
-            String first = fileName.substring(0, fileName.lastIndexOf(".")); // 파일명은 항상 파일명.확장자명 으로 들어올테니 .을 구분
-            String extension = fileName.substring(fileName.lastIndexOf("."));
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter dateTimeFormatter =
-                    DateTimeFormatter.ofPattern("YYYYMMdd_hhmmss");
-
-            String formatNow = now.format(dateTimeFormatter);
-            renameProfile = first + "_" + formatNow + extension;
-
-            File oldFile = new File(serverUploadDir + File.separator + fileName);
-            File newFile = new File(serverUploadDir + File.separator + renameProfile);
-
-            Thumbnails.of(oldFile)
-                    //.sourceRegion(Positions.CENTER,100,200);
-                    .size(100,200)
-                    .toFiles(dir, Rename.NO_CHANGE);
-            oldFile.renameTo(newFile);
-
-            // 서버에 이미지 올리는것도 다 돈이다.
-        }
-
-        Map<Integer, String> deptMap = new HashMap<>();
-        deptMap.put(10, "개발팀");
-        deptMap.put(20, "영업팀");
-        deptMap.put(30, "인사팀");
-        deptMap.put(40, "회계팀");
-        int deptNo = Integer.parseInt(req.getParameter("deptNo"));
-
-        Map<Integer, String> positionMap = new HashMap<>();
-        // 사원 대리 과장 차장 대표이사
-        positionMap.put(10, "사원");
-        positionMap.put(20, "대리");
-        positionMap.put(30, "과장");
-        positionMap.put(40, "차장");
-        positionMap.put(50, "대표이사");
-        int positionNo = Integer.parseInt(req.getParameter("positionNo"));
-
-        /*HrmDto hrmDto = HrmDto.builder()
-                .deptNo(10)
-                .deptName(deptMap.get(10))
-                .build();*/
-
-        HrmDto hrmDto = HrmDto.builder()
-                .empNo(Integer.parseInt(req.getParameter("empNo")))
-                .ename(req.getParameter("ename"))
-
-                .foreignName(req.getParameter("foreignName"))
-
-                .deptNo(deptNo)
-                .deptName(deptMap.get(deptNo))
-
-                .positionNo(positionNo)
-                .position(positionMap.get(positionNo))
-
-                .mobile(req.getParameter("mobile"))
-                .passport(req.getParameter("passport"))
-                .email(req.getParameter("email"))
-
-                .hireDate(req.getParameter("hireDate"))
-                .hireType(req.getParameter("hireType"))
-
-                .bankName(req.getParameter("bankName"))
-                .account(req.getParameter("account"))
-                .accountHolder(req.getParameter("accountHolder"))
-
-                .postCode(req.getParameter("postCode"))
-                .address(req.getParameter("address"))
-                .addressDetail(req.getParameter("addressDetail"))
-
-                .originalProfile(fileName)
-                .renameProfile(renameProfile)
-                .build();
-
-        HrmDao hrmDao = new HrmDao();
-        int result = hrmDao.insertHrm(hrmDto);
-        if (result > 0) {
-            ScriptWriter.alertAndNext(resp, "사원 정보가 입력되었습니다.", "../hrm/board");
-        } else {
-            ScriptWriter.alertAndBack(resp, "오류가 발생했습니다. 다시 시도해주세요.");
-        }
-
+        HrmMap hrmMap = new HrmMap();
+        req.setAttribute("deptMap", hrmMap.getDeptMap());
+        req.setAttribute("positionMap", hrmMap.getPositionMap());
+        req.setAttribute("bankMap", hrmMap.getBankMap());
     }
 }

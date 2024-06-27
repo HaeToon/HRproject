@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hrproject.hrproject.dao.CommunityDao">
+
+    <!-- 조회수 증가 쿼리 -->
+    <update id="incrementViews" parameterType="int">
+        UPDATE COMMUNITY
+        SET VIEWS = VIEWS + 1
+        WHERE COMMUNITYNO = #{communityNo}
+    </update>
+
+
+    <!--검색-->
+    <sql id="searchCondition" >
+        <choose>
+            <when test="search == 'communityNo'">
+                communityNo LIKE CONCAT('%', #{searchWord}, '%')
+            </when>
+            <when test="search == 'title'">
+                title LIKE CONCAT('%', #{searchWord}, '%')
+            </when>
+            <when test="search == 'author'">
+                author LIKE CONCAT('%', #{searchWord}, '%')
+            </when>
+            <when test="search == 'category'">
+                category LIKE CONCAT('%', #{searchWord}, '%')
+            </when>
+
+            <otherwise>
+                communityNo LIKE CONCAT('%', #{searchWord}, '%') OR
+                title LIKE CONCAT('%', #{searchWord}, '%') OR
+                author LIKE CONCAT('%', #{searchWord}, '%') OR
+                category LIKE CONCAT('%', #{searchWord}, '%')
+            </otherwise>
+        </choose>
+    </sql>
+
+    <select id="searchCommunity" resultType="com.hrproject.hrproject.dto.CommunityDto" >
+        SELECT * FROM COMMUNITY
+        <where>
+            <include refid="searchCondition"/>
+        </where>
+    </select>
+
+    <!--삭제-->
+    <delete id="deleteCommunity" parameterType="int" >
+        DELETE FROM COMMUNITY
+        WHERE COMMUNITYNO = #{communityNo}
+    </delete>
+
+    <!--수정-->
+    <update id="updateCommunity" parameterType="com.hrproject.hrproject.dto.CommunityDto">
+        UPDATE COMMUNITY
+        SET title = #{title},
+        author = #{author},
+        content = #{content},
+        category = #{category}
+        WHERE communityNo = #{communityNo}
+    </update>
+
+    <select id="getCommunityList">
+        SELECT * FROM COMMUNITY
+    </select>
+
+    <select id="getCommunityByCommunityNo" parameterType="int" resultType="com.hrproject.hrproject.dto.CommunityDto">
+        SELECT * FROM COMMUNITY
+        WHERE communityNo = #{communityNo}
+    </select>
+
+
+    <insert id="insertCommunity" parameterType="com.hrproject.hrproject.dto.CommunityDto">
+        INSERT INTO COMMUNITY (TITLE, AUTHOR, CONTENT, CATEGORY)
+        VALUES (
+        #{title}, <!--제목 -->
+        #{author}, <!--작성자-->
+        #{content},<!--내용-->
+        #{category}<!--내용-->
+        )
+    </insert>
+
+</mapper>

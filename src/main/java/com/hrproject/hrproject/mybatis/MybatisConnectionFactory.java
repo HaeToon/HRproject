@@ -28,4 +28,11 @@ public class MybatisConnectionFactory {
     public static SqlSession getSqlSession(boolean isCommit){
         return  sqlSessionFactory.openSession(isCommit);
     }
+
+    public static synchronized SqlSessionFactory getSqlSessionFactory() {
+        if (sqlSessionFactory == null) {
+            throw new IllegalStateException("SqlSessionFactory is not initialized.");
+        }
+        return sqlSessionFactory;
+    }
 }

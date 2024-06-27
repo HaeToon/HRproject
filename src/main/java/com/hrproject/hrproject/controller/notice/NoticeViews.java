@@ -26,11 +26,11 @@ public class NoticeViews extends HttpServlet {
         noticeDao.incrementViews(noticeNo);
 
         // 공지사항 상세 페이지로 리다이렉트
-        response.sendRedirect("/notice/detail?notice_no=" + noticeNo);
+        response.sendRedirect("/notice/detail?noticeNo=" + noticeNo);
     }
 
     private int getNoticeNoFromRequest(HttpServletRequest request) {
-        String noticeNoParam = request.getParameter("notice_no");
+        String noticeNoParam = request.getParameter("noticeNo");
         if (noticeNoParam == null || noticeNoParam.isEmpty()) {
             return -1;
         }

@@ -2,30 +2,17 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@include file="../include/header.jsp" %>
-
 <%--테이블--%>
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
     <div class="board-title">
-        <h2 class="title">Salary list</h2>
+        <h2 class="title">급여 목록</h2>
     </div>
-    <div class="salary-content-area p-3 bg-body-tertiary">
-<%--    <div class="col-5">--%>
-<%--        <div class="input-group mt-3 mb-3">--%>
-<%--            <select class="form-select col-2" aria-label="Default select example">--%>
-<%--                <option selected>사원번호</option>--%>
-<%--                <option value="1">사원명</option>--%>
-<%--                <option value="2">날짜</option>--%>
-<%--                <option value="3">Three</option>--%>
-<%--            </select>--%>
-<%--            <input type="text" class="form-control col-2 " placeholder="ex)홍길동" aria-label="empNo" >--%>
-<%--            <button class="btn btn-primary col-1" type="submit" >찾기</button>--%>
-<%--        </div>--%>
-<%--    </div>--%>
+    <div class="salary-content-area p-3">
     <div class="salary-search-area">
         <button class="salary-search-button btn btn-primary insertSalary " data-bs-target="#searchModal" data-bs-toggle="modal">검색</button>
         <a class="salary-search-button btn btn-primary insertSalary" href="../salary/board">전체보기</a>
     </div>
-    <table class="table table-striped">
+    <table class="table">
         <thead>
         <tr>
             <th class="align-middle">번호</th>
@@ -800,5 +787,6 @@
     });
 
 </script>
+
 
 

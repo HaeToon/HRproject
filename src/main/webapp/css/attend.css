@@ -4,9 +4,119 @@
 .attend-delete-button{
 
 }
+.attend-content-area{
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin-top: 30px;
+}
+.atttend-board-big-area{
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin-top: 30px;
+}
 .attend-search-area{
     padding-left: 0;
     padding-right: 0;
     padding-top:0;
     padding-bottom: 16px;
+}
+.attend-check-area{
+    background-color: #ffffff;
+    border-radius: 20px;
+    .attend-check-profile{
+        border: 1px solid #ccc;
+        width:300px;
+        height:365px;
+    }
+    .attend-check-info{
+        border: 1px solid #ccc;
+        height:300px;
+        width:100%;
+        margin-left:30px;
+    }
+}
+.attend-check-search-area{
+    display: flex; /* 부모 요소를 플렉스 컨테이너로 설정 */
+    align-items: center;
+    margin-top:40px;
+}
+.left-section {
+
+}
+
+.center-section {
+    align-items: center;
+    text-align: center; /* 내부 요소들을 가운데 정렬 */
+    justify-content: center;
+}
+.attend-check-calendar-area{
+    border: 1px solid #DCDCDD;
+    width:100%;
+    height:100%;
+    margin-top:10px;
+
+    .attend-check-calendar{
+        thead{
+            justify-content: center;
+            text-align: center;
+            tr{
+                th{
+                    width:100px;
+                    height:50px;
+                    border:1px solid #DCDCDD;
+                }
+            }
+        }
+        tr{
+            width:200px;
+            td{
+                width:200px;
+                height:150px;
+                border:1px solid #DCDCDD;
+                position: relative;
+                .calendar-day{
+                    position: absolute;
+                    color: #000000;
+                    top:0;
+                    left:0;
+                }
+            }
+
+        }
+    }
+}
+.attend-check-request-list-area{
+    width:100%;
+    height:100%;
+    margin-top:70px;
+    border:1px solid #DCDCDD;
+}
+.attend-check-search-year-text{
+    width:100px;
+}
+.attend-check-search-month-text{
+    width:100px;
+}
+.attend-check-search-btn{
+    width:80px;
+}
+.btn-basic{
+    background-color: #3577FF;
+}
+.attend-check-bottom{
+    margin-bottom: 30px;
+    background-color: #ffffff;
+    border-radius: 20px;
+}
+
+.attend-profile{
+    width: 250px;
+    height:350px;
+
+}
+.attend-check-big-area{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background-color: #ffffff;
+    border-radius: 20px;
 }

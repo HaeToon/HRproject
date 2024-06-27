@@ -16,6 +16,7 @@ public class NoticeDao {
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
         noticeList = sqlSession.selectList("getNoticeList");
         sqlSession.close();
+        System.out.println(noticeList.toString());
         return noticeList;
     }
 
@@ -74,7 +75,7 @@ public class NoticeDao {
 
             List<NoticeDto> noticeList = sqlSession.selectList("searchNotice", parameterMap);
             System.out.println("search query is successful");
-            System.out.println(noticeList); // 가져온 데이터 로깅
+            System.out.println(noticeList.toString()); // 가져온 데이터 로깅
 
             return noticeList;
         } catch (Exception e) {
@@ -86,7 +87,7 @@ public class NoticeDao {
 
     public void incrementViews(int noticeNo) {
         try (SqlSession session = MybatisConnectionFactory.getSqlSession(true)) {
-            session.update("incrementViews", noticeNo);
+            session.update("com.hrproject.hrproject.dao.NoticeDao.incrementViews", noticeNo);
             session.commit();
         }
     }
