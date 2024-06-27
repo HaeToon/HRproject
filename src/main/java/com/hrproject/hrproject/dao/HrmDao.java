@@ -1,5 +1,6 @@
 package com.hrproject.hrproject.dao;
 
+import com.hrproject.hrproject.controller.hrm.HrmMap;
 import com.hrproject.hrproject.dto.EvaluationDto;
 import com.hrproject.hrproject.dto.HrmDto;
 import com.hrproject.hrproject.dto.HrmPageDto;
@@ -7,6 +8,8 @@ import com.hrproject.hrproject.mybatis.MybatisConnectionFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +54,7 @@ public class HrmDao {
 //        sqlSession.close();
 //        return result;
 //    }
+
     public int setShowAbleHrm(HrmDto hrmDto) {
         int result = 0;
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession();
@@ -128,10 +132,8 @@ public class HrmDao {
         HrmDto hrmDto = null;
         HrmDao hrmDao = new HrmDao();
         if (hrmDao.getHrm(empNo) == null) return hrmDto; // 로그인하려는 empNo 없음연 리턴
-
         String hashPassword = hrmDao.getHrm(empNo).getPassword();
-        if (password.equals(hashPassword)) hrmDto = hrmDao.getHrm(empNo); // 비밀번호 변경전 empNo=password면 이걸로 로그인
-        else if (BCrypt.checkpw(password, hashPassword)) hrmDto = hrmDao.getHrm(empNo); // 비밀번호 변경후 로그인
+        if (BCrypt.checkpw(password, hashPassword)) hrmDto = hrmDao.getHrm(empNo); // 비밀번호 변경후 로그인
         return hrmDto;
     }
 
@@ -188,59 +190,6 @@ public int getUsedAnnualLeaveDays(int empNo) {
         return result;
     }
 
-    //     getWorkStatus
-    public int getWorkStatus(int empNo) {
-        int result = 0;
-
-        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-        result = sqlSession.selectOne("getWorkStatus", empNo);
-        sqlSession.close();
-
-        return result;
-    }
-
-    public EvaluationDto getHrmEval(int empNo) {
-        EvaluationDto evaluationDto = null;
-
-        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-        evaluationDto = sqlSession.selectOne("getHrmEval", empNo);
-        sqlSession.close();
-
-        return evaluationDto;
-    }
-
-//    public int createHrmEval(int empNo) {
-//        int result = 0;
-//        /* TOTALWORKDAYS % days_since_hire = 출근율 = EvaluationScore */
-//        /* 모든 직원중 최대 출근율 기준점으로 잡고 나머지 계산?  */
-////        double score = (double) getTotalWorkDays(empNo) / (double) getDaysSinceHire(empNo);
-//        double score =  (double) 4000 / (double) getDaysSinceHire(empNo);
-//        EvaluationDto evaluationDto = EvaluationDto.builder()
-//                .empNo(empNo)
-//                .performanceScore(score)
-//                .build();
-//
-//        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-//        result = sqlSession.insert("createHrmEval", evaluationDto);
-//        sqlSession.close();
-//        return result;
-//    }
-//
-//    public int getDaysSinceHire(int empNo) {
-//        int result = 0;
-//        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-//        result = sqlSession.selectOne("getDaysSinceHire", empNo);
-//        sqlSession.close();
-//        return result;
-//    }
-
-    public int getTotalWorkDays(int empNo) {
-        int result = 0;
-        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
-        result = sqlSession.selectOne("getTotalWorkDays", empNo);
-        sqlSession.close();
-        return result;
-    }
 
     //// HrmEval 관련 getHrm 보드
     public List<HrmDto> getHrmEvalBoardList(HrmPageDto hrmPageDto) {
@@ -251,6 +200,7 @@ public int getUsedAnnualLeaveDays(int empNo) {
         return hrmList;
     }
 
+
     public List<HrmDto> getHrmEvalSearchBoardList(HrmPageDto hrmPageDto) {
         List<HrmDto> hrmList = null;
         SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
@@ -258,4 +208,81 @@ public int getUsedAnnualLeaveDays(int empNo) {
         sqlSession.close();
         return hrmList;
     }
+
+    public List<HrmDto> getAllHrmEvalList() {
+        List<HrmDto> hrmList = null;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        hrmList = sqlSession.selectList("getEvalHrmList");
+        sqlSession.close();
+        return hrmList;
+    }
+
+    public int promote(int empNo) {
+        int result = 0;
+        HrmDto hrmDto = getHrm(empNo);
+        HrmMap hrmMap = new HrmMap();
+        LocalDate now = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String today = now.format(formatter);
+
+        EvaluationDto evaluationDto = EvaluationDto.builder()
+                .empNo(empNo)
+                .evaluationYear(today)
+                .comments(hrmMap.getPositionMap().get(hrmDto.getPosNo()) + " ==> "+hrmMap.getPositionMap().get(hrmDto.getPosNo()+10))
+                .promote(false)
+                .build();
+        result = createEvaluation(evaluationDto);
+
+        if (result == 0) return result;
+        else result = 0;
+
+        if (hrmDto.getPosNo()<50) {
+            hrmDto.setPosNo(hrmDto.getPosNo()+10);
+            hrmDto.setPosName(hrmMap.getPositionMap().get(hrmDto.getPosNo()));
+        }
+        else return result;
+
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        result = sqlSession.update("promote", hrmDto);
+
+        sqlSession.close();
+        return result;
+    }
+
+    public List<HrmDto> getHrmEvaluationList() {
+        List<HrmDto> hrmList = null;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        hrmList = sqlSession.selectList("getHrmEvaluationList");
+        sqlSession.close();
+        return hrmList;
+    }
+
+    public EvaluationDto getEvaluation(int empNo){
+        EvaluationDto evaluationDto = null;
+
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        evaluationDto = sqlSession.selectOne("getEvaluation", empNo);
+        sqlSession.close();
+
+        return evaluationDto;
+    }
+    public int createEvaluation(EvaluationDto evaluationDto) {
+        int result = 0;
+
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        result = sqlSession.insert("createEvaluation", evaluationDto);
+
+        sqlSession.close();
+        return result;
+    }
+    public int updateEvaluation(EvaluationDto evaluationDto) {
+        int result = 0;
+
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession(true);
+        result = sqlSession.update("updateEvaluation", evaluationDto);
+
+        sqlSession.close();
+        return result;
+    }
+
 }

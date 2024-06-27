@@ -1,4 +1,4 @@
-.employee-card {
+.employee-mypage-card {
 
     padding: 20px;
     box-shadow: 10px 10px 20px rgba(126, 126, 126, 0.42);
@@ -50,6 +50,10 @@
         bottom:16px;
         font-size: 48px;
     }
+}
+#renameProfile_view {
+    width: 140px;
+    height: 180px;
 }
 .hrm-content-area{
     background-color: #ffffff;

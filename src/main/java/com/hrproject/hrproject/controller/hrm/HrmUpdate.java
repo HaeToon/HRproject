@@ -44,23 +44,8 @@ public class HrmUpdate extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         /* 예외처리 try catch 어케함?? */
         /* empNo 수정버튼 누른거랑 다른값 들어오면 막아야함 */
-//        if (req.getParameter("empNo_password_update") != null) {
-//            HrmDao hrmDao = new HrmDao();
-//            HrmDto hrmDto = HrmDto.builder()
-//                    .empNo(Integer.parseInt(req.getParameter("empNo_password_update")))
-//                    .password(req.getParameter("empNo_password_update"))
-//                    .build();
-//            int result = hrmDao.changePW(hrmDto);
-//            if (result > 0) {
-//                ScriptWriter.alertAndNext(resp, "비밀번호 초기화 되었습니다.", "../hrm/board");
-//                return;
-//            } else {
-//                ScriptWriter.alertAndBack(resp, "오류가 발생했습니다. 다시 시도해주세요.");
-//                return;
-//            }
-//        }
 
-        if (!isNullCheck(req)) {
+        if (!isNullCheck(req) && duplicateCheck(req) == 0) {
             Part profile = req.getPart("profile");
             String renameProfile = "";
             //String originalProfile = "";
@@ -108,7 +93,6 @@ public class HrmUpdate extends HttpServlet {
                     .ename(req.getParameter("ename"))
                     .foreignName(req.getParameter("foreignName"))
                     .birthDate(req.getParameter("birthDate"))
-                    .password("password")
 
                     .deptNo(deptNo)
                     .deptName(deptMap.get(deptNo))
@@ -122,11 +106,12 @@ public class HrmUpdate extends HttpServlet {
                     .account(req.getParameter("account"))
                     .email(req.getParameter("email"))
 
-                    .bankName(hrmMap.getBankMap().get(Integer.parseInt(req.getParameter("bankName"))))
+                    .bankName(req.getParameter("bankName"))
                     .accountHolder(req.getParameter("accountHolder"))
                     .postCode(req.getParameter("postCode"))
                     .address(req.getParameter("address"))
                     .addressDetail(req.getParameter("addressDetail"))
+
 
                     .originalProfile(fileName)
                     .renameProfile(renameProfile)
@@ -141,7 +126,8 @@ public class HrmUpdate extends HttpServlet {
                 ScriptWriter.alertAndBack(resp, "오류가 발생했습니다. 다시 시도해주세요.");
             }
         } else {
-            ScriptWriter.alertAndBack(resp, "오류가 발생했습니다.(필수입력사항) 다시 시도해주세요.");
+            if (isNullCheck(req)) ScriptWriter.alertAndBack(resp, "오류가 발생했습니다.(필수입력사항 미입력) 다시 시도해주세요.");
+            else ScriptWriter.alertAndBack(resp, "오류가 발생했습니다.() 다시 시도해주세요.");
         }
     }
 
@@ -156,5 +142,36 @@ public class HrmUpdate extends HttpServlet {
                 || req.getParameter("postCode") == null || req.getParameter("postCode").equals("")
                 || req.getParameter("address") == null || req.getParameter("address").equals("");
         return nullCheck;
+    }
+
+    private static boolean isChanged(HttpServletRequest req, int empNo) {
+        HrmDao hrmDao = new HrmDao();
+        HrmDto hrmDto = hrmDao.getHrm(empNo);
+
+        return true;
+    }
+
+    private static int duplicateCheck(HttpServletRequest req) {
+        HrmDao hrmDao = new HrmDao();
+        HrmDto hrmDto = hrmDao.getHrm(Integer.parseInt(req.getParameter("empNo")));
+        int result = 0;
+        if (!hrmDto.getEmail().equals(req.getParameter("email"))) {
+            HrmDao hrmDao2 = new HrmDao();
+            result += hrmDao2.duplicateCheck("email", req.getParameter("email"));
+        }
+        if (!hrmDto.getMobile().equals(req.getParameter("mobile"))) {
+            HrmDao hrmDao3 = new HrmDao();
+            result += hrmDao3.duplicateCheck("mobile", req.getParameter("mobile"));
+        }
+        if (!hrmDto.getAccount().equals(req.getParameter("account"))) {
+            HrmDao hrmDao4 = new HrmDao();
+            result += hrmDao4.duplicateCheck("account", req.getParameter("account"));
+        }
+        if (req.getParameter("passport") != null && !req.getParameter("passport").equals("") &&
+                !hrmDto.getPassport().equals(req.getParameter("passport"))) {
+            HrmDao hrmDao5 = new HrmDao();
+            result += hrmDao5.duplicateCheck("passport", req.getParameter("passport"));
+        }
+        return result;
     }
 }

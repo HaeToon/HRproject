@@ -11,103 +11,92 @@
     <%--  hrm 내용 영역  --%>
     <div class="hrm-content-area p-3">
         <%--    hrm 검색 영역    --%>
-        <div class="hrm-search-area">
-            <form action="../hrm/board" class="row d-flex align-items-center">
-                <div class="col-sm-3">
-                    <div class="row g-3">
-                        <div class="col">
-                            <select class="form-select" aria-label="Default select example" name="search">
-                                <option value="all" ${search eq "all" ? "selected": ""}>전체</option>
-                                <option value="empno" ${search eq "empno" ? "selected": ""}>사원번호</option>
-                                <option value="ename" ${search eq "ename" ? "selected": ""}>사원명</option>
-                                <option value="deptname" ${search eq "deptname" ? "selected": ""}>부서명</option>
-                                <option value="email" ${search eq "email" ? "selected": ""}>이메일</option>
-                            </select>
-                        </div>
-                        <div class="col w-auto">
-                            <input type="text" name="searchWord" class="form-control" value="${searchWord}">
+        <c:if test="${not param.promote eq true}">
+            <div class="hrm-search-area">
+                <form action="../hrm/evaluation" class="row d-flex align-items-center">
+                    <div class="col-sm-3">
+                        <div class="row g-3">
+                            <div class="col">
+                                <select class="form-select" aria-label="Default select example" name="search">
+                                    <option value="empno" ${search eq "empno" ? "selected": ""}>사원번호</option>
+                                    <option value="ename" ${search eq "ename" ? "selected": ""}>사원명</option>
+                                    <option value="deptname" ${search eq "deptname" ? "selected": ""}>부서명</option>
+                                    <option value="email" ${search eq "email" ? "selected": ""}>이메일</option>
+                                </select>
+                            </div>
+                            <div class="col w-auto">
+                                <input type="text" name="searchWord" class="form-control" value="${searchWord}">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-3">
-                    <button class="btn btn-primary">SEARCH</button>
-                </div>
-            </form>
-        </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-primary">SEARCH</button>
+                    </div>
+                </form>
+            </div>
+        </c:if>
         <%--    hrm 검색 영역  끝   --%>
         <%--      hrm list table 영역      --%>
         <table class="table table-sm">
             <thead>
             <tr>
-                <%-- 9개 --%>
-                <th scope="col">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="check-all">
-                        <label class="form-check-label" for="check-all"></label>
-                    </div>
-                </th>
+                <th scope="col">번호</th>
                 <th scope="col">사원번호</th>
                 <th scope="col">부서</th>
                 <th scope="col">직책</th>
                 <th scope="col">사원명</th>
                 <th scope="col">입사일</th>
                 <th scope="col">근속연수</th>
-                <th scope="col">등급(출석률)</th>
+                <th scope="col">최근 진급</th>
+                <th scope="col">사원평가등급</th>
                 <th scope="col">승진대상</th>
-                <th scope="col">승인 / 반려</th>
+                <c:if test="${param.promote eq true}">
+                    <th scope="col">승진신청</th>
+                </c:if>
+                <%--                <th scope="col">승인 / 반려</th>--%>
             </tr>
             </thead>
             <tbody>
-
             <c:forEach items="${hrmList}" var="hrmDto" varStatus="loop">
+                <c:set var="evalDto" value="${evaluationList[loop.index]}"/>
                 <c:choose>
                     <%-- 현재 주소창에 '?page=' param이 없을시 page=1로 설정 --%>
                     <c:when test="${param.page == null}"><c:set var="page" value="1"></c:set></c:when>
                     <c:otherwise><c:set var="page" value="${param.page}"></c:set></c:otherwise>
                 </c:choose>
                 <tr>
-                    <td>
-                        <input type="checkbox" class="chk btn-check" id="btn-check-${loop.index}"
-                               autocomplete="off"
-                               value="${hrmDto.empNo}" name="check"
-                               style="width: 20px; height: 20px">
-                        <label class="btn"
-                               for="btn-check-${loop.index}">${((page -1) * listPerPage) + loop.count}</label>
-                    </td>
+                    <td>${((page -1) * listPerPage) + loop.count}</td>
                     <td>${hrmDto.empNo}</td>
                     <td>${hrmDto.deptName}</td>
                     <td>${hrmDto.posName}</td>
                     <td>${hrmDto.ename}</td>
                     <td>${hrmDto.hireDate}</td>
-                        <%--                            hrmBoard 서블릿에 setRequestAttributes(....,... hrmList 를 참조함 --%>
-                        <%--Evaluations 서블릿에 req.getRequestDispatcher("/WEB-INF/hrm/evaluation-board.jsp").forward(req, resp);--%>
+                    <td>${hrmDto.yosYear}년${hrmDto.yosMonth}개월</td>
+                    <td>${evalDto.evaluationYear}, ${evalDto.comments}</td>
+                    <td>${evalDto.performanceGrade}</td>
+                    <td><c:choose><c:when test="${evalDto.promote eq true}">O</c:when><c:otherwise>X</c:otherwise></c:choose></td>
                     <td>
-                            ${hrmDto.yosYear}년${hrmDto.yosMonth}개월
-                    </td>
-
-                    <td>${hrmDto.attendanceRate}%</td>
-                    <td>
-<%--                        <c:choose>--%>
-<%--                        <c:when test="${hrmDto.isPromotable eq true}">O</c:when>--%>
-<%--                        <c:otherwise>X</c:otherwise>--%>
-<%--                        </c:choose>--%>
-        ${hrmDto.isPromo}
-                    </td>
-
-                    <td>
-                        <c:choose>
-                            <c:when test="${hrmDto.isPromo eq 'O'}"><button class="btn btn-primary">승인</button></c:when>
-                            <c:otherwise><button class="btn btn-dark" disabled>반려</button></c:otherwise>
-                        </c:choose>
+                        <c:if test="${param.promote eq true}">
+                            <form action="../hrm/evaluation" method="post">
+                                <input type="hidden" value="${hrmDto.empNo}" name="empNo">
+                                <button class="btn btn-primary">승인</button>
+                            </form>
+                        </c:if>
                     </td>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
         <div class="text-end">
-            <button type="button" class="btn btn-primary" style="width: 100px" data-bs-toggle="modal"
-                    data-bs-target="#insertModal">신규
-            </button>
+            <c:choose>
+                <c:when test="${param.promote eq true}">
+                    <a href="../hrm/evaluation?page=1" type="button" class="btn btn-primary">평가업무</a>
+                </c:when>
+                <c:when test="${loginDto.grade eq 'ADMIN'}">
+                    <a href="../hrm/evaluation?promote=true" type="button" class="btn btn-primary">승진대상자</a>
+                </c:when>
+                <c:otherwise></c:otherwise>
+            </c:choose>
         </div>
     </div>
     <%--      hrm page 영역      --%>
@@ -186,5 +175,4 @@
         </div>--%>
     </div>
     <%--      hrm page 영역 끝      --%>
-</div>
 </div>

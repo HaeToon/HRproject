@@ -34,6 +34,7 @@
             </div>
             <!-- Login Button -->
             <div class="header-user-info d-flex col-auto ms-auto text-end">
+                <%-- 프로필 사진 있을시 해당 이미지 설정, 없을시 기본 이미지 --%>
                 <c:choose>
                     <c:when test="${not empty loginDto.renameProfile}">
                         <img src="${request.contextPath}/upload/${loginDto.renameProfile}" class="profile">
@@ -42,36 +43,31 @@
                         <img src="../images/profile01.jpg" class="profile">
                     </c:otherwise>
                 </c:choose>
-                <c:choose>
-                    <c:when test="${loginDto eq null}">
-                        <c:set var="redirectUrl" value="${pageContext.request.contextPath}/index/index"/>
-                        <c:if test="${not fn:contains(pageContext.request.requestURI, '/index/index')}">
-                            <meta http-equiv="refresh" content="0; url=${redirectUrl}">
-                        </c:if>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="dropdown">
-                            <button class="user-name btn btn-outline-light" type="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    ${loginDto.ename}
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark mt-2">
+                <%-- 로그인시 마이페이지 로그아웃 버튼 생성 --%>
+                <c:if test="${not empty loginDto}">
+                    <div class="dropdown">
+                        <button class="user-name btn btn-outline-light" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                ${loginDto.ename}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark mt-2">
+                            <c:if test="${loginDto.grade ne 'ADMIN'}">
                                 <li>
                                     <form action="../hrm/mypage" method="post" id="mypage" class="m-0">
                                         <input type="hidden" value="${loginDto.empNo}" name="sessionEmpNo">
                                         <button class="btn dropdown-btn-outline-light" form="mypage">마이페이지</button>
                                     </form>
                                 </li>
-                                <li>
-                                    <form action="../hrm/login-logout" method="post" id="logout" class="m-0">
-                                        <input type="hidden" value="${loginDto.empNo}" name="sessionEmpNo">
-                                        <button class="btn dropdown-btn-outline-light" form="logout">로그아웃</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
+                            </c:if>
+                            <li>
+                                <form action="../hrm/login-logout" method="post" id="logout" class="m-0">
+                                    <input type="hidden" value="${loginDto.empNo}" name="sessionEmpNo">
+                                    <button class="btn dropdown-btn-outline-light" form="logout">로그아웃</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </c:if>
             </div>
         </div>
     </div>
@@ -105,8 +101,10 @@
                             </div>
                             <div class="collapse" id="selectDropDown" style="">
                                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                                    <li><a href="/attend/check" class="nav-link text-decoration-none rounded">근태 조회</a></li>
-                                    <li><a href="/salary/check" class="nav-link text-decoration-none rounded">급여 조회</a></li>
+                                    <li><a href="/attend/check" class="nav-link text-decoration-none rounded">근태 조회</a>
+                                    </li>
+                                    <li><a href="/salary/check" class="nav-link text-decoration-none rounded">급여 조회</a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -123,17 +121,25 @@
                         </div>
                         <div class="collapse" id="workDropDown" style="">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    <%-- <c:if test="${loginDto.grade eq 'ADMIN' or loginDto.deptNo eq 10}"> --%>
                                 <c:if test="${loginDto.grade eq 'ADMIN' or loginDto.deptNo eq 10}">
-                                    <li><a href="/attend/board" class="nav-link text-decoration-none rounded">근태 업무</a></li>
+                                    <li><a href="/attend/board" class="nav-link text-decoration-none rounded">근태 업무</a>
+                                    </li>
                                 </c:if>
+                                    <%--<c:if test="${loginDto.grade eq 'ADMIN' or loginDto.deptNo eq 20}">--%>
                                 <c:if test="${loginDto.grade eq 'ADMIN' or loginDto.deptNo eq 20}">
-                                <li><a href="/salary/board" class="nav-link text-decoration-none rounded">급여 업무</a></li>
+                                    <li><a href="/salary/board" class="nav-link text-decoration-none rounded">급여 업무</a>
+                                    </li>
                                 </c:if>
-                               <c:if test="${loginDto.grade eq 'ADMIN' or loginDto.deptNo eq 30}" >
-                                <li><a href="/hrm/board" class="nav-link text-decoration-none rounded">인사 업무</a></li>
+                                    <%-- <c:if test="${loginDto.grade eq 'ADMIN' or loginDto.deptNo eq 30}">--%>
+                                <c:if test="${loginDto.grade eq 'ADMIN' or loginDto.deptNo eq 30}">
+                                    <li><a href="/hrm/board" class="nav-link text-decoration-none rounded">인사 업무</a>
+                                    </li>
                                 </c:if>
-                                <c:if test="${loginDto.grade eq 'ADMIN' or loginDto.deptNo eq 30}" >
-                                    <li><a href="/hrm/evaluation" class="nav-link text-decoration-none rounded">평가 업무</a></li>
+                                    <%--<c:if test="${loginDto.grade eq 'ADMIN' or loginDto.deptNo eq 30}">--%>
+                                <c:if test="${loginDto.grade eq 'ADMIN'}">
+                                    <li><a href="/hrm/evaluation" class="nav-link text-decoration-none rounded">평가
+                                        업무</a></li>
                                 </c:if>
                             </ul>
                         </div>
@@ -143,14 +149,18 @@
                     <i class="bi bi-exclamation-square"></i>
                     <a class="nav-link" href="/notice/board">공지사항</a>
                 </li>
-                <li class="left-side-link nav-item d-flex align-items-center">
-                    <i class="bi bi-calendar4"></i>
-                    <a class="nav-link" href="../workSchedule/empWorkBoard">사원용 출퇴근</a>
-                </li>
-                <li class="left-side-link nav-item d-flex align-items-center">
-                    <i class="bi bi-calendar4"></i>
-                    <a class="nav-link" href="../workSchedule/adminWorkBoard">관리자용 출퇴근</a>
-                </li>
+                <c:if test="${loginDto.grade ne 'ADMIN'}">
+                    <li class="left-side-link nav-item d-flex align-items-center">
+                        <i class="bi bi-calendar4"></i>
+                        <a class="nav-link" href="../workSchedule/empWorkBoard">사원용 출퇴근</a>
+                    </li>
+                </c:if>
+                <c:if test="${loginDto.grade eq 'ADMIN'}">
+                    <li class="left-side-link nav-item d-flex align-items-center">
+                        <i class="bi bi-calendar4"></i>
+                        <a class="nav-link" href="../workSchedule/adminWorkBoard">관리자용 출퇴근</a>
+                    </li>
+                </c:if>
                 <li class="left-side-link nav-item d-flex align-items-center">
                     <i class="bi bi-book"></i>
                     <a class="nav-link" href="/community/board">커뮤니티</a>

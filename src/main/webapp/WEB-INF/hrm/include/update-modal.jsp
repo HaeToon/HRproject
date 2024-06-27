@@ -13,7 +13,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="modifyHrmToggleLabel">사원 정보 수정</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="../hrm/update" id="modifyModalForm" method="post" enctype="multipart/form-data">
@@ -73,12 +73,12 @@
                         </div>
                         <div class="col">부서</div>
                         <div class="col col-md-4">
-                                <select class="form-select form-select" id="deptNo_update" aria-label="select"
-                                        name="deptNo">
-                                    <c:forEach var="dept" items="${deptMap}">
+                            <select class="form-select form-select" id="deptNo_update" aria-label="select"
+                                    name="deptNo">
+                                <c:forEach var="dept" items="${deptMap}">
                                     <option value="${dept.key}">부서코드:${dept.key} | 부서명:${dept.value}</option>
-                                    </c:forEach>
-                                </select>
+                                </c:forEach>
+                            </select>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -123,16 +123,22 @@
                                 <span class="input-group-text">은행명</span>
                                 <select class="form-select col-2" id="bankName_update" aria-label="은행명 선택"
                                         name="bankName">
-                                    <c:forEach var="bank" items="${bankMap}">
-                                        <option value="${bank.key}">${bank.value}</option>
-                                    </c:forEach>
+                                    <option value="한국은행">한국은행</option>
+                                    <option value="국민은행">국민은행</option>
+                                    <option value="신한은행">신한은행</option>
+                                    <option value="우리은행">우리은행</option>
+                                    <option value="하나은행">하나은행</option>
+                                    <option value="기업은행">기업은행</option>
+                                    <option value="외환은행">외환은행</option>
                                 </select>
-                                <span class="input-group-text">통장번호</span>
-                                <input type="text" class="form-control col-6" aria-label="account"
-                                       name="account" id="account_update">
                                 <span class="input-group-text">예금주</span>
                                 <input type="text" class="form-control col-2" aria-label="accountHolder"
                                        name="accountHolder" id="accountHolder_update">
+                                <span class="input-group-text">통장번호</span>
+                                <input type="text" class="form-control col-6" aria-label="account"
+                                       name="account" id="account_update">
+                                <button class="btn btn-outline-secondary btn-update-duplicate" type="button">확인
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -169,7 +175,10 @@
                         </div>
                         <div class="col-md-4 preview" style="width: 170px; height: 170px; object-fit: contain">
                             <%--                        <div id="preview"></div>--%>
-                            <img id="update_preview" src="../../../images/profile01.jpg">
+                            <%--                            <img class="preview" id="update_preview" src="../../../images/profile01.jpg">--%>
+                            <li class="nav-item">
+                                <img id="update_preview" class="preview" src="" alt="Profile Image">
+                            </li>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -181,21 +190,43 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="modifyModalForm" class="btn btn-primary" id="btn-update">수정</button>
-                <%--                <form action="../hrm/update" type="post">--%>
-                <%--                    <input type="hidden" id="empNo_password_update" name="empNo_password">--%>
-                <%--                    <button type="submit" form="modifyModalForm" class="btn btn-primary">비밀번호 초기화</button>--%>
-                <%--                </form>--%>
+                <form action="../hrm/change-password" method="post" id="password-reset-form">
+                    <input type="hidden" id="empNo_password_update" name="empNoPasswordReset">
+                    <button type="submit" id="password-reset-btn" class="btn btn-primary">비밀번호 초기화</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+
+    let empNo_password_reset;
+    $("#password-reset-btn").on("click", function () {
+        empNo_password_reset = $("#empNo_update").val();
+        $("#empNo_password_update").val(empNo_password_reset);
+        $("#password-reset-form").submit();
+    });
+
     let emailChecked_update = true;
     let mobileChecked_update = true;
     let passportChecked_update = true;
+    let accountChecked_update = true;
+
+    // 사원정보 입력시에 토요일이나 일요일 입력 못하게 막는 function
+    function validateHireDate(input) {
+        const date = new Date(input.value);
+        const day = date.getUTCDay();
+
+        if (day === 6 || day === 0) { // 6: Saturday, 0: Sunday
+            alert('토요일과 일요일은 선택할 수 없습니다.');
+            input.value = ''; // Reset the input value
+            return false;
+        }
+        return true;
+    }
 
     $("#btn-update").on("click", () => {
         /* 필수 입력 사항 체크 */
@@ -226,35 +257,49 @@
         }
         if ($("#account_update").val().trim() === "") {
             alert("통장번호은 필수입력 사항입니다.");
-            $("#account").focus();
+            $("#account_update").focus();
             return false;
         }
         if ($("#postCode_update").val().trim() === "") {
-            alert("통장번호은 필수입력 사항입니다.");
-            $("#postCode").focus();
+            alert("우편번호는 필수입력 사항입니다.");
+            $("#postCode_update").focus();
             return false;
         }
         if ($("#address_update").val().trim() === "") {
-            alert("통장번호은 필수입력 사항입니다.");
-            $("#address").focus();
+            alert("주소는 필수입력 사항입니다.");
+            $("#address_update").focus();
             return false;
         }
-        /* 아이디 중복 체크 */
+        /* 중복 체크 */
         if (!emailChecked_update) {
             alert("이메일 중복확인 필요")
-            $("#email").focus();
+            $("#email_update").focus();
             return false;
         }
         if (!mobileChecked_update) {
             alert("휴대폰번호 중복확인 필요")
-            $("#mobile").focus();
+            $("#mobile_update").focus();
             return false;
         }
         if (!passportChecked_update) {
-            alert("아이디 중복 체크 ㄱㄱ")
-            $("#passport").focus();
+            alert("여권번호 중복확인 필요")
+            $("#passport_update").focus();
             return false;
         }
+        if (!accountChecked_update) {
+            alert("계좌번호 중복확인 필요")
+            $("#account_update").focus();
+            return false;
+        }
+
+        // 입사일자 주말이면 컷하기
+        if (!validateHireDate(document.getElementById('hireDate_update'))) {
+            return false;
+        }
+
+        // 폼 제출 허용
+        $('#modifyModalForm').submit();
+
     });
 
     $(".btn-update-duplicate").on("click", function () {
@@ -268,6 +313,12 @@
                     return; // 이미 중복 확인을 완료한 경우, 추가 확인 방지
                 }
                 data = {check: "email", checkValue: checkValue};
+                break;
+            case "account_update":
+                if (accountChecked_update) {
+                    return;
+                }
+                data = {check: "account", checkValue: checkValue};
                 break;
             case "passport_update":
                 if (passportChecked_update) {
@@ -306,14 +357,22 @@
                         $("#" + inputId).attr("readonly", true);
                         switch (inputId) {
                             case "email_update":
+                                $("#" + inputId).removeClass('is-invalid');
                                 $("#" + inputId).addClass('is-valid');
                                 emailChecked_update = true;
                                 break;
+                            case "account_update":
+                                $("#" + inputId).removeClass('is-invalid');
+                                $("#" + inputId).addClass('is-valid');
+                                accountChecked_update = true;
+                                break;
                             case "passport_update":
+                                $("#" + inputId).removeClass('is-invalid');
                                 $("#" + inputId).addClass('is-valid');
                                 passportChecked_update = true;
                                 break;
                             case "mobile_update":
+                                $("#" + inputId).removeClass('is-invalid');
                                 $("#" + inputId).addClass('is-valid');
                                 mobileChecked_update = true;
                                 break;
@@ -375,6 +434,7 @@
     let emailValue;
     let mobileValue;
     let passportValue;
+    let accountValue;
     $("#email_update").on("focus", function () {
         emailValue = $("#email_update").val();
     });
@@ -383,6 +443,9 @@
     });
     $("#passport_update").on("focus", function () {
         passportValue = $("#passport_update").val();
+    });
+    $("#account_update").on("focus", function () {
+        accountValue = $("#account_update").val();
     });
 
     $("#email_update").on("keyup", function () {
@@ -404,13 +467,15 @@
             $(this).removeClass('is-invalid');
         }
     });
-    // $("#account_update").on("keyup", function () {
-    //     if ($(this).val() !== '') {
-    //         $(this).addClass('is-invalid');
-    //     } else {
-    //         $(this).removeClass('is-invalid');
-    //     }
-    // });
+    $("#account_update").on("keyup", function () {
+        if ($(this).val() !== accountValue) {
+            $(this).addClass('is-invalid');
+            accountChecked_update = false;
+        } else {
+            accountChecked_update = true;
+            $(this).removeClass('is-invalid');
+        }
+    });
     $("#passport_update").on("keyup", function () {
         if ($(this).val() !== passportValue && $(this).val().trim() !== "") {
             passportChecked_update = false;
@@ -420,6 +485,4 @@
             $(this).removeClass('is-invalid');
         }
     });
-
-
 </script>

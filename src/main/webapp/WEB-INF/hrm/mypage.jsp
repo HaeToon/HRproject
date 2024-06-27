@@ -1,15 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@include file="../include/header.jsp" %>
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
-<div class="employee-card  notice-content-area p-3">
+<div class="employee-mypage-card  notice-content-area p-3">
     <h1 class="text-center">사원 카드</h1>
     <div class="profile-container">
             <c:choose>
                 <c:when test="${not empty hrmDto.renameProfile}">
-                    <img src="${request.contextPath}/upload/${hrmDto.renameProfile}" class="myPageProfile">
+                    <img src="${request.contextPath}/upload/${hrmDto.renameProfile}" id="renameProfile_view" class="myPageProfile">
                 </c:when>
                 <c:otherwise>
-                    <img src="../images/profile03.jpg" class="mypage-profile">
+                    <img src="../images/profile03.jpg" class="mypage-profile" id="renameProfile_view">
                 </c:otherwise>
             </c:choose>
         <div class="profile-details">
@@ -50,7 +50,8 @@
                 <label for="long" class="col-sm-2 col-form-label">주소</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="long"
-                           value="${hrmDto.address}" readonly>
+
+                           value="${hrmDto.address} ${hrmDto.addressDetail}" readonly>
                 </div>
             </div>
             <div class="row mb-sm-1 reduce-gap">
@@ -80,15 +81,14 @@
                 <div class="col-sm-12">
                     <label for="remarks" class="form-label">비고</label>
                     <textarea class="form-control" id="remarks" name="remarks" value="${hrmDto.remarks}"
-                              readonly>비고란</textarea>
+                              readonly>${hrmDto.remarks}</textarea>
                 </div>
             </div>
-            <div class="text-end mt-3">
+            <div class="text-center mt-3">
                 <jsp:include page="mypage-passwordChange-modal.jsp" />
                 <button type="button" class="btn btn-primary"
                         data-bs-toggle="modal" data-bs-target="#passwordChange">비밀번호변경
                 </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">인쇄</button>
             </div>
         </div>
     </div>

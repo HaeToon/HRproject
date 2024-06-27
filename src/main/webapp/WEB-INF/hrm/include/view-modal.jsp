@@ -21,7 +21,7 @@
                     <h1 class="text-center">사원 카드</h1>
                     <div class="profile-container">
                         <li class="nav-item">
-                                <img id="renameProfile_view" class="myPageProfile" src="" alt="Profile Image">
+                            <img id="renameProfile_view" class="myPageProfile" src="" alt="Profile Image">
                         </li>
                         <div class="profile-details">
                             <div class="row mb-sm-1 reduce-gap">
@@ -128,10 +128,5 @@
         // 새 창을 화면 가운데에 위치시키고 크게 열기
         var printWindow = window.open(printUrl);
 
-        // 새 창이 로드된 후 프린트 명령 실행
-        printWindow.onload = function() {
-            printWindow.print();
-            // printWindow.close(); // 프린트 후 창 닫기
-        };
     });
 </script>

@@ -3,6 +3,7 @@ package com.hrproject.hrproject.controller.hrm;
 import com.hrproject.hrproject.dao.HrmDao;
 import com.hrproject.hrproject.dto.HrmDto;
 import com.hrproject.hrproject.utils.ScriptWriter;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,10 +15,10 @@ import java.io.IOException;
 
 @WebServlet("/hrm/login-logout")
 public class LoginLogout extends HttpServlet {
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        req.getRequestDispatcher("/WEB-INF/index/index.jsp").forward(req, resp);
-//    }
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/WEB-INF/hrm/login.jsp").forward(req, resp);
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -25,11 +26,14 @@ public class LoginLogout extends HttpServlet {
         if (req.getParameter("sessionEmpNo") != null) {
             HttpSession session = req.getSession();
             session.invalidate();
-            ScriptWriter.alertAndNext(resp, "로그아웃", "../index/index");
+            ScriptWriter.alertAndNext(resp, "로그아웃", "../hrm/login-logout");
         } else {
-            /* 관리자 로그인 임시 */
-            if (req.getParameter("loginEmpNo").equals("admin") && req.getParameter("loginPassword").equals("1234")) {
-                adminLogin(req, resp, "Admin", Grade.ADMIN, "관리자");
+            /* 관리자 로그인 id, pw 설정 위치 - web.xml */
+            ServletContext application  = getServletContext();
+            String adminID = application.getInitParameter("AdminID");
+            String adminPassword = application.getInitParameter("AdminPassword");
+            if (req.getParameter("loginEmpNo").equals(adminID) && req.getParameter("loginPassword").equals(adminPassword)) {
+                adminLogin(req, resp,  "관리자");
             } else {
                 /* 로그인 */
                 String empNoStr = req.getParameter("loginEmpNo");
@@ -66,11 +70,11 @@ public class LoginLogout extends HttpServlet {
         }
     }
 
-    private static void adminLogin(HttpServletRequest req, HttpServletResponse resp, String ename, Grade grade, String msg) {
+    private static void adminLogin(HttpServletRequest req, HttpServletResponse resp, String msg) {
         HrmDto adminDto = HrmDto.builder()
                 .empNo(0)
-                .ename(ename)
-                .grade(grade)
+                .ename("Admin")
+                .grade(Grade.ADMIN)
                 .build();
         HttpSession session = req.getSession();
         session.setAttribute("loginDto", adminDto);

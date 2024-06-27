@@ -1,21 +1,22 @@
 package com.hrproject.hrproject.dto;
 
+import com.hrproject.hrproject.controller.hrm.Grade;
 import lombok.*;
 
-@NoArgsConstructor
 @Getter
 @Setter
-@Builder
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class EvaluationDto {
-    private int empNo;
     private int evaluationNo;
-//    private String evaluationYear;
-    private double performanceScore;
+    private int empNo;
+    private String evaluationYear;
     private String performanceGrade;
-    private boolean isPromotable;
     private String comments;
-    private int daysSinceHire;
-    private int totalWorkDays;
+    private boolean promote;
+    private int yosYear; // 근속년수
+    private int yosMonth; // 근속월수
+    private double attendanceRate;
 }

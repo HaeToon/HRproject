@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.name.Rename;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,13 +45,15 @@ public class HrmInsert extends HttpServlet {
                 String dateStrHire = String.format("%04d-%02d-%02d", year+20, month2, day2);
 
                 HrmMap hrmMap = new HrmMap();
+                String salt = BCrypt.gensalt();
+                String hashPassword = BCrypt.hashpw(Integer.toString(maxEmpNo + i), salt);
 
                 HrmDto hrmDto = HrmDto.builder()
                         .empNo(maxEmpNo + i)
                         .ename("Employee" + (i + maxEmpNo))
                         .foreignName("ForeignName" + (i + maxEmpNo))
                         .birthDate(dateStr)
-                        .password(Integer.toString(maxEmpNo + i))
+                        .password(hashPassword)
                         .deptNo(deptNo)
                         .deptName(hrmMap.getDeptMap().get(deptNo))
                         .posNo(positionNo)
@@ -61,7 +64,7 @@ public class HrmInsert extends HttpServlet {
                         .email("ee" + (i + maxEmpNo) + "@ee.co")
                         .hireDate(dateStrHire)
                         .hireType("신입")
-                        .bankName(hrmMap.getBankMap().get(2))
+                        .bankName("한국은행")
                         .account("Acc" + (i + maxEmpNo))
                         .accountHolder("AccHolder" + (i + 1))
                         .postCode(Integer.toString(12345 + i))
@@ -88,7 +91,7 @@ public class HrmInsert extends HttpServlet {
 
         HrmDao hrmGetMaxDao = new HrmDao();
         int maxEmpNo = hrmGetMaxDao.getMaxEmpNo();
-        if (Integer.parseInt(req.getParameter("empNo")) == maxEmpNo + 1 || !isNullCheck(req)) {
+        if (Integer.parseInt(req.getParameter("empNo")) == maxEmpNo + 1 && !isNullCheck(req) && duplicateCheck(req) == 0) {
             Part profile = req.getPart("profile");
             String renameProfile = "";
             //String originalProfile = "";
@@ -132,12 +135,15 @@ public class HrmInsert extends HttpServlet {
             String passport = req.getParameter("passport");
             if (passport.equals("")) passport = null;
 
+            String salt = BCrypt.gensalt();
+            String hashPassword = BCrypt.hashpw(req.getParameter("empNo"), salt);
+
             HrmDto hrmDto = HrmDto.builder()
                     .empNo(Integer.parseInt(req.getParameter("empNo")))
                     .ename(req.getParameter("ename"))
                     .foreignName(req.getParameter("foreignName"))
                     .birthDate(req.getParameter("birthDate"))
-                    .password(req.getParameter("empNo"))
+                    .password(hashPassword)
 
                     .deptNo(deptNo)
                     .deptName(deptMap.get(deptNo))
@@ -152,7 +158,7 @@ public class HrmInsert extends HttpServlet {
                     .hireDate(req.getParameter("hireDate"))
                     .hireType(req.getParameter("hireType"))
 
-                    .bankName(hrmMap.getBankMap().get(Integer.parseInt(req.getParameter("bankName"))))
+                    .bankName(req.getParameter("bankName"))
                     .account(req.getParameter("account"))
                     .accountHolder(req.getParameter("accountHolder"))
                     .postCode(req.getParameter("postCode"))
@@ -188,5 +194,20 @@ public class HrmInsert extends HttpServlet {
                 || req.getParameter("postCode") == null || req.getParameter("postCode").equals("")
                 || req.getParameter("address") == null || req.getParameter("address").equals("");
         return nullCheck;
+    }
+
+    private static int duplicateCheck(HttpServletRequest req) {
+        HrmDao hrmDao = new HrmDao();
+        HrmDao hrmDao2 = new HrmDao();
+        HrmDao hrmDao3 = new HrmDao();
+        int result = 0;
+        result += hrmDao.duplicateCheck("email",req.getParameter("email"));
+        result += hrmDao2.duplicateCheck("mobile",req.getParameter("mobile"));
+        result += hrmDao3.duplicateCheck("account",req.getParameter("account"));
+        if (req.getParameter("passport") != null && !req.getParameter("passport").equals("")){
+            HrmDao hrmDao4 = new HrmDao();
+            result += hrmDao4.duplicateCheck("passport",req.getParameter("passport"));
+        }
+        return result;
     }
 }
