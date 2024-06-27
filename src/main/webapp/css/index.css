@@ -73,3 +73,6 @@ position: relative;
 body{
     background-color: #eff5fb;
 }
+.index-content{
+    box-shadow: 10px 10px 20px rgba(126, 126, 126, 0.42);
+}

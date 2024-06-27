@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<div class="content-area d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary position-relative col-12">
+<div class="content-area index-content d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary position-relative col-12">
     <div class="main d-flex">
     <div class="main-img-box">
         <img src="../../images/mainImage02.jpg" class="main-img">
