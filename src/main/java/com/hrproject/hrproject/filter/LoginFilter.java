@@ -39,55 +39,31 @@ public class LoginFilter implements Filter {
         } else {
             /* 로그인 상태일때 */
             HrmDto hrmDto = (HrmDto) session.getAttribute("loginDto");
-//            Boolean isAdmin = hrmDto.getGrade() == Grade.ADMIN ? true : false;
 
-            // 특정 URL 패턴()에 대한 필터링 조건
-            if (requestUrl.startsWith("/workSchedule/adminWorkBoard") || requestUrl.startsWith("/hrm/evaluation")) {
-                if (hrmDto.getGrade() == Grade.ADMIN) {
-                    chain.doFilter(request, response);
-                    return;
-                } else {
-                    HttpServletResponse resp = (HttpServletResponse) response;
-                    resp.sendRedirect("/index/index");
-                }
-            } else if (requestUrl.startsWith("/hrm/board")) {
-                if (hrmDto.getGrade() == Grade.ADMIN) {
-                    chain.doFilter(request, response);
-                    return;
-                } else if (hrmDto.getDeptNo() == 30) {
-                    chain.doFilter(request, response);
-                    return;
-                } else {
-                    HttpServletResponse resp = (HttpServletResponse) response;
-                    resp.sendRedirect("/index/index");
-                }
-            } else if (requestUrl.startsWith("/attend/board")) {
-                if (hrmDto.getGrade() == Grade.ADMIN) {
-                    chain.doFilter(request, response);
-                    return;
-                } else if (hrmDto.getDeptNo() == 10) {
-                    chain.doFilter(request, response);
-                    return;
-                } else {
-                    HttpServletResponse resp = (HttpServletResponse) response;
-                    resp.sendRedirect("/index/index");
-                }
-            } else if (requestUrl.startsWith("/salary/board")) {
-                if (hrmDto.getGrade() == Grade.ADMIN) {
-                    chain.doFilter(request, response);
-                    return;
-                } else if (hrmDto.getDeptNo() == 20) {
-                    chain.doFilter(request, response);
-                    return;
-                } else {
-                    HttpServletResponse resp = (HttpServletResponse) response;
-                    resp.sendRedirect("/index/index");
-                }
-            } else {
-                /* 특정 URL 패턴 전부 안걸렸을시 */
+            /* 권한 없는 페이지 들어갈시 index로 */
+            if (filterRequest(requestUrl, hrmDto, request, response, chain)) {
                 chain.doFilter(request, response);
-                return;
+            } else {
+                HttpServletResponse resp = (HttpServletResponse) response;
+                resp.sendRedirect("/index/index");
             }
         }
+    }
+
+    private boolean filterRequest(String requestUrl, HrmDto hrmDto, ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (requestUrl.startsWith("/workSchedule/adminWorkBoard") || requestUrl.startsWith("/hrm/evaluation")) {
+            if (hrmDto.getGrade() == Grade.ADMIN) return true;
+            else return false;
+        } else if (requestUrl.startsWith("/hrm/board")) {
+            if (hrmDto.getGrade() == Grade.ADMIN || hrmDto.getDeptNo() == 30) return true;
+            else return false;
+        } else if (requestUrl.startsWith("/attend/board")) {
+            if (hrmDto.getGrade() == Grade.ADMIN || hrmDto.getDeptNo() == 10) return true;
+            else return false;
+        } else if (requestUrl.startsWith("/salary/board")) {
+            if (hrmDto.getGrade() == Grade.ADMIN || hrmDto.getDeptNo() == 20) return true;
+            else return false;
+        } else return true;
+
     }
 }
