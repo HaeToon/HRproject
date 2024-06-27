@@ -7,12 +7,12 @@
     <div class="board-title">
         <h2 class="title">급여 목록</h2>
     </div>
-    <div class="salary-content-area p-3 bg-body-tertiary">
+    <div class="salary-content-area p-3">
     <div class="salary-search-area">
         <button class="salary-search-button btn btn-primary insertSalary " data-bs-target="#searchModal" data-bs-toggle="modal">검색</button>
         <a class="salary-search-button btn btn-primary insertSalary" href="../salary/board">전체보기</a>
     </div>
-    <table class="table table-striped">
+    <table class="table">
         <thead>
         <tr>
             <th class="align-middle">번호</th>

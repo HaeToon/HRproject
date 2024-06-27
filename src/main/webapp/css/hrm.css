@@ -60,3 +60,8 @@
     background-color: #ffffff;
     border-radius: 20px;
 }
+.mypage-profile{
+    width:250px;
+    height:310px;
+    border:1px solid #ccc;
+}

@@ -12,7 +12,7 @@
     <div class="board-title">
         <h2 class="title">커뮤니티</h2>
     </div>
-    <div class="community-content-area p-3 bg-body-tertiary">
+    <div class="community-content-area p-3">
         <form action="../community/board" class="row d-flex align-items-center justify-content-start m-0">
             <div class="attend-search-area col-sm-5">
                 <div class="row">
@@ -35,7 +35,7 @@
             </div>
         </form>
 
-        <table class="table table-striped">
+        <table class="table">
             <thead>
             <tr>
                 <th scope="col">글번호</th>
