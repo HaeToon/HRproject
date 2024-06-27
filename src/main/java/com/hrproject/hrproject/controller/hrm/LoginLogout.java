@@ -3,6 +3,7 @@ package com.hrproject.hrproject.controller.hrm;
 import com.hrproject.hrproject.dao.HrmDao;
 import com.hrproject.hrproject.dto.HrmDto;
 import com.hrproject.hrproject.utils.ScriptWriter;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -27,8 +28,11 @@ public class LoginLogout extends HttpServlet {
             session.invalidate();
             ScriptWriter.alertAndNext(resp, "로그아웃", "../hrm/login-logout");
         } else {
-            /* 관리자 로그인 임시 */
-            if (req.getParameter("loginEmpNo").equals("admin") && req.getParameter("loginPassword").equals("1234")) {
+            /* 관리자 로그인 id, pw 설정 위치 - web.xml */
+            ServletContext application  = getServletContext();
+            String adminID = application.getInitParameter("AdminID");
+            String adminPassword = application.getInitParameter("AdminPassword");
+            if (req.getParameter("loginEmpNo").equals(adminID) && req.getParameter("loginPassword").equals(adminPassword)) {
                 adminLogin(req, resp,  "관리자");
             } else {
                 /* 로그인 */

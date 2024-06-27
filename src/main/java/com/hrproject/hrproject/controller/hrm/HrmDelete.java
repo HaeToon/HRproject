@@ -20,6 +20,9 @@ public class HrmDelete extends HttpServlet {
         System.out.println(empNo);
         String outReasons = req.getParameter("outReasons");
         String resignDate = req.getParameter("resignDate");
+        if (resignDate.equals("")){
+            resignDate = null;
+        }
 
         HrmDao hrmDao = new HrmDao();
         HrmDto hrmDto = HrmDto.builder()
