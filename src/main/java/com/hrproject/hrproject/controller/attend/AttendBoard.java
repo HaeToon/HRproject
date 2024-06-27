@@ -37,15 +37,13 @@ public class AttendBoard extends HttpServlet {
             req.setAttribute("url", url);
         }
 
-<<<<<<< p4
-=======
+
         //처리 완료된 근태 정보 가져오기
         List<AttendDto> acceptedAttendList = attendDao.getAcceptedAttendList();
         req.setAttribute("acceptedAttendList", acceptedAttendList);
-        req.setAttribute("url", url);
 
 
->>>>>>> develop
+
         // JSP 페이지로 포워딩합니다.
         RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/attend/board-attend.jsp");
         dispatcher.forward(req, resp);

@@ -6,10 +6,10 @@
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
     <%--  hrm 제목 영역  --%>
     <div class="board-title">
-        <h2 class="title">Hrm list</h2>
+        <h2 class="title">인사평가</h2>
     </div>
     <%--  hrm 내용 영역  --%>
-    <div class="hrm-content-area p-3 bg-body-tertiary">
+    <div class="hrm-content-area p-3">
         <%--    hrm 검색 영역    --%>
         <div class="hrm-search-area">
             <form action="../hrm/board" class="row d-flex align-items-center">
@@ -111,7 +111,7 @@
         </div>
     </div>
     <%--      hrm page 영역      --%>
-    <div class="d-flex justify-content-between align-items-center ">
+    <div class="hrm-ev-area d-flex justify-content-between align-items-center ">
         <c:choose>
             <c:when test="${empty search}">
                 <c:set var="firstPage" value="../hrm/evaluation?page=1"></c:set>
@@ -172,10 +172,10 @@
                 </c:if>
             </ul>
         </nav>
-        <div class="text-end">
-            <%--                <a href="#" data-bs-toggle="modal" class="openModal btn btn-danger"--%>
-            <%--                   data-bs-target="#staticBackdropView" onclick="return chk_form()"--%>
-            <%--                   data-show="delete">삭제</a>--%>
+        <%--<div class="text-end">
+            &lt;%&ndash;                <a href="#" data-bs-toggle="modal" class="openModal btn btn-danger"&ndash;%&gt;
+            &lt;%&ndash;                   data-bs-target="#staticBackdropView" onclick="return chk_form()"&ndash;%&gt;
+            &lt;%&ndash;                   data-show="delete">삭제</a>&ndash;%&gt;
             <button type="button" class="btn btn-primary" style="width: 100px" data-bs-toggle="modal"
                     data-bs-target="#insertModal">신규
             </button>
@@ -183,7 +183,7 @@
                 <input type="hidden" value="addEmployee" name="addEmployee">
                 <button class="btn btn-primary mt-2">사원 30명+</button>
             </form>
-        </div>
+        </div>--%>
     </div>
     <%--      hrm page 영역 끝      --%>
 </div>

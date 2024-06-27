@@ -4,7 +4,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>HRM</title>
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/include.css" rel="stylesheet">
     <link href="../../css/hrm.css" rel="stylesheet">
@@ -21,7 +21,7 @@
 </head>
 <body>
 <%--헤더 처음--%>
-<nav class="navbar navbar-dark bg-dark fixed-top">
+<nav class="header-top navbar navbar-dark fixed-top">
     <div class="container-fluid">
         <div class="row w-100">
             <!-- Offcanvas Toggle Button -->
@@ -76,7 +76,7 @@
         </div>
     </div>
     <!-- Offcanvas Component -->
-    <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
+    <div class="left-side offcanvas offcanvas-start " tabindex="-1" id="offcanvasDarkNavbar"
          aria-labelledby="offcanvasDarkNavbarLabel" style="width:300px">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">메뉴</h5>

@@ -3,9 +3,9 @@
 
 
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
-    <div class="board-title"><h2 class="title">출퇴근 list</h2></div>
+    <div class="board-title"><h2 class="title">출/퇴근 목록</h2></div>
 
-    <div class="attend-content-area p-3 bg-body-tertiary">
+    <div class="attend-content-area p-3">
 
         <div class="salary-search-area">
             <button class="salary-search-button btn btn-primary insertSalary " data-bs-target="#searchModal_work"
@@ -14,7 +14,7 @@
             <a class="salary-search-button btn btn-primary insertSalary" href="../workSchedule/adminWorkBoard">새로고침</a>
         </div>
         <%--보드--%>
-        <table class="table table-striped">
+        <table class="table ">
             <thead>
             <tr>
                 <th scope="col">번호</th>
@@ -64,7 +64,7 @@
     </div>
 
 
-    <nav aria-label="Page navigation example" class="">
+    <nav aria-label="Page navigation example" class="mt-3">
         <ul class="pagination d-flex justify-content-center" style="margin-bottom: 0">
             <c:if test="${currentPage > 1}">
                 <li class="page-item">

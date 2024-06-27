@@ -6,10 +6,10 @@
         <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
                 <%--  hrm 제목 영역  --%>
             <div class="board-title">
-                <h2 class="title">Hrm list</h2>
+                <h2 class="title">사원 목록</h2>
             </div>
                 <%--  hrm 내용 영역  --%>
-            <div class="hrm-content-area p-3 bg-body-tertiary">
+            <div class="hrm-content-area p-3 ">
                     <%--    hrm 검색 영역    --%>
                 <div class="hrm-search-area">
                     <form action="../hrm/board" class="row d-flex align-items-center">
@@ -36,7 +36,7 @@
                 </div>
                     <%--    hrm 검색 영역  끝   --%>
                     <%--      hrm list table 영역      --%>
-                <table class="table table-sm">
+                <table class="table table-light table-sm">
                     <thead>
                     <tr>
                             <%-- 9개 --%>

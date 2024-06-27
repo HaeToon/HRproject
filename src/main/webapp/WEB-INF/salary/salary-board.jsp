@@ -5,7 +5,7 @@
 <%--테이블--%>
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
     <div class="board-title">
-        <h2 class="title">Salary list</h2>
+        <h2 class="title">급여 목록</h2>
     </div>
     <div class="salary-content-area p-3 bg-body-tertiary">
     <div class="salary-search-area">

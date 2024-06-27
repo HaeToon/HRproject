@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="../include/header.jsp" %>
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
-    <div class="board-title">
+    <%--div class="board-title">
         <h2 class="title">급여 조회</h2>
-    </div>
+    </div>--%>
     <div class="salary-check-area d-flex col-12">
         <div class="employee-card col-12">
             <div class="profile-container">
@@ -13,18 +13,18 @@
                                 <img src="${request.contextPath}/upload/${loginDto.renameProfile}" class="myPageProfile">
                             </c:when>
                             <c:otherwise>
-                                <img src="../images/profile01.jpg">
+                                <img src="../images/profile03.jpg " class="salary-profile">
                             </c:otherwise>
                         </c:choose>
                 </div>
                 <div class="salary-profile-details">
-                    <h2 class="">이름 : ${loginDto.ename} </h2>
+                    <h5 class="">이름 : ${loginDto.ename} </h5>
                     <hr>
-                            <h4>부서 : ${loginDto.deptName}</h4>
-                            <h4>직책 : ${loginDto.posName}</h4>
-                            <h4>직급 : ${loginDto.roleName}</h4>
-                            <h4>입사일 : ${loginDto.hireDate}</h4>
-                            <h4>근속연수 :
+                            <h5>부서 : ${loginDto.deptName}</h5>
+                            <h5>직책 : ${loginDto.posName}</h5>
+                            <h5>직급 : ${loginDto.roleName}</h5>
+                            <h5>입사일 : ${loginDto.hireDate}</h5>
+                            <h5>근속연수 :
                             <c:if test="${diffYear != 0}">
                                 ${diffYear}년
                             </c:if>
@@ -33,18 +33,19 @@
                             </c:if>
                             <c:if test="${diffDay != 0}">
                                 ${diffDay}일
-                            </c:if> </h4>
+                            </c:if> </h5>
                     <div id="salaryRate">
-                            <h4>${year}년 ${month}월 근무율 : ${formattedRate}% </h4>
-                            <h4>${year}년 ${month+1}월 예상급여 : ${formattedRate * 30000} 원</h4>
+                            <h5>${year}년 ${month}월 근무율 : ${formattedRate}% </h5>
+                            <h5>${year}년 ${month+1}월 예상급여 : ${formattedRate * 30000} 원</h5>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="salary-check-bigarea p-3">
     <div class="salary-check-search-area col-12">
         <div class="left-section col-4">
-            <h2>근무 시간표</h2>
+            <h4>검색</h4>
             <div class="d-flex input-group">
                 <input type="text" class="form-control salary-check-search-year-text " placeholder="ex)2024"
                        id="salary-check-search-year" name="salaryCheckYear">
@@ -55,7 +56,7 @@
             </div>
         </div>
         <div class="center-section col-4">
-            <h1 class="salary-check-calendar-date" id="salary-check-calendar-date">${year}년 ${month}월 근무표</h1>
+            <h2 class="salary-check-calendar-date" id="salary-check-calendar-date">${year}년 ${month}월 근무 현황</h2>
         </div>
     </div>
     <div class="salary-check-calendar-area d-flex">
@@ -109,7 +110,8 @@
             </table>
         </div>
     </div>
-    <div class="salary-check-list-area">
+    </div>
+    <div class="salary-check-list-area p-3">
     <table class="table table-striped">
         <thead>
         <tr>
@@ -174,7 +176,7 @@
                 },
                 success: function (response) {
                     console.log("Ajax Response:", response);
-                    $("#salary-check-calendar-date").text(year + " " + month + "월 근무표");
+                    $("#salary-check-calendar-date").text(year + " " + month + "월 근무 현황");
                     var calendarBody = $("#calendar-body");
                     var totalBody = $("#total-body");
 

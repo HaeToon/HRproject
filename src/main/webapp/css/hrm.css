@@ -1,5 +1,5 @@
 .employee-card {
-    border: 1px solid #ddd;
+
     padding: 20px;
 }
 
@@ -49,4 +49,14 @@
         bottom:16px;
         font-size: 48px;
     }
+}
+.hrm-content-area{
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin-top: 30px;
+
+}
+.hrm-ev-area{
+    background-color: #ffffff;
+    border-radius: 20px;
 }

@@ -13,7 +13,7 @@
 <script src="../js/bootstrap.bundle.min.js"></script>
 <html>
 <head>
-    <title>Title</title>
+    <title></title>
 
     <style>
 
