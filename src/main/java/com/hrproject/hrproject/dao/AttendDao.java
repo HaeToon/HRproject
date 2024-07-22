@@ -168,7 +168,7 @@ public class AttendDao {
         try (SqlSession sqlSession = MybatisConnectionFactory.getSqlSession()) {
             List<AttendDto> attendList = sqlSession.selectList("getAttendListByEmpNo", empNo);
             System.out.println("getAttendListByEmpNo query is successfully");
-            //System.out.println("attendList >>> " + attendList); // 가져온 데이터 로깅
+            System.out.println("attendList >>> " + attendList); // 가져온 데이터 로깅
 
             return attendList;
         } catch (Exception e) {

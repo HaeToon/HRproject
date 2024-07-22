@@ -20,7 +20,6 @@ public class SalaryBoard extends HttpServlet {
         SalaryDao salaryDao = new SalaryDao();
         //salary_DB에서 조회를 통해 list에 담는다.
         List<SalarySearchDto> salaryList = salaryDao.getSalaryList();
-
         req.setAttribute("salaryList",salaryList);
         RequestDispatcher dispatcher =
                 req.getRequestDispatcher("/WEB-INF/salary/salary-board.jsp");

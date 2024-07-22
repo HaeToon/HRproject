@@ -104,9 +104,11 @@ public class AttendCheck extends HttpServlet {
         req.setAttribute("diffMonth",diffMonth);
         req.setAttribute("diffDay",hiredateToSysdate);
 
+
+
         AttendDao annualDao = new AttendDao();
         List<AttendDto> annualList = annualDao.getAttendListByEmpNo(loginEmpNo);
-
+        System.out.println("annualList=="+annualList);
         List<AttendDto> approvedAttendList = annualDao.getApprovedAttendList();
         req.setAttribute("approvedAttendList", approvedAttendList);
 
@@ -134,6 +136,8 @@ public class AttendCheck extends HttpServlet {
                 long usedAnnual = ChronoUnit.DAYS.between(startDate, endDate)+1;
                 annualLeave-=usedAnnual;
                 usedAnnualCount+=usedAnnual;
+                System.out.println("startdate=="+startDate);
+                System.out.println("enddate=="+endDate);
             }
         }
         //남은연차

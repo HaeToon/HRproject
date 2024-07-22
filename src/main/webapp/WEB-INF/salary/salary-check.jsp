@@ -1,32 +1,30 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="../include/header.jsp" %>
 <div class="content-area d-flex flex-column flex-shrink-0 position-relative col-12">
-    <div class="board-title">
+    <%--div class="board-title">
         <h2 class="title">급여 조회</h2>
-    </div>
+    </div>--%>
     <div class="salary-check-area d-flex col-12">
         <div class="employee-card col-12">
             <div class="profile-container">
                 <div class="salary-check-profile">
-                    <li class="nav-item">
                         <c:choose>
                             <c:when test="${not empty loginDto.renameProfile}">
                                 <img src="${request.contextPath}/upload/${loginDto.renameProfile}" class="myPageProfile">
                             </c:when>
                             <c:otherwise>
-                                <img src="../images/profile01.jpg">
+                                <img src="../images/profile03.jpg " class="salary-profile">
                             </c:otherwise>
                         </c:choose>
-                    </li>
                 </div>
                 <div class="salary-profile-details">
-                    <h2 class="">이름 : ${loginDto.ename} </h2>
+                    <h5 class="">이름 : ${loginDto.ename} </h5>
                     <hr>
-                            <h4>부서 : ${loginDto.deptName}</h4>
-                            <h4>직책 : ${loginDto.posName}</h4>
-                            <h4>직급 : ${loginDto.roleName}</h4>
-                            <h4>입사일 : ${loginDto.hireDate}</h4>
-                            <h4>근속연수 :
+                            <h5>부서 : ${loginDto.deptName}</h5>
+                            <h5>직책 : ${loginDto.posName}</h5>
+                            <h5>직급 : ${loginDto.roleName}</h5>
+                            <h5>입사일 : ${loginDto.hireDate}</h5>
+                            <h5>근속연수 :
                             <c:if test="${diffYear != 0}">
                                 ${diffYear}년
                             </c:if>
@@ -35,16 +33,19 @@
                             </c:if>
                             <c:if test="${diffDay != 0}">
                                 ${diffDay}일
-                            </c:if> </h4>
-                            <h4>${year}년 ${month}월 근무율 : </h4>
-                            <h4>${year}년 ${month}월 예상급여 : </h4>
+                            </c:if> </h5>
+                    <div id="salaryRate">
+                            <h5>${year}년 ${month}월 근무율 : ${formattedRate}% </h5>
+                            <h5>${year}년 ${month+1}월 예상급여 : ${formattedRate * 30000} 원</h5>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="salary-check-bigarea p-3">
     <div class="salary-check-search-area col-12">
         <div class="left-section col-4">
-            <h2>근무 시간표</h2>
+            <h4>검색</h4>
             <div class="d-flex input-group">
                 <input type="text" class="form-control salary-check-search-year-text " placeholder="ex)2024"
                        id="salary-check-search-year" name="salaryCheckYear">
@@ -55,7 +56,7 @@
             </div>
         </div>
         <div class="center-section col-4">
-            <h1 class="salary-check-calendar-date" id="salary-check-calendar-date">${year}년 ${month}월 근무표</h1>
+            <h2 class="salary-check-calendar-date" id="salary-check-calendar-date">${year}년 ${month}월 근무 현황</h2>
         </div>
     </div>
     <div class="salary-check-calendar-area d-flex">
@@ -109,6 +110,39 @@
             </table>
         </div>
     </div>
+    </div>
+    <div class="salary-check-list-area p-3">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="align-middle">번호</th>
+            <th class="align-middle">사원 번호</th>
+            <th class="align-middle">사원 명</th>
+            <th class="align-middle">급여구분</th>
+            <th class="align-middle">지급구분</th>
+            <th class="align-middle">대장명칭</th>
+            <th class="align-middle">지급일</th>
+            <th class="align-middle">근무연월</th>
+            <th class="align-middle">지급액</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach items="${salarycheckList}" var="salaryDto" varStatus="loop">
+            <tr>
+                <td>${salaryDto.salary_No}</td>
+                <td>${salaryDto.empNo}</td>
+                <td>${salaryDto.ename}</td>
+                <td>${salaryDto.salaryName}</td>
+                <td>${salaryDto.salaryCategory}</td>
+                <td>${salaryDto.salaryInfo}</td>
+                <td>${salaryDto.salaryDay}</td>
+                <td>${salaryDto.accountingPeriod}</td>
+                <td>${salaryDto.salary}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+    </div>
 </div>
 <script>
 
@@ -130,9 +164,7 @@
                 return;
             }
             const salaryCheckEmpNo = $("#salary-check-search-empNo").val();
-            console.log("year==" + year)
-            console.log("month==" + month)
-            console.log("salaryCheckEmpNo==" + salaryCheckEmpNo)
+
             var message = "";
             $.ajax({
                 url: "/salary/check",
@@ -143,8 +175,8 @@
                     month: month,
                 },
                 success: function (response) {
-                    $("#salary-check-calendar-date").text(year + " " + month + "월 근무표");
-
+                    console.log("Ajax Response:", response);
+                    $("#salary-check-calendar-date").text(year + " " + month + "월 근무 현황");
                     var calendarBody = $("#calendar-body");
                     var totalBody = $("#total-body");
 

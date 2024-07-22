@@ -44,6 +44,16 @@ public class SalaryDao {
         sqlSession.close();
         return salaryList;
     }
+    public List<SalaryDto> getSalaryList(int empNo) {
+        List<SalaryDto> salaryList = null;
+        SqlSession sqlSession = MybatisConnectionFactory.getSqlSession();
+        salaryList = sqlSession.selectList("getSalaryListByEmpNo",empNo);
+        if (salaryList !=null){
+            System.out.println("salary select query is successfully");
+        }
+        sqlSession.close();
+        return salaryList;
+    }
 
     public List<SalaryPlusEmpNameDto> getSearchSalaryList(SalarySearchDto salarySearchDto) {
         List<SalaryPlusEmpNameDto> searchSalaryList = null;

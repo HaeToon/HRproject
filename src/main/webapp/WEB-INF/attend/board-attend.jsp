@@ -7,7 +7,7 @@
         <h2 class="title">휴가 신청 대기 목록</h2>
     </div>
     <%--검색 영역--%>
-    <div class="attend-content-area p-3 bg-body-tertiary">
+    <div class="attend-content-area p-3 ">
         <form action="../attend/board" class="row d-flex align-items-center justify-content-start m-0">
             <div class="attend-search-area col-sm-5">
                 <div class="row">
@@ -30,7 +30,7 @@
             </div>
         </form>
         <%--attend list table--%>
-        <table class="table table-striped">
+        <table class="table">
             <thead>
             <tr>
                 <th scope="col">사원번호</th>
@@ -59,18 +59,18 @@
                     <td>${attendDto.offDayRs}</td>
                     <td>${attendDto.print}</td>
                     <td>
-                        <button type="button" class="attend-delete-button btn btn-danger" data-id="${attendDto.atdNo}">삭제</button>
+                        <button type="button" class="btn btn-primary attend-delete-button" data-id="${attendDto.atdNo}">삭제</button>
                     </td>
                     <td>
-                        <button type="button" class="approve-button btn btn-primary" data-id="${attendDto.atdNo}">승인</button>
-                        <button type="button" class="reject-button btn btn-danger" data-id="${attendDto.atdNo}">반려</button>
+                        <button type="button" class="btn-primary approve-button btn " data-id="${attendDto.atdNo}">승인</button>
+                        <button type="button" class=" reject-button btn btn-danger" data-id="${attendDto.atdNo}">반려</button>
                     </td>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
         <%--신규 버튼--%>
-        <button class="attend-Insert-btn btn btn-primary" data-bs-target="#insertModalToggle" data-bs-toggle="modal">신규</button>
+        <button class="btn btn-primary attend-Insert-btn " data-bs-target="#insertModalToggle" data-bs-toggle="modal">신규</button>
     </div>
     <%--attend insert 모달--%>
     <div class="modal fade" id="insertModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" data-bs-backdrop="static"
@@ -171,12 +171,12 @@
             </div>
         </div>
     </div>
-<br><br><br><br>
+
 <%--처리 완료된 근태 목록 --%>
-        <div>
+        <div class="atttend-board-big-area p-3">
             <h3> 처리 완료된 휴가 목록</h3>
             <hr>
-            <table class="table table-striped">
+            <table class="table">
                 <thead>
                 <tr>
                     <th scope="col">사원번호</th>

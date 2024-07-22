@@ -21,7 +21,7 @@
                                  class="myPageProfile">
                         </c:when>
                         <c:otherwise>
-                            <img src="../images/profile01.jpg" class="myPageProfile">
+                            <img src="../images/profile03.jpg" class="myPageProfile">
                         </c:otherwise>
                     </c:choose>
 

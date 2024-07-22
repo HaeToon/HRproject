@@ -115,6 +115,24 @@
         JOIN
         HRM H ON S.EMPNO = H.EMPNO
     </select>
+    <select id="getSalaryListByEmpNo" resultType="SalaryPlusEmpNameDto" parameterType="int">
+        SELECT
+        S.SALARY_NO,
+        S.EMPNO,
+        H.ENAME as ename,
+        S.ACCOUNTINGPERIOD,
+        S.SALARYCATEGORY,
+        S.SALARYNAME,
+        S.SALARYDAY,
+        S.SALARY,
+        S.SALARYINFO
+        FROM
+        SALARY S
+        JOIN
+        HRM H ON S.EMPNO = H.EMPNO
+        WHERE S.EMPNO=#{EMPNO}
+    </select>
+
     <delete id="deleteSalary" parameterType="int">
         delete from salary where salary_No = #{salary_No}
     </delete>
