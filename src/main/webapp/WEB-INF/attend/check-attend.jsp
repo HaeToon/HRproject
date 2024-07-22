@@ -36,7 +36,7 @@
                             ${diffDay}일
                         </c:if> </h4>
                     <h4>${year}년 ${month}월 발생연차 : ${annualLeave+usedAnnualCount}</h4>
-                    <h4>사용가능한 연차 : ${annualLeave}</h4>
+                    <h4 id="annualLeave">사용가능한 연차 : ${annualLeave}</h4>
                     <h4>사용한 연차 : ${usedAnnualCount}</h4>
                 </div>
             </div>
@@ -286,6 +286,7 @@
 
     <script>
 
+        //근태수 계산
         document.addEventListener("DOMContentLoaded", function() {
             const startAtdDate = document.getElementById("startAtdDate");
             const endAtdDate = document.getElementById("endAtdDate");
@@ -417,6 +418,7 @@
             }
         });
 
+
         //외래키 사원번호 예외처리
         $(document).ready(function () {
             $("#insertAttendCheck").on('submit', function (event) {
@@ -426,6 +428,7 @@
                 var startAtdDate = $('#startAtdDate').val();
                 var endAtdDate = $('#endAtdDate').val();
                 var atdCode = $('#atdCode').val();
+                var atdNum = $('#atdNum').val();
 
                 //사원번호를 입력하지 않은경우
                 if (!empNo) {
@@ -509,6 +512,9 @@
                         }
                     });
                 }
+
+                //근태수가 남아있는 연차수보다 클수 없음
+                if (atdNum > )
             });
         });
 

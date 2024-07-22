@@ -397,6 +397,7 @@
             });
         }
     });
+
     // 근태번호 클릭하여 수정 모달창 열기
     $(document).ready(function () {
         $(document).on("click", ".updateModal", function () {
@@ -457,6 +458,7 @@
         }
     });
 
+
     //외래키 사원번호 예외처리
     $(document).ready(function () {
         $("#insertModalForm").on('submit', function (event) {
@@ -466,6 +468,7 @@
             var startAtdDate = $('#startAtdDate').val();
             var endAtdDate = $('#endAtdDate').val();
             var atdCode = $('#atdCode').val();
+            var atdNum = $('#atdNum').val();
 
             //사원번호를 입력하지 않은경우
             if (!empNo) {
@@ -475,6 +478,7 @@
                 $('#insertEmpNo').focus();
                 return;
             }
+
             //근태번호를 입력하지 않은경우
             if (!atdNo) {
                 event.preventDefault();
@@ -483,6 +487,7 @@
                 $('#atdNo').focus();
                 return;
             }
+
             //사원명을 입력하지 않은경우
             if (!ename) {
                 event.preventDefault();
@@ -549,6 +554,8 @@
                     }
                 });
             }
+
+
         });
     });
 </script>

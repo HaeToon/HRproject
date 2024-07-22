@@ -104,7 +104,6 @@ public class AttendCheck extends HttpServlet {
         req.setAttribute("diffMonth",diffMonth);
         req.setAttribute("diffDay",hiredateToSysdate);
 
-
         AttendDao annualDao = new AttendDao();
         List<AttendDto> annualList = annualDao.getAttendListByEmpNo(loginEmpNo);
 
@@ -144,11 +143,13 @@ public class AttendCheck extends HttpServlet {
         RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/attend/check-attend.jsp");
         dispatcher.forward(req, resp);
     }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         int year = Integer.parseInt(req.getParameter("year"));
         int month = Integer.parseInt(req.getParameter("month"));
+
         System.out.println("year=="+year);
         System.out.println("month=="+month);
         Calendar cal = Calendar.getInstance();

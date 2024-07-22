@@ -4,10 +4,10 @@
     <div class="main-img-box">
         <img src="../../images/mainImage.jpg" class="main-img">
     </div>
-    <div class="main-img-info">
+    <div class="">
         <h2>한화오션 폴란드 잠수함 수주 현지 협력 확대</h2>
-        <h3>대한민국 대표 잠수함 명가 한화오션, 폴란드에서 Industry Day 개최</h3>
-        <h3>한화오션(대표이사 권혁웅 부회장)은 <br> 지난5월21일 폴란드 해양 산업의 <br> 핵심 도시 그단스크에서 <br>  인더스트리 데이(Industry Day) 를 <br> 주최하고 폴란드 오르카(Orka) 잠수함 사업 협력 방안을 <br>현지 업체들과 토의했다.</h3>
+        <h5>대한민국 대표 잠수함 명가 한화오션, 폴란드에서 Industry Day 개최</h5>
+        <h5>한화오션(대표이사 권혁웅 부회장)은 <br> 지난5월21일 폴란드 해양 산업의 <br> 핵심 도시 그단스크에서 <br>  인더스트리 데이(Industry Day) 를 <br> 주최하고 폴란드 오르카(Orka) 잠수함 사업 협력 방안을 <br>현지 업체들과 토의했다.</h5>
     </div>
     </div>
     <div class="community-img-card">
